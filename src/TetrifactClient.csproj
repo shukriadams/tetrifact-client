@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <!-- disable lack of explicit nullable object warnings because since when did objects stop being implicity nullable ?? -->
+	<NoWarn>CS8618</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="background.jpg" />
+    <None Remove="DarkTheme.xaml" />
+    <None Remove="gradient.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="DarkTheme.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="gradient.PNG" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.2" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="ReactiveUI" Version="19.5.1" />
+  </ItemGroup>
+</Project>
