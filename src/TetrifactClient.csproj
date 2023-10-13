@@ -30,5 +30,6 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="ReactiveUI" Version="19.5.1" />
+    <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 </Project>

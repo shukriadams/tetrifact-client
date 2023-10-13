@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Unity;
 
 namespace TetrifactClient
 {
@@ -7,6 +9,12 @@ namespace TetrifactClient
         public ProjectsView()
         {
             InitializeComponent();
+        }
+
+        public void OnNewProject(object? sender, RoutedEventArgs args)
+        {
+            ProjectEditorView settingsEditor = App.UnityContainer.Resolve<ProjectEditorView>();
+            settingsEditor.ShowDialog(MainWindow.Instance);
         }
     }
 }

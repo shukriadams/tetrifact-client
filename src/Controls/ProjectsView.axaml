@@ -12,8 +12,15 @@
  			 x:DataType="vm:ProjectsViewModel">
 	
 	<StackPanel Orientation="Vertical">
-		<TextBlock>
-		</TextBlock>
+		<StackPanel Orientation="Horizontal">
+			<TextBlock>
+				Projects :
+			</TextBlock>
+			<Button Click="OnNewProject">
+				+
+			</Button>
+		</StackPanel>
+
 		<ListBox Name="listProjects" ItemsSource="{Binding Projects}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
@@ -24,9 +31,8 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<TextBlock Text="nothing to see here!"
+		<TextBlock Text="No projects added yet"
 				   IsVisible="{Binding Projects, 
                        Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
-
 	</StackPanel>
 </UserControl>
