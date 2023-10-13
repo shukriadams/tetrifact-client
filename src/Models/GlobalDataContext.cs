@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TetrifactClient.Models
+namespace TetrifactClient
 {
     public class GlobalDataContext
     {
@@ -8,9 +8,15 @@ namespace TetrifactClient.Models
 
         public IEnumerable<SourceServer> SourceServers { get; } = new List<SourceServer>();
 
+        public ProjectsViewModel Projects { get; } = new ProjectsViewModel();
 
+        private string caption = "some text";
 
-
+        public string Caption
+        {
+            get => caption;
+            set => caption = value;
+        }
 
         public static GlobalDataContext Instance 
         { 

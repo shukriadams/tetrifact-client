@@ -19,12 +19,15 @@ namespace TetrifactClient
         public Bitmap? ImageFromBinding { get; }
 
         private string caption = "some text";
-
+   
         public string Caption
         {
             get => caption;
             set => this.RaiseAndSetIfChanged(ref caption, value);
         }
+
+
+
 
         public MainWindowViewModel() 
         {

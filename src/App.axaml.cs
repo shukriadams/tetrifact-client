@@ -11,7 +11,7 @@ public partial class App : Application
         Styles.Add(new DarkTheme());
     }
 
-    public static MainWindowViewModel model = new MainWindowViewModel();
+    public static GlobalDataContext model = new GlobalDataContext();
 
     public override void OnFrameworkInitializationCompleted()
     {

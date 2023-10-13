@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TetrifactClient.Models
+namespace TetrifactClient
 {
     public class SourceServer
     {
