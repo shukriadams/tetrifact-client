@@ -8,5 +8,5 @@ GUI client for tetrifact. Avalonia UI, C#.
 
 ## Optional 
 
-- Avalonia Extension for Visual Studio 
+- Avalonia for Visual Studio
 - Python 3.x 

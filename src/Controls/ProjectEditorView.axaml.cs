@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System;
 
 namespace TetrifactClient
 {
@@ -7,6 +8,12 @@ namespace TetrifactClient
         public ProjectEditorView()
         {
             InitializeComponent();
+        }
+
+        public new void ShowDialog(Window parent) 
+        {
+            base.ShowDialog(parent);
+            this.CenterOn(parent);
         }
     }
 }

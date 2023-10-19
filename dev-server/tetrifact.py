@@ -1,14 +1,14 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re as regex
 import os
-
+port=8000
 class MyServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/v1/packages':
             self.do_packages()
         elif self.path.startswith('/v1/packages/'):
-            packageid = regex.search('\/v1\/packages\/(.*)', self.path).group(1)
+            packageid = regex.search(r'\/v1\/packages\/(.*)', self.path).group(1)
             print(self.path)
             print(packageid)
             self.do_package(packageid)
@@ -49,6 +49,6 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write('Unhandled route - try something else'.encode())
 
 
-print('server started')
-myServer = HTTPServer(('localhost', 8000), MyServer)
+print(f'Simulating tetrifact server started on port {port}')
+myServer = HTTPServer(('localhost', port), MyServer)
 myServer.serve_forever()
