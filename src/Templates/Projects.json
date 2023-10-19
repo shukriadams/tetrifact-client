@@ -1,0 +1,10 @@
+﻿[
+    {
+        "Name" : "Ironbird",
+        "BuildServer": "http://localhost:8000"
+    },
+    {
+        "Name": "Skunkwords",
+        "BuildServer": "http://localhost:8000"
+    }
+]

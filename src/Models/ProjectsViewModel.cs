@@ -1,13 +1,14 @@
 ﻿using ReactiveUI;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TetrifactClient
 {
     public class ProjectsViewModel : ReactiveObject
     {
-        private IEnumerable<Project> _projects = new List<Project> { new Project { Name= "test" } };
+        private ObservableCollection<Project> _projects = new ObservableCollection<Project> { new Project { Name= "test" } };
 
-        public IEnumerable<Project> Projects
+        public ObservableCollection<Project> Projects
         {
             get => _projects;
             set => this.RaiseAndSetIfChanged(ref _projects, value);

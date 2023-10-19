@@ -2,9 +2,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:vm="using:TetrifactClient"
+		mc:Ignorable="d" 
+		d:DesignWidth="800" 
+		d:DesignHeight="450"
+		x:DataType="vm:GlobalDataContext"
 		ExtendClientAreaToDecorationsHint="True"
 		x:Class="TetrifactClient.ProjectEditorView"
         Title="ProjectEditorView">
-  Welcome to Avalonia!
+    <Border Classes="flow">
+		<StackPanel Orientation="Vertical">
+			<Label Classes="header1">Preferences</Label>
+			<StackPanel Classes="flow-vertical" >
+				<Label>From Template</Label>
+				<ComboBox Name="cmbTemplateSource" ItemsSource="{Binding ProjectTemplates.Projects}" SelectedIndex="0" SelectionChanged="OnTemplateSourceChanged">
+					<ComboBox.ItemTemplate>
+						<DataTemplate x:DataType="vm:Project">
+							<TextBox Text="{Binding Name}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</StackPanel>
+			<StackPanel Classes="flow-vertical">
+				<Label>Project Name</Label>
+				<TextBox Name="txtName"></TextBox>
+			</StackPanel>
+			<StackPanel Classes="flow-vertical">
+				<Label>Build server</Label>
+				<TextBox Name="txtServer"></TextBox>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Classes="flow-vertical">
+				<Button Name="btnCancel" Click="OnCancel" Classes="warning">Cancel</Button>
+				<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
+			</StackPanel>
+		</StackPanel>
+    </Border>
 </Window>

@@ -15,9 +15,13 @@
   <ItemGroup>
     <None Remove="background.jpg" />
     <None Remove="DarkTheme.xaml" />
+    <None Remove="Templates\Projects.json" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="DarkTheme.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Projects.json" />
   </ItemGroup>
 
 
@@ -29,6 +33,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="ReactiveUI" Version="19.5.1" />
     <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>

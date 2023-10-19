@@ -4,7 +4,7 @@
     {
         public string Name { get; set; }
         
-        public string SourceServerId { get; set; }
+        public string BuildServer { get; set; }
 
         /// <summary>
         /// Name of Tetrifact-managed application that will be downloaded and launched. Normally ends in .exe. Lower case only

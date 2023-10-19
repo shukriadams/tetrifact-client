@@ -15,6 +15,7 @@ namespace TetrifactClient
         public void OnNewProject(object? sender, RoutedEventArgs args)
         {
             ProjectEditorView settingsEditor = App.UnityContainer.Resolve<ProjectEditorView>();
+            settingsEditor.DataContext = GlobalDataContext.Instance;
             settingsEditor.ShowDialog(MainWindow.Instance);
         }
     }
