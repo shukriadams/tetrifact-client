@@ -34,6 +34,7 @@ namespace TetrifactClient
 
         public ConsoleViewModel Console { get; } = new ConsoleViewModel();
 
+        public LogLevels LogLevel { get; set; }
 
         public Project FocusedProject
         {

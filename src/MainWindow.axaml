@@ -44,14 +44,6 @@
 			<Panel Height="30"></Panel>
 			<local:ProjectView DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch">
 			</local:ProjectView>
-			
-			<local:ThingToggler></local:ThingToggler>
-			<TextBlock>
-				A caption :
-			</TextBlock>
-			<TextBlock>
-				
-			</TextBlock>
 		</StackPanel>
 	</DockPanel>
 </Window>

@@ -18,6 +18,10 @@
 		<Setter Property="Margin" Value="0,10,0,10"/>
 	</Style>
 
+	<Style Selector="TextBlock.header1">
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
 	<Style Selector="Label.header1">
 		<Setter Property="FontSize" Value="18"/>
 		<Setter Property="FontWeight" Value="Bold"/>

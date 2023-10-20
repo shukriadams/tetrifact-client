@@ -28,6 +28,7 @@ public partial class App : Application
 
         UnityContainer = new UnityContainer();
         UnityContainer.RegisterType<ProjectEditorView, ProjectEditorView>();
+        UnityContainer.RegisterType<ILog, Log>();
     }
 
     public override void OnFrameworkInitializationCompleted()

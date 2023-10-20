@@ -14,8 +14,8 @@
 	
 	<StackPanel Orientation="Vertical">
 		<StackPanel Orientation="Horizontal">
-			<TextBlock>
-				Projects :
+			<TextBlock Classes="header1">
+				Projects
 			</TextBlock>
 			<Button Click="OnNewProject">
 				+
@@ -33,7 +33,8 @@
 		</ListBox>
 
 		<TextBlock Text="No projects added yet"
-				   IsVisible="{Binding Projects, 
-                       Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
+			IsVisible="{Binding Projects, 
+                Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
+		
 	</StackPanel>
 </UserControl>

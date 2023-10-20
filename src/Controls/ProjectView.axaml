@@ -8,6 +8,15 @@
  			 x:DataType="vm:Project"
 			 >
 	<StackPanel>
-		<TextBox Text="{Binding Name}"></TextBox>
+		<TextBlock Text="{Binding Name}"></TextBlock>
+		<ListBox Name="listProjects" ItemsSource="{Binding Packages}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding Id}" />
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 	</StackPanel>
 </UserControl>

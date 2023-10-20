@@ -1,7 +1,11 @@
-﻿namespace TetrifactClient
+﻿using System.Collections.Generic;
+
+namespace TetrifactClient
 {
     public class Project
     {
+        #region PROPERTIES
+
         public string Name { get; set; }
         
         public string BuildServer { get; set; }
@@ -37,5 +41,20 @@
         /// Access key for tetrifact server instances that are access protected.
         /// </summary>
         public string AccessKey { get; set; }
+
+        public IEnumerable<Package> Packages { get; set; }
+
+        public SourceServerStates ServerState { get; set; }
+
+        #endregion
+
+        #region CTORS
+
+        public Project() 
+        {
+            this.Packages = new Package[] { };
+        }
+
+        #endregion
     }
 }
