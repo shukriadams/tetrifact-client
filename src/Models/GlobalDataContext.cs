@@ -1,6 +1,6 @@
-﻿using DynamicData.Binding;
+﻿using DynamicData;
+using DynamicData.Binding;
 using Newtonsoft.Json;
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +8,11 @@ using System.IO;
 
 namespace TetrifactClient
 {
+    public class GlobalDataContextSerialize 
+    {
+        public IEnumerable<Project> Projects { get; set; }
+    }
+
     public class GlobalDataContext
     {
         private static GlobalDataContext _instance;
@@ -32,29 +37,57 @@ namespace TetrifactClient
                 if (_instance == null)
                 {
                     _instance = new GlobalDataContext();
-                    _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
+                    
+                    string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
+                    if (File.Exists(filePath))
+                    {
+                        string rawJson = null;
+                        try
+                        {
+                            rawJson = File.ReadAllText(filePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            // handle error, for now rethrow
+                            throw;
+                        }
 
+                        GlobalDataContextSerialize settings = null;
+
+                        try
+                        {
+                            settings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
+
+                        }
+                        catch (Exception ex) 
+                        {
+                            // handle error, for now rethrow
+                            // settings corrupt, consider deleting
+                            throw;
+                        }
+
+                        Instance.Projects.Projects.AddRange(settings.Projects);
+                    }
+
+                    _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
+    
                     _instance.Projects.Projects.ToObservableChangeSet(t => t.Name)
                       .Subscribe(t => {
-                          string test = "";
+                          Save();
                       });
-
-
-                    _instance.Projects.WhenAnyValue(vm => vm.Projects)
-                      .Subscribe(t => {
-                          string test = "";
-                      });
-
                 }
-                return _instance;
 
+                return _instance;
             } 
         }
 
-        private static void Projects_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public static void Save()
         {
+            GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
+            serialize.Projects = _instance.Projects.Projects;
+
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(_instance));
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(serialize, Formatting.Indented ));
         }
     }
 }

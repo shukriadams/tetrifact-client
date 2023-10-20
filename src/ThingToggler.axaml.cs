@@ -22,7 +22,7 @@ namespace TetrifactClient
             {
                 State1.IsVisible = true;
                 State2.IsVisible = false;
-                App.model.Caption = DateTime.Now.ToString();
+                //App.model.Caption = DateTime.Now.ToString();
 
                 AnimationHelper.SlideInFromLeft(State1, 100);
             }

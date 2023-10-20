@@ -16,8 +16,6 @@ public partial class App : Application
         Styles.Add(new DarkTheme());
     }
 
-    public static GlobalDataContext model = new GlobalDataContext();
-
     /// <summary>
     /// Cludge solution to allow any class to reliably ensure type binding. This is needed by UI controls in Visual studio only, unity
     /// binding doesn't fire reliably in visual studio, so designer views often crash when trying to display a control that has a child
@@ -40,7 +38,7 @@ public partial class App : Application
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = model,
+                DataContext = GlobalDataContext.Instance,
             };
         }
 
