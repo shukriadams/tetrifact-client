@@ -9,7 +9,8 @@
 			 xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
     		 x:Class="TetrifactClient.ProjectsView"
 			 xmlns:vm="using:TetrifactClient"
- 			 x:DataType="vm:ProjectsViewModel">
+ 			 x:DataType="vm:ProjectsViewModel"
+			 >
 	
 	<StackPanel Orientation="Vertical">
 		<StackPanel Orientation="Horizontal">
@@ -25,7 +26,7 @@
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Name}"/>
+						<Button Content="{Binding Name}" Click="OnProjectClicked" />
 					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

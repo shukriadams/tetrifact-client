@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 
 namespace TetrifactClient
 {
-    [Serializable]
     public class ProjectsViewModel : ReactiveObject
     {
         private ObservableCollection<Project> _projects = new ObservableCollection<Project> { };

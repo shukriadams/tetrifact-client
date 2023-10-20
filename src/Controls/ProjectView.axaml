@@ -3,6 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="TetrifactClient.ProjectView">
-Settings + builds in project
+             x:Class="TetrifactClient.ProjectView"
+			 xmlns:vm="using:TetrifactClient"
+ 			 x:DataType="vm:Project"
+			 >
+	<StackPanel>
+		<TextBox Text="{Binding Name}"></TextBox>
+	</StackPanel>
 </UserControl>

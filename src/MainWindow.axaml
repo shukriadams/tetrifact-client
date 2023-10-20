@@ -23,24 +23,18 @@
 	</Window.Background>
 	<DockPanel>
 
-		<StackPanel DockPanel.Dock="Left" Width="100">
+		<StackPanel DockPanel.Dock="Left" Width="200">
 			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
 			<Panel Height="30"></Panel>
-
 			<local:ProjectsView DataContext="{Binding Projects}" />
-			
-			<Button Classes="importantButton" Click="">test1</Button>
-			<Image Name="image"
-				   Stretch="Fill"
-						   />
 		</StackPanel>
 		
 		<StackPanel DockPanel.Dock="Right" Width="100">
 			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
 			<Panel Height="30"></Panel>
+			
+			<local:ConsoleView DataContext="{Binding Console}"></local:ConsoleView>
 
-			<Button Click="">test2</Button>
-			<Button Click="">test2</Button>
 		</StackPanel>
 		
 		<!-- NOTE : stetch works only if elements with fixed widths are defined before the stretched element! -->
@@ -48,11 +42,10 @@
 			
 			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
 			<Panel Height="30"></Panel>
-			<Button Click="">test3</Button>
-			<Button Click="">test4</Button>
-			<local:ThingToggler>
-
-			</local:ThingToggler>
+			<local:ProjectView DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch">
+			</local:ProjectView>
+			
+			<local:ThingToggler></local:ThingToggler>
 			<TextBlock>
 				A caption :
 			</TextBlock>

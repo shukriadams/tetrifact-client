@@ -1,6 +1,7 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
 using Newtonsoft.Json;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,16 +14,32 @@ namespace TetrifactClient
         public IEnumerable<Project> Projects { get; set; }
     }
 
-    public class GlobalDataContext
+    public class GlobalDataContext : ReactiveObject
     {
+        #region FIELDS
+
         private static GlobalDataContext _instance;
+        private string caption = "some text";
+        private Project _focusedProject;
+
+        #endregion
+
+        #region PROPERTIES
 
         public IEnumerable<SourceServer> SourceServers { get; } = new List<SourceServer>();
 
         public ProjectsViewModel Projects { get; } = new ProjectsViewModel();
+        
         public ProjectsViewModel ProjectTemplates { get; } = new ProjectsViewModel();
 
-        private string caption = "some text";
+        public ConsoleViewModel Console { get; } = new ConsoleViewModel();
+
+
+        public Project FocusedProject
+        {
+            get => _focusedProject;
+            set => this.RaiseAndSetIfChanged(ref _focusedProject, value);
+        }
 
         public string Caption
         {
@@ -75,11 +92,17 @@ namespace TetrifactClient
                       .Subscribe(t => {
                           Save();
                       });
+
+                    _instance.Console.Items.Add("loaded!");
                 }
 
                 return _instance;
             } 
         }
+
+        #endregion
+
+        #region METHODS
 
         public static void Save()
         {
@@ -89,5 +112,7 @@ namespace TetrifactClient
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
             File.WriteAllText(filePath, JsonConvert.SerializeObject(serialize, Formatting.Indented ));
         }
+
+        #endregion
     }
 }
