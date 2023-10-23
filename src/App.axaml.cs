@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.IO;
 using Unity;
 
 
@@ -44,5 +45,14 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+
+        // create directories
+        Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
+
+        // start daemons
+        PackageListDaemon daemon = new PackageListDaemon();
+        daemon.Start();
+
+
     }
 }

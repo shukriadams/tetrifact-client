@@ -23,6 +23,11 @@ namespace TetrifactClient
         public string DiffDownloadThreshold { get; set; }
 
         /// <summary>
+        /// something went wrong? write it here
+        /// </summary>
+        public string ServerErrorDescription { get; set; }
+
+        /// <summary>
         /// Can be overridden by core application value
         /// </summary>
         public int? MaxDownloadFailedAttempts { get; set; }
@@ -43,6 +48,11 @@ namespace TetrifactClient
         public string AccessKey { get; set; }
 
         public IEnumerable<Package> Packages { get; set; }
+
+        /// <summary>
+        /// Packages available remotely. Details need to be retrieved
+        /// </summary>
+        public IEnumerable<string> AvailablePackages { get; set; }
 
         public SourceServerStates ServerState { get; set; }
 

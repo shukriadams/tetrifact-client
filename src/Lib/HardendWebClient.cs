@@ -15,6 +15,8 @@ namespace TetrifactClient
 
         private ILog _log;
 
+        public int Attempts { get; set; }
+
         public HardenedWebClient()
         {
             Proxy = WebRequest.DefaultWebProxy;
@@ -78,12 +80,12 @@ namespace TetrifactClient
         /// <returns></returns>
         public byte[] DownloadBytes(string url, int maxTries = 1, int sleepPerTry = 1000)
         {
-            int attempt = 0;
             bool error = false;
+            Exception _lastException = null;
 
-            while (attempt < maxTries)
+            while (this.Attempts < maxTries)
             {
-                attempt++;
+                this.Attempts++;
 
                 try
                 {
@@ -93,7 +95,7 @@ namespace TetrifactClient
                         stream.CopyTo(ms);
 
                         if (error)
-                            _log.LogError(error, $"Succeeded downloading {url} after {attempt} tries.");
+                            _log.LogError(error, $"Succeeded downloading {url} after {this.Attempts} tries.");
 
                         return ms.ToArray();
                     }
@@ -101,31 +103,43 @@ namespace TetrifactClient
                 catch (Exception ex)
                 {
                     error = true;
+                    _lastException = ex;
+
+                    if (ex is WebException) 
+                    {
+                        WebException wex = ex as WebException;
+                        // target not found, abort immediately, no need to retry
+                        if (wex.Response is HttpWebResponse && ((HttpWebResponse)wex.Response).StatusCode == HttpStatusCode.NotFound)  
+                            break;
+                    }
 
                     if (maxTries > 1)
                     {
-                        // we're running this class in "try many times mode". Log the error, sleep, try again
-                        _log.LogError(ex, $"Error downloading {url}, attempt {attempt} of {maxTries}");
-
-                        Thread.Sleep(sleepPerTry); // wait a bit for a random act of god to magically heal the network 
+                        // running in "try many times mode". Log the error, sleep, try again
+                        _log.LogError(ex, $"Error downloading {url}, attempt {this.Attempts} of {maxTries}");
+                        Thread.Sleep(sleepPerTry);
                     }
                     else
                     {
-                        // we're not retrying, rethrow exception and fail immediately
-                        throw ex;
+                        // not retrying, fail immediately
+                        throw;
                     }
                 }
             }
 
-            throw new Exception($"Too many failed attempts downloading {url}");
+            if (_lastException == null)
+                throw new Exception($"Too many failed attempts downloading {url}");
+            else
+                throw new Exception($"Too many failed attempts downloading {url}", _lastException);
         }
 
         public void DownloadFile(string url, string saveLocation, int maxTries = 1, int sleepPerTry = 1000)
         {
-            int attempt = 0;
+            this.Attempts = 0;
             bool succeeded = false;
+            Exception _lastException = null;
 
-            while (attempt < maxTries)
+            while (this.Attempts < maxTries)
             {
                 try
                 {
@@ -141,8 +155,9 @@ namespace TetrifactClient
                 {
                     if (maxTries > 1)
                     {
+                        _lastException = ex;
                         if (_log != null)
-                            _log.LogError(ex, $"Error downloading {url}, attempt {attempt} of {maxTries}");
+                            _log.LogError(ex, $"Error downloading {url}, attempt {this.Attempts} of {maxTries}");
 
                         Thread.Sleep(sleepPerTry); // wait a bit for a random act of god to magically heal the network 
                     }
@@ -154,12 +169,15 @@ namespace TetrifactClient
                 }
                 finally
                 {
-                    attempt++;
+                    this.Attempts++;
                 }
             }
 
             if (!succeeded)
-                throw new Exception($"Too many failed attempts downloading {url}");
+                if (_lastException == null)
+                    throw new Exception($"Too many failed attempts downloading {url}");
+                else
+                    throw new Exception($"Too many failed attempts downloading {url}.", _lastException);
         }
     }
 }

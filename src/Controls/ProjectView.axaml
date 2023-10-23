@@ -8,7 +8,16 @@
  			 x:DataType="vm:Project"
 			 >
 	<StackPanel>
+		<Label Content="Name : " />
 		<TextBlock Text="{Binding Name}"></TextBlock>
+		<Label Content="State : " />
+		<TextBlock Text="{Binding ServerState}" />
+
+		<Label Content="Error : " />
+		<TextBlock Text="{Binding ServerErrorDescription}" />
+
+		
+
 		<ListBox Name="listProjects" ItemsSource="{Binding Packages}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>

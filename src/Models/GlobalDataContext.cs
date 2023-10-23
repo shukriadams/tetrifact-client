@@ -5,13 +5,17 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
+using System.Reflection;
 
 namespace TetrifactClient
 {
     public class GlobalDataContextSerialize 
     {
         public IEnumerable<Project> Projects { get; set; }
+
+        public string DataFolder { get; set; }
     }
 
     public class GlobalDataContext : ReactiveObject
@@ -48,6 +52,8 @@ namespace TetrifactClient
             set => caption = value;
         }
 
+        public string DataFolder { get; set; }
+
         public static GlobalDataContext Instance 
         { 
             get 
@@ -70,11 +76,11 @@ namespace TetrifactClient
                             throw;
                         }
 
-                        GlobalDataContextSerialize settings = null;
+                        GlobalDataContextSerialize persistedSettings = null;
 
                         try
                         {
-                            settings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
+                            persistedSettings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
 
                         }
                         catch (Exception ex) 
@@ -84,7 +90,8 @@ namespace TetrifactClient
                             throw;
                         }
 
-                        Instance.Projects.Projects.AddRange(settings.Projects);
+                        Instance.Projects.Projects.AddRange(persistedSettings.Projects);
+                        Instance.DataFolder = persistedSettings.DataFolder;
                     }
 
                     _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
@@ -103,10 +110,23 @@ namespace TetrifactClient
 
         #endregion
 
+        public GlobalDataContext() 
+        {
+            // default
+            this.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
+            
+        }
+
         #region METHODS
+
+        public string GetProjectsDirectoryPath() 
+        {
+            return Path.Combine(this.DataFolder, "projects");
+        }
 
         public static void Save()
         {
+
             GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
             serialize.Projects = _instance.Projects.Projects;
 
