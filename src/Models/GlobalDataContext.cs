@@ -90,8 +90,11 @@ namespace TetrifactClient
                             throw;
                         }
 
-                        Instance.Projects.Projects.AddRange(persistedSettings.Projects);
-                        Instance.DataFolder = persistedSettings.DataFolder;
+                        if (persistedSettings.Projects != null)
+                            Instance.Projects.Projects.AddRange(persistedSettings.Projects);
+
+                        if (persistedSettings.DataFolder != null)
+                            Instance.DataFolder = persistedSettings.DataFolder;
                     }
 
                     _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
@@ -114,7 +117,6 @@ namespace TetrifactClient
         {
             // default
             this.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
-            
         }
 
         #region METHODS

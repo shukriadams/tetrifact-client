@@ -51,7 +51,9 @@ public partial class App : Application
 
         // start daemons
         PackageListDaemon daemon = new PackageListDaemon();
+        PackageDetailsDaemon daemon2 = new PackageDetailsDaemon();
         daemon.Start();
+        daemon2.Start();
 
 
     }

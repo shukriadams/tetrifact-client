@@ -45,9 +45,6 @@ namespace TetrifactClient
 
         private async Task Work(Project project)
         {
-            HttpPayloadRequest request = new HttpPayloadRequest(project.BuildServer);
-            request.Attempt();
-
             Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == project.Name);
 
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
@@ -59,35 +56,17 @@ namespace TetrifactClient
                 if (File.Exists(localPackagePath))
                     continue;
 
-                HttpLocalFileRequest localLocalFileRequest = new HttpLocalFileRequest(new Uri(localPackagePath, ));
-            }
+                HttpLocalFileRequest request = new HttpLocalFileRequest(new Uri(new Uri(localPackagePath), availablePackage), localPackagePath);
+                request.Attempt();
 
-            if (request.Succeeded)
-            {
-                // somehow project was deleted since call started, this is an edge case and can be ignored
-                if (contextProject == null)
-                    return;
-
-                string payload = Encoding.Default.GetString(request.Payload);
-                Payload<PackagesLookup> data = JsonConvert.DeserializeObject<Payload<PackagesLookup>>(payload);
-                if (data == null || !string.IsNullOrEmpty(data.Error))
+                if (!request.Succeeded)
                 {
-                    // handle error
-                    return;
+                    if (!string.IsNullOrEmpty(request.Error))
+                        contextProject.ServerErrorDescription = request.Error;
+
+                    contextProject.ServerState = SourceServerStates.Unavailable;
                 }
-
-                contextProject.ServerState = SourceServerStates.Normal;
-                lock (GlobalDataContext.Instance)
-                    contextProject.AvailablePackages = data.Success.Packages;
             }
-            else
-            {
-                if (!string.IsNullOrEmpty(request.Error))
-                    contextProject.ServerErrorDescription = request.Error;
-
-                contextProject.ServerState = SourceServerStates.Unavailable;
-            }
-
         }
     }
 }

@@ -62,7 +62,8 @@ namespace TetrifactClient
 
         public Project() 
         {
-            this.Packages = new Package[] { };
+            this.Packages = new List<Package>();
+            this.AvailablePackages = new List<string>();
         }
 
         #endregion
