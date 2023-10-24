@@ -47,7 +47,7 @@ namespace TetrifactClient
 
         private async Task Work(Project project)
         {
-            HttpPayloadRequest request = new HttpPayloadRequest(project.BuildServer);
+            HttpPayloadRequest request = new HttpPayloadRequest(HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages" } ));
             request.Attempt();
 
             Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == project.Name);

@@ -5,6 +5,7 @@ port=8000
 class MyServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        print(f'handling path : {self.path}')
         if self.path == '/v1/packages':
             self.do_packages()
         elif self.path.startswith('/v1/packages/'):

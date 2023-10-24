@@ -23,10 +23,7 @@ namespace TetrifactClient
         /// </summary>
         public long Size { get; set; }
 
-        /// <summary>
-        /// Files in build. List population is context dependendent
-        /// </summary>
-        public IEnumerable<PackageFile> Files { get; set; }
+        public IEnumerable<string> Files { get; set; }
 
         #endregion
 

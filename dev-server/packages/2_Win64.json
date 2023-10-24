@@ -1,0 +1,13 @@
+{
+    "files" : [],
+    "sizeOnDisk": 2358437425,
+    "size": 33132020509,
+    "isCompressed": false,
+    "id": "2_Win64",
+    "hash": "a977f8005a08ac61fae8e44115ae7127e4489d6bf01aaea85d02d61851a30fa2",
+    "createdUtc": "2023-10-24T08:05:35.9997063Z",
+    "description": "",
+    "tags": [
+        "platform:ycube"
+    ]
+}

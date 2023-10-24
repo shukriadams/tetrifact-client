@@ -9,9 +9,12 @@
   </PropertyGroup>
 	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <!-- disable lack of explicit nullable object warnings because since when did objects stop being implicity nullable ?? -->
-	<NoWarn>CS8618</NoWarn>
+    <!-- CS8618 disable lack of explicit nullable object warnings because since when did objects stop being implicity nullable ?? -->
+    <!-- CS8602 disable converting null literal to non-nullable type -->
+    <!-- CS8600 more null drama -->
+  	<NoWarn>CS8618,CS8602,CS8600</NoWarn>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="background.jpg" />
     <None Remove="DarkTheme.xaml" />
