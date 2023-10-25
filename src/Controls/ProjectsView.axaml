@@ -11,9 +11,9 @@
 			 xmlns:vm="using:TetrifactClient"
  			 x:DataType="vm:ProjectsViewModel"
 			 >
-	
-	<StackPanel Orientation="Vertical">
-		<StackPanel Orientation="Horizontal">
+
+	<DockPanel LastChildFill="True">
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
 			<TextBlock Classes="header1">
 				Projects
 			</TextBlock>
@@ -22,7 +22,11 @@
 			</Button>
 		</StackPanel>
 
-		<ListBox Name="listProjects" ItemsSource="{Binding Projects}">
+		<TextBlock DockPanel.Dock="Top" Text="No projects added yet"
+			IsVisible="{Binding Projects, 
+            Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
+
+		<ListBox DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Projects}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
@@ -32,9 +36,5 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<TextBlock Text="No projects added yet"
-			IsVisible="{Binding Projects, 
-                Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
-		
-	</StackPanel>
+	</DockPanel>
 </UserControl>

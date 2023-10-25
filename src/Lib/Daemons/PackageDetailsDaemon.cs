@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using TetrifactClient.Models;
 
@@ -51,14 +50,15 @@ namespace TetrifactClient
     
             // todo : project name must be made file-system safe
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
-            Directory.CreateDirectory(localProjectPackagesDirectory);
 
             foreach (string availablePackage in contextProject.AvailablePackages)
             {
-                string localPackagePath = Path.Combine(localProjectPackagesDirectory, $"{availablePackage}.json");
-                string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, $"{availablePackage}-files.json");
+                string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"base.json");
+                string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
                 if (File.Exists(localPackagePath))
                     continue;
+
+                Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
 
                 string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
                 HttpPayloadRequest request = new HttpPayloadRequest(url);
@@ -73,7 +73,7 @@ namespace TetrifactClient
                         continue;
                     }
 
-                    File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data));
+                    File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data, Formatting.Indented));
                     PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
                     if (data == null)
                     {
@@ -81,7 +81,7 @@ namespace TetrifactClient
                         continue;
                     }
 
-                    File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2));
+                    File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2, Formatting.Indented));
 
                     contextProject.ServerState = SourceServerStates.Normal;
                 }

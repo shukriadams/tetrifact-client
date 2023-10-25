@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TetrifactClient
 {
@@ -47,7 +49,8 @@ namespace TetrifactClient
         /// </summary>
         public string AccessKey { get; set; }
 
-        public IEnumerable<Package> Packages { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        public IList<Package> Packages { get; set; }
 
         /// <summary>
         /// Packages available remotely. Details need to be retrieved

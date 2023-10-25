@@ -8,6 +8,12 @@
         </Border>
     </Design.PreviewWith>
 
+	<!-- top padding -->
+	<Style Selector="DockPanel.appLayout">
+		<Setter Property="Margin" Value="0,30,0,0"/>
+	</Style>
+
+
 	<!-- layout flow control, pushes both vertical and horizontal -->
 	<Style Selector="Border.flow">
 		<Setter Property="Margin" Value="10,10,10,10"/>

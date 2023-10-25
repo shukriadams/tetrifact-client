@@ -7,25 +7,42 @@
 			 xmlns:vm="using:TetrifactClient"
  			 x:DataType="vm:Project"
 			 >
-	<StackPanel>
+	<StackPanel VerticalAlignment="Stretch">
 		<Label Content="Name : " />
 		<TextBlock Text="{Binding Name}"></TextBlock>
+
 		<Label Content="State : " />
 		<TextBlock Text="{Binding ServerState}" />
 
 		<Label Content="Error : " />
 		<TextBlock Text="{Binding ServerErrorDescription}" />
 
-		
+		<Grid VerticalAlignment="Stretch">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="300"></ColumnDefinition>
+				<ColumnDefinition Width="400"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
 
-		<ListBox Name="listProjects" ItemsSource="{Binding Packages}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Id}" />
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+			<ListBox Name="listProjects" VerticalAlignment="Stretch" ItemsSource="{Binding Packages}" ScrollViewer.VerticalScrollBarVisibility="Visible">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Grid.Column="0" Text="{Binding Id}" />
+							<ListBox Grid.Column="1" ItemsSource="{Binding Tags}">
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+
 	</StackPanel>
 </UserControl>

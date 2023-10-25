@@ -5,8 +5,10 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace TetrifactClient
@@ -61,50 +63,7 @@ namespace TetrifactClient
                 if (_instance == null)
                 {
                     _instance = new GlobalDataContext();
-                    
-                    string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
-                    if (File.Exists(filePath))
-                    {
-                        string rawJson = null;
-                        try
-                        {
-                            rawJson = File.ReadAllText(filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            // handle error, for now rethrow
-                            throw;
-                        }
-
-                        GlobalDataContextSerialize persistedSettings = null;
-
-                        try
-                        {
-                            persistedSettings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
-
-                        }
-                        catch (Exception ex) 
-                        {
-                            // handle error, for now rethrow
-                            // settings corrupt, consider deleting
-                            throw;
-                        }
-
-                        if (persistedSettings.Projects != null)
-                            Instance.Projects.Projects.AddRange(persistedSettings.Projects);
-
-                        if (persistedSettings.DataFolder != null)
-                            Instance.DataFolder = persistedSettings.DataFolder;
-                    }
-
-                    _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
-    
-                    _instance.Projects.Projects.ToObservableChangeSet(t => t.Name)
-                      .Subscribe(t => {
-                          Save();
-                      });
-
-                    _instance.Console.Items.Add("loaded!");
+                    Load();
                 }
 
                 return _instance;
@@ -126,13 +85,103 @@ namespace TetrifactClient
             return Path.Combine(this.DataFolder, "projects");
         }
 
+        public static void Load() 
+        {
+            string filePath = Path.Combine(_instance.DataFolder, "Settings.json");
+            string rawJson = null;
+            GlobalDataContextSerialize persistedSettings = null;
+
+            if (!File.Exists(filePath))
+                return;
+            
+            try
+            {
+                rawJson = File.ReadAllText(filePath);
+            }
+            catch (Exception ex)
+            {
+                // handle error, for now rethrow
+                throw;
+            }
+
+            try
+            {
+                persistedSettings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
+            }
+            catch (Exception ex)
+            {
+                // handle error, for now rethrow
+                // settings corrupt, consider deleting
+                throw;
+            }
+
+            if (persistedSettings.Projects != null)
+                Instance.Projects.Projects.AddRange(persistedSettings.Projects);
+
+            if (persistedSettings.DataFolder != null)
+                Instance.DataFolder = persistedSettings.DataFolder;
+
+            _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
+
+            // load packages for each project
+
+            foreach (Project project in _instance.Projects.Projects) 
+            {
+                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
+                IEnumerable<string> packages = Directory.
+                    GetDirectories(localProjectPackagesDirectory).
+                    Select(p => Path.GetFileName(p));
+
+                foreach (string package in packages) 
+                {
+                    if (project.Packages.Any(p => p.Id == package))
+                        continue;
+
+                    string packageRawJson = string.Empty;
+                    string basefilePath = Path.Combine(localProjectPackagesDirectory, package, "base.json");
+                    if (!File.Exists(basefilePath))
+                        continue;
+
+                    try
+                    {
+                        packageRawJson = File.ReadAllText(basefilePath);
+                    }
+                    catch (Exception ex) 
+                    {
+                        // todo : handle error
+                        throw;
+                    }
+
+                    try
+                    {
+                        Package packageObject = JsonConvert.DeserializeObject<Package>(packageRawJson);
+                        if (packageObject == null)
+                            throw new Exception($"Failed to load JSON for package {package}");
+
+                        project.Packages.Add(packageObject);
+
+                    } 
+                    catch (Exception ex)
+                    {
+                        // todo : handle
+                        throw;
+                    }
+                }
+            }
+
+            _instance.Projects.Projects.ToObservableChangeSet(t => t.Name)
+                .Subscribe(t => {
+                    Save();
+                });
+        }
+
         public static void Save()
         {
 
             GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
             serialize.Projects = _instance.Projects.Projects;
 
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
+            string filePath = Path.Combine(_instance.DataFolder, "Settings.json");
             File.WriteAllText(filePath, JsonConvert.SerializeObject(serialize, Formatting.Indented ));
         }
 

@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         mc:Ignorable="d" 
 		d:DesignWidth="800" 
-		d:DesignHeight="450"
+		d:DesignHeight="350"
 		xmlns:vm="using:TetrifactClient"
 		x:DataType="vm:GlobalDataContext"
 		ExtendClientAreaToDecorationsHint="True"
@@ -23,27 +23,17 @@
 	</Window.Background>
 	<DockPanel>
 
-		<StackPanel DockPanel.Dock="Left" Width="200">
-			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
-			<Panel Height="30"></Panel>
-			<local:ProjectsView DataContext="{Binding Projects}" />
-		</StackPanel>
-		
-		<StackPanel DockPanel.Dock="Right" Width="100">
-			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
-			<Panel Height="30"></Panel>
-			
-			<local:ConsoleView DataContext="{Binding Console}"></local:ConsoleView>
+		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
+			<local:ProjectsView DockPanel.Dock="Top" DataContext="{Binding Projects}" />
+		</DockPanel>
 
-		</StackPanel>
+		<DockPanel Classes="appLayout">
+			<local:ProjectView DockPanel.Dock="Top" DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />			
+		</DockPanel>
+
+		<DockPanel Classes="appLayout" DockPanel.Dock="Right" Width="200">
+			<local:ConsoleView DockPanel.Dock="Top" DataContext="{Binding Console}" />
+		</DockPanel>
 		
-		<!-- NOTE : stetch works only if elements with fixed widths are defined before the stretched element! -->
-		<StackPanel HorizontalAlignment="Stretch" Name="centerPanel">
-			
-			<!-- empty padding to always have clear space for OS app window controls that are rendered here -->
-			<Panel Height="30"></Panel>
-			<local:ProjectView DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch">
-			</local:ProjectView>
-		</StackPanel>
 	</DockPanel>
 </Window>
