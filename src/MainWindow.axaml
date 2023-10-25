@@ -21,19 +21,21 @@
 			<GradientStop Offset="1" Color="#757575" />
 		</LinearGradientBrush>
 	</Window.Background>
-	<DockPanel>
+	<DockPanel LastChildFill="True">
 
-		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
+		<DockPanel Classes="appLayout" DockPanel.Dock="Left" Width="200">
 			<local:ProjectsView DockPanel.Dock="Top" DataContext="{Binding Projects}" />
-		</DockPanel>
-
-		<DockPanel Classes="appLayout">
-			<local:ProjectView DockPanel.Dock="Top" DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />			
 		</DockPanel>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Right" Width="200">
 			<local:ConsoleView DockPanel.Dock="Top" DataContext="{Binding Console}" />
 		</DockPanel>
+
+		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
+			<local:ProjectView DockPanel.Dock="Top" DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />			
+		</DockPanel>
+
 		
 	</DockPanel>
 </Window>
+ 

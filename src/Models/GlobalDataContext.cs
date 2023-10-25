@@ -128,6 +128,9 @@ namespace TetrifactClient
             foreach (Project project in _instance.Projects.Projects) 
             {
                 string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
+                if (!Directory.Exists(localProjectPackagesDirectory))
+                    continue;
+
                 IEnumerable<string> packages = Directory.
                     GetDirectories(localProjectPackagesDirectory).
                     Select(p => Path.GetFileName(p));
