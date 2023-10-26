@@ -1,12 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="TetrifactClient.ProjectView"
-			 xmlns:vm="using:TetrifactClient"
- 			 x:DataType="vm:Project"
-			 >
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="TetrifactClient.ProjectView"
+		xmlns:vm="using:TetrifactClient"
+ 		x:DataType="vm:Project">
 	<DockPanel LastChildFill="True">
 		<Label DockPanel.Dock="Top" Content="Name : " />
 		<TextBlock DockPanel.Dock="Top" Text="{Binding Name}"></TextBlock>
@@ -15,48 +14,43 @@
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerState}" />
 
 		<Label DockPanel.Dock="Top" Content="Error : " />
-
-
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
 
-		<DataGrid
-	      ItemsSource="{Binding Packages}"
-	      Name="grid"
-          IsReadOnly="True"
-          CanUserReorderColumns="True"
-          CanUserResizeColumns="True"
-          CanUserSortColumns="False"
-          GridLinesVisibility="All"
-		  
-          BorderThickness="1" 
-		  BorderBrush="Gray">
-			<DataGrid.ContextMenu>
-				<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
-					<MenuItem Header="Copy" Name="mnuCopy" />
-					<MenuItem Header="Paste" Name="mnuPaste" />
-				</ContextMenu>
-			</DataGrid.ContextMenu>
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
-				<DataGridTemplateColumn Header="Tags">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<ListBox Grid.Column="1" ItemsSource="{Binding Tags}">
-								<ListBox.ItemTemplate>
-									<DataTemplate>
-										<StackPanel Orientation="Horizontal">
-											<TextBlock Text="{Binding}" />
-										</StackPanel>
-									</DataTemplate>
-								</ListBox.ItemTemplate>
-							</ListBox>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn>
-			</DataGrid.Columns>
-		</DataGrid>
-
-
-
-	</DockPanel>
+        <DataGrid
+			ItemsSource="{Binding Packages}"
+			Classes="grid"
+			Name="grid"
+			IsReadOnly="True"
+			CanUserReorderColumns="True"
+			CanUserResizeColumns="True"
+			CanUserSortColumns="False"
+			GridLinesVisibility="All"
+			BorderThickness="1" 
+			BorderBrush="Gray">
+				<DataGrid.ContextMenu>
+					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
+						<MenuItem Header="Copy" Name="mnuCopy" />
+						<MenuItem Header="Paste" Name="mnuPaste" />
+					</ContextMenu>
+				</DataGrid.ContextMenu>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+					<DataGridTemplateColumn Header="Tags">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal">
+									<ListBox Classes="grid" Grid.Column="1" ItemsSource="{Binding Tags}">
+										<ListBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding}" />
+											</DataTemplate>
+										</ListBox.ItemTemplate>
+									</ListBox>
+								</StackPanel>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+				</DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
 </UserControl>

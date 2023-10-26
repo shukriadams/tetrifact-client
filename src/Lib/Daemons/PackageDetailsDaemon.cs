@@ -63,6 +63,7 @@ namespace TetrifactClient
                 string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
                 HttpPayloadRequest request = new HttpPayloadRequest(url);
                 request.Attempt();
+
                 if (request.Succeeded)
                 {
                     string payload = Encoding.Default.GetString(request.Payload);
@@ -72,8 +73,10 @@ namespace TetrifactClient
                         // handle error
                         continue;
                     }
+                    data.Tags = data.Tags.OrderBy(t => t);
 
                     File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+
                     PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
                     if (data == null)
                     {

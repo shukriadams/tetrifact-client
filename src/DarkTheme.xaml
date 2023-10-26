@@ -45,9 +45,16 @@
 		<Setter Property="Background" Value="Blue"/>
 	</Style>
 
-
 	<Style Selector="Button.importantButton">
 		<Setter Property="Background" Value="Red"/>
+	</Style>
+
+	<Style Selector="DataGrid.grid">
+		<Setter Property="Background" Value="LightGray"/>
+	</Style>
+
+	<Style Selector="ListBox.grid">
+		<Setter Property="Background" Value="LightGray"/>
 	</Style>
 	
 </Styles>
