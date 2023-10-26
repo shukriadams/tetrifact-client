@@ -16,6 +16,8 @@
 		<Label DockPanel.Dock="Top" Content="Error : " />
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
 
+		<Button>Delete</Button>
+		
         <DataGrid
 			ItemsSource="{Binding Packages}"
 			Classes="grid"
@@ -35,6 +37,7 @@
 				</DataGrid.ContextMenu>
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="Date" Binding="{Binding CreatedUtc}"/>
 					<DataGridTemplateColumn Header="Tags">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>

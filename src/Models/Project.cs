@@ -49,7 +49,7 @@ namespace TetrifactClient
         /// </summary>
         public string AccessKey { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public IList<Package> Packages { get; set; }
 
         /// <summary>
