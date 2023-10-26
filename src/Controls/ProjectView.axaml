@@ -15,43 +15,47 @@
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerState}" />
 
 		<Label DockPanel.Dock="Top" Content="Error : " />
-		
+
+
+		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
+
 		<DataGrid
 	      ItemsSource="{Binding Packages}"
-		  Background="Red"
 	      Name="grid"
-		  Margin="20"
           IsReadOnly="True"
           CanUserReorderColumns="True"
           CanUserResizeColumns="True"
           CanUserSortColumns="False"
           GridLinesVisibility="All"
-          BorderThickness="1" BorderBrush="Gray">
+		  
+          BorderThickness="1" 
+		  BorderBrush="Gray">
+			<DataGrid.ContextMenu>
+				<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
+					<MenuItem Header="Copy" Name="mnuCopy" />
+					<MenuItem Header="Paste" Name="mnuPaste" />
+				</ContextMenu>
+			</DataGrid.ContextMenu>
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="First Name" Binding="{Binding Id}"/>
+				<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+				<DataGridTemplateColumn Header="Tags">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<ListBox Grid.Column="1" ItemsSource="{Binding Tags}">
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
-		
-		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
-		
-		<ListBox IsVisible="False" Name="listProjects" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Packages}" ScrollViewer.VerticalScrollBarVisibility="Visible">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Grid.Column="0" Text="{Binding Id}" />
-						<ListBox Grid.Column="1" ItemsSource="{Binding Tags}">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<StackPanel Orientation="Horizontal">
-										<TextBlock Text="{Binding}" />
-									</StackPanel>
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-						</ListBox>
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+
 
 
 	</DockPanel>
