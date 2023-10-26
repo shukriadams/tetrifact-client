@@ -6,7 +6,7 @@
 		x:Class="TetrifactClient.ProjectView"
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
-	<DockPanel LastChildFill="True">
+	<DockPanel Classes="projectView" LastChildFill="True">
 		<Label DockPanel.Dock="Top" Content="Name : " />
 		<TextBlock DockPanel.Dock="Top" Text="{Binding Name}"></TextBlock>
 

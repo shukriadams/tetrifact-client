@@ -89,35 +89,37 @@ namespace TetrifactClient
             string rawJson = null;
             GlobalDataContextSerialize persistedSettings = null;
 
-            if (!File.Exists(filePath))
-                return;
-            
-            try
+            if (File.Exists(filePath)) 
             {
-                rawJson = File.ReadAllText(filePath);
-            }
-            catch (Exception ex)
-            {
-                // handle error, for now rethrow
-                throw;
-            }
 
-            try
-            {
-                persistedSettings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
-            }
-            catch (Exception ex)
-            {
-                // handle error, for now rethrow
-                // settings corrupt, consider deleting
-                throw;
-            }
+                try
+                {
+                    rawJson = File.ReadAllText(filePath);
+                }
+                catch (Exception ex)
+                {
+                    // handle error, for now rethrow
+                    throw;
+                }
 
-            if (persistedSettings.Projects != null)
-                Instance.Projects.Projects.AddRange(persistedSettings.Projects);
+                try
+                {
+                    persistedSettings = JsonConvert.DeserializeObject<GlobalDataContextSerialize>(rawJson);
+                }
+                catch (Exception ex)
+                {
+                    // handle error, for now rethrow
+                    // settings corrupt, consider deleting
+                    throw;
+                }
 
-            if (persistedSettings.DataFolder != null)
-                Instance.DataFolder = persistedSettings.DataFolder;
+                if (persistedSettings.Projects != null)
+                    Instance.Projects.Projects.AddRange(persistedSettings.Projects);
+
+                if (persistedSettings.DataFolder != null)
+                    Instance.DataFolder = persistedSettings.DataFolder;
+
+            }
 
             _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
 

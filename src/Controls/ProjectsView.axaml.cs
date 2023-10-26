@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
 using System.Linq;
 using Unity;
@@ -23,6 +24,23 @@ namespace TetrifactClient
         {
             Button button = (Button)sender;
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == button.Content);
+        }
+
+        private void listProjects_Clicked(object? sender, Avalonia.Input.TappedEventArgs e)
+        {
+            string text = null;
+            object source = e.Source;
+
+            if (e.Source is ContentPresenter)
+                source = ((ContentPresenter)e.Source).Child;
+
+            if (source is TextBlock)
+                text = ((TextBlock)source).Text;
+
+            if (text == null)
+                return;
+
+            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == text);
         }
     }
 }

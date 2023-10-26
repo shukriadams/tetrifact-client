@@ -1,40 +1,39 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
- 			 x:CompileBindings="True"
-			 mc:Ignorable="d" 
-			 d:DesignWidth="400" 
-			 d:DesignHeight="250"
-			 xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
-    		 x:Class="TetrifactClient.ProjectsView"
-			 xmlns:vm="using:TetrifactClient"
- 			 x:DataType="vm:ProjectsViewModel"
-			 >
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:CompileBindings="True"
+	mc:Ignorable="d" 
+	d:DesignWidth="400" 
+	d:DesignHeight="250"
+	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
+	x:Class="TetrifactClient.ProjectsView"
+    Classes="projectsView"
+	xmlns:vm="using:TetrifactClient"
+	x:DataType="vm:ProjectsViewModel">
+    <Border Classes="projectsView">
+        <DockPanel Classes="projectsView" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Classes="header1">
+                    Projects
+                </TextBlock>
+                <Button Click="OnNewProject">
+                    Add Project
+                </Button>
+            </StackPanel>
 
-	<DockPanel LastChildFill="True">
-		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-			<TextBlock Classes="header1">
-				Projects
-			</TextBlock>
-			<Button Click="OnNewProject">
-				+
-			</Button>
-		</StackPanel>
-
-		<TextBlock DockPanel.Dock="Top" Text="No projects added yet"
-			IsVisible="{Binding Projects, 
+            <TextBlock DockPanel.Dock="Top" Text="No projects added yet"
+                IsVisible="{Binding Projects, 
             Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
 
-		<ListBox DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Projects}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<Button Content="{Binding Name}" Click="OnProjectClicked" />
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+            <ListBox Classes="listProjects" Tapped="listProjects_Clicked" DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Projects}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Border>
 
-	</DockPanel>
 </UserControl>
