@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -172,10 +173,14 @@ namespace TetrifactClient
                 }
             }
 
+            // set up event to save config to disk whenever changed
             _instance.Projects.Projects.ToObservableChangeSet(t => t.Name)
                 .Subscribe(t => {
                     Save();
                 });
+
+            if (_instance.Projects.Projects.Any())
+                _instance.FocusedProject = _instance.Projects.Projects.First();
         }
 
         public static void Save()

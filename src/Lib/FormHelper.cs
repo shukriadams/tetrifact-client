@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using System;
+
 namespace TetrifactClient
 {
     public static  class FormHelper
@@ -9,11 +10,13 @@ namespace TetrifactClient
         /// </summary>
         /// <param name="currentWindow"></param>
         /// <param name="parentWindow"></param>
-        public static void CenterOn(this Window currentWindow, Window parentWindow)
+        public static void CenterOn(this Window currentWindow, Window parentWindow, bool fitSize = false, int fitBufferMargin = 100)
         {
-            int reduction = 100;
-            currentWindow.Width = parentWindow.Width - reduction;
-            currentWindow.Height = parentWindow.Height - reduction;
+            if (fitSize) 
+            {
+                currentWindow.Width = parentWindow.Width - fitBufferMargin;
+                currentWindow.Height = parentWindow.Height - fitBufferMargin;
+            }
 
             int x = Convert.ToInt32(parentWindow.Position.X + (parentWindow.Width / 2) - (currentWindow.Width / 2));
             int y = Convert.ToInt32(parentWindow.Position.Y + (parentWindow.Height / 2) - (currentWindow.Height / 2));

@@ -5,8 +5,11 @@
         mc:Ignorable="d" 
 		d:DesignWidth="400" 
 		d:DesignHeight="250"
-        x:Class="TetrifactClient.Controls.Prompt"
+        x:Class="TetrifactClient.Prompt"
 		Classes="prompt"
+        ExtendClientAreaToDecorationsHint="True" 
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaTitleBarHeightHint="-1"
         Title="Prompt">
 	<DockPanel VerticalAlignment="Stretch">
 		

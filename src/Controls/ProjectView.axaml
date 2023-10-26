@@ -16,8 +16,9 @@
 		<Label DockPanel.Dock="Top" Content="Error : " />
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
 
-		<Button>Delete</Button>
+		<Button DockPanel.Dock="Top" Click="ProjectDelete_Click">Delete project</Button>
 		
+        
         <DataGrid
 			ItemsSource="{Binding Packages}"
 			Classes="grid"
