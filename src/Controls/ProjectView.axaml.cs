@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace TetrifactClient
 {
@@ -22,7 +24,7 @@ namespace TetrifactClient
 
         private void ContextMenu_Opening(object? sender, CancelEventArgs e)
         {
-            mnuCopy.IsVisible = false;
+
         }
 
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -30,6 +32,37 @@ namespace TetrifactClient
             Prompt prompt = new Prompt(300, 400, "Delete", "really?");
             prompt.ShowDialog(MainWindow.Instance);
             prompt.CenterOn(MainWindow.Instance);
+            prompt.OnAccept += this.OnDeleteAccept;
+        }
+
+        private void OnDeleteAccept() 
+        {
+            GlobalDataContext.Instance.Projects.Projects.Remove(GlobalDataContext.Instance.FocusedProject);
+            GlobalDataContext.Save();
+            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
+        }
+
+        private void Button_Click_1(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            /*
+            foreach (var project in GlobalDataContext.Instance.Projects.Projects) 
+            {
+                foreach (var package in project.Packages) 
+                {
+                    var list = new List<string>();
+                    list = list.Concat(package.Tags).ToList();
+                    list.Add("lol");
+                    package.Tags = list;
+                }
+            }
+
+            string test = "";
+            */
+
+            Package p = new Package();
+            p.Id = Guid.NewGuid().ToString();
+            GlobalDataContext.Instance.FocusedProject.Packages.Add(p);
+            GlobalDataContext.Instance.FocusedProject.Name = Guid.NewGuid().ToString();
         }
     }
 }

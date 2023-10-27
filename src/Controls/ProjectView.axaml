@@ -17,7 +17,8 @@
 		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
 
 		<Button DockPanel.Dock="Top" Click="ProjectDelete_Click">Delete project</Button>
-		
+
+		<Button Click="Button_Click_1">Test me</Button>
         
         <DataGrid
 			ItemsSource="{Binding Packages}"
@@ -32,8 +33,17 @@
 			BorderBrush="Gray">
 				<DataGrid.ContextMenu>
 					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
-						<MenuItem Header="Copy" Name="mnuCopy" />
-						<MenuItem Header="Paste" Name="mnuPaste" />
+						<MenuItem Header="Download" Name="mnuDownload" />
+						<MenuItem Header="Keep" Name="mnuKeep" />
+						<MenuItem Header="Unkeep" Name="mnuUnkeep" />
+						<MenuItem Header="Ignore" Name="mnuIgnore" />
+						<MenuItem Header="Unignore" Name="mnuUnignore" />
+						<MenuItem Header="Run" Name="mnuRun" />
+						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" />
+						<MenuItem Header="Delete" Name="mnuDelete" />
+						<MenuItem Header="Verify" Name="mnuVerify" />
+						<MenuItem Header="Copy id" Name="mnuCopyId" />
+						<MenuItem Header="Advanced" Name="mnuAdvanced" />
 					</ContextMenu>
 				</DataGrid.ContextMenu>
 				<DataGrid.Columns>
@@ -42,15 +52,16 @@
 					<DataGridTemplateColumn Header="Tags">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
-								<StackPanel Orientation="Horizontal">
-									<ListBox Classes="grid" Grid.Column="1" ItemsSource="{Binding Tags}">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding}" />
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-									</ListBox>
-								</StackPanel>
+								<ItemsRepeater Classes="grid" ItemsSource="{Binding Tags}">
+									<ItemsRepeater.Layout>
+										<StackLayout Spacing="40" Orientation="Horizontal" />
+									</ItemsRepeater.Layout>
+									<ItemsRepeater.ItemTemplate>
+										<DataTemplate>
+											<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+										</DataTemplate>
+									</ItemsRepeater.ItemTemplate>
+								</ItemsRepeater>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>

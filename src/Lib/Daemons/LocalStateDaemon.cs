@@ -9,6 +9,9 @@ using TetrifactClient.Models;
 
 namespace TetrifactClient.Lib.Daemons
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LocalStateDaemon
     {
         private bool _busy;

@@ -125,56 +125,11 @@ namespace TetrifactClient
             _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
 
             // load packages for each project
-
             foreach (Project project in _instance.Projects.Projects) 
-            {
-                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
-                if (!Directory.Exists(localProjectPackagesDirectory))
-                    continue;
-
-                IEnumerable<string> packages = Directory.
-                    GetDirectories(localProjectPackagesDirectory).
-                    Select(p => Path.GetFileName(p));
-
-                foreach (string package in packages) 
-                {
-                    if (project.Packages.Any(p => p.Id == package))
-                        continue;
-
-                    string packageRawJson = string.Empty;
-                    string basefilePath = Path.Combine(localProjectPackagesDirectory, package, "base.json");
-                    if (!File.Exists(basefilePath))
-                        continue;
-
-                    try
-                    {
-                        packageRawJson = File.ReadAllText(basefilePath);
-                    }
-                    catch (Exception ex) 
-                    {
-                        // todo : handle error
-                        throw;
-                    }
-
-                    try
-                    {
-                        Package packageObject = JsonConvert.DeserializeObject<Package>(packageRawJson);
-                        if (packageObject == null)
-                            throw new Exception($"Failed to load JSON for package {package}");
-
-                        project.Packages.Add(packageObject);
-
-                    } 
-                    catch (Exception ex)
-                    {
-                        // todo : handle
-                        throw;
-                    }
-                }
-            }
+                project.ListPackages();
 
             // set up event to save config to disk whenever changed
-            _instance.Projects.Projects.ToObservableChangeSet(t => t.Name)
+            _instance.Projects.Projects.ToObservableChangeSet(t => t.Id)
                 .Subscribe(t => {
                     Save();
                 });
@@ -185,7 +140,6 @@ namespace TetrifactClient
 
         public static void Save()
         {
-
             GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
             serialize.Projects = _instance.Projects.Projects;
 

@@ -50,10 +50,10 @@ public partial class App : Application
         Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
 
         // start daemons
-        PackageListDaemon daemon = new PackageListDaemon();
-        PackageDetailsDaemon daemon2 = new PackageDetailsDaemon();
-        daemon.Start();
-        daemon2.Start();
+        PackageListDaemon listDaemon = new PackageListDaemon();
+        PackageDetailsDaemon detailsDaemon = new PackageDetailsDaemon();
+        listDaemon.Start();
+        //detailsDaemon.Start();
 
 
     }

@@ -20,27 +20,21 @@ namespace TetrifactClient
             settingsEditor.ShowDialog(MainWindow.Instance);
         }
 
-        private void OnProjectClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == button.Content);
-        }
-
         private void listProjects_Clicked(object? sender, Avalonia.Input.TappedEventArgs e)
         {
-            string text = null;
+            string id = null;
             object source = e.Source;
 
             if (e.Source is ContentPresenter)
                 source = ((ContentPresenter)e.Source).Child;
 
             if (source is TextBlock)
-                text = ((TextBlock)source).Text;
+                id = ((TextBlock)source).Tag.ToString();
 
-            if (text == null)
+            if (id == null)
                 return;
 
-            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == text);
+            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == id);
         }
     }
 }

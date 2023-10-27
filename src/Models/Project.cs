@@ -1,63 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.IO;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 
 namespace TetrifactClient
 {
-    public class Project
+    public partial class Project : ObservableObject
     {
-        #region PROPERTIES
+        #region FIELDS
 
-        public string Name { get; set; }
-        
-        public string BuildServer { get; set; }
+        [property: JsonProperty("Name")]
+        [ObservableProperty]
+        private string _name;
 
-        /// <summary>
-        /// Name of Tetrifact-managed application that will be downloaded and launched. Normally ends in .exe. Lower case only
-        /// </summary>
-        public string ApplicationExecutableName { get; set; }
+        [property: JsonProperty("Id")]
+        [ObservableProperty]
+        private string _id;
+
+        [property: JsonProperty("BuildServer")]
+        [ObservableProperty]
+        private string _buildServer;
+
+        [property: JsonProperty("ApplicationExecutableName")]
+        [ObservableProperty]
+        private string _applicationExecutableName;
 
         /// <summary>
         /// Name of application process in windows. Used to track running instance of application and terminate if necessary.
         /// </summary>
-        public string ApplicationProcessName { get; set; }
+        [property: JsonProperty("ApplicationProcessName")]
+        [ObservableProperty]
+        private string _applicationProcessName;
 
-        public string DiffDownloadThreshold { get; set; }
+        [property: JsonProperty("DiffDownloadThreshold")]
+        [ObservableProperty]
+        private int _diffDownloadThreshold;
 
         /// <summary>
-        /// something went wrong? write it here
+        /// Does not persist
         /// </summary>
-        public string ServerErrorDescription { get; set; }
+        [ObservableProperty]
+        private string _serverErrorDescription;
 
-        /// <summary>
-        /// Can be overridden by core application value
-        /// </summary>
-        public int? MaxDownloadFailedAttempts { get; set; }
+        [property: JsonProperty("MaxDownloadFailedAttempts")]
+        [ObservableProperty]
+        private int? _maxDownloadFailedAttempts;
 
         /// <summary>
         /// Comma-separted tags remote packages must have to be eligable for download.
         /// </summary>
-        public string RequiredTags { get; set; }
+        [property: JsonProperty("RequiredTags")]
+        [ObservableProperty]
+        private string _requiredTags;
 
         /// <summary>
         /// Comma-separted tags remote packages will be ignored on.
         /// </summary>
-        public string IgnoreTags { get; set; }
+        [property: JsonProperty("IgnoreTags")]
+        [ObservableProperty]
+        private string _ignoreTags;
 
         /// <summary>
         /// Access key for tetrifact server instances that are access protected.
         /// </summary>
-        public string AccessKey { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public IList<Package> Packages { get; set; }
+        [property: JsonProperty("AccessKey")]
+        [ObservableProperty]
+        private string _accessKey;
 
         /// <summary>
-        /// Packages available remotely. Details need to be retrieved
+        /// Loaded on-the-fly by daemons
         /// </summary>
-        public IEnumerable<string> AvailablePackages { get; set; }
+        [ObservableProperty]
+        private IList<Package> _packages;
 
-        public SourceServerStates ServerState { get; set; }
+        /// <summary>
+        /// Packages available remotely. Details need to be retrieved.
+        /// Loaded on-the-fly by daemons
+        /// </summary>
+        [ObservableProperty]
+        private IList<string> _availablePackages;
+
+        [property: JsonProperty("ServerState")]
+        [ObservableProperty]
+        private SourceServerStates _serverState;
 
         #endregion
 
@@ -65,8 +92,60 @@ namespace TetrifactClient
 
         public Project() 
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Packages = new List<Package>();
             this.AvailablePackages = new List<string>();
+        }
+
+        #endregion
+
+        #region METHODS
+
+        public void ListPackages() 
+        {
+            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
+            if (!Directory.Exists(localProjectPackagesDirectory))
+                return;
+
+            IEnumerable<string> packages = Directory.
+                GetDirectories(localProjectPackagesDirectory).
+                Select(p => Path.GetFileName(p));
+
+            foreach (string package in packages)
+            {
+                if (this.Packages.Any(p => p.Id == package))
+                    continue;
+
+                string packageRawJson = string.Empty;
+                string basefilePath = Path.Combine(localProjectPackagesDirectory, package, "base.json");
+                if (!File.Exists(basefilePath))
+                    continue;
+
+                try
+                {
+                    packageRawJson = File.ReadAllText(basefilePath);
+                }
+                catch (Exception ex)
+                {
+                    // todo : handle error
+                    throw;
+                }
+
+                try
+                {
+                    Package packageObject = JsonConvert.DeserializeObject<Package>(packageRawJson);
+                    if (packageObject == null)
+                        throw new Exception($"Failed to load JSON for package {package}");
+
+                    this.Packages.Add(packageObject);
+
+                }
+                catch (Exception ex)
+                {
+                    // todo : handle
+                    throw;
+                }
+            }
         }
 
         #endregion

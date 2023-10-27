@@ -8,6 +8,9 @@ using TetrifactClient.Models;
 
 namespace TetrifactClient
 {
+    /// <summary>
+    /// Daemon for downloading metadata details of each package from remote server. Doesn't download binaries, only meta data.
+    /// </summary>
     public class PackageDetailsDaemon
     {
         private bool _busy;
@@ -46,10 +49,10 @@ namespace TetrifactClient
 
         private async Task Work(Project project)
         {
-            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == project.Name);
+            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
     
             // todo : project name must be made file-system safe
-            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Name, "packages");
+            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Id, "packages");
 
             foreach (string availablePackage in contextProject.AvailablePackages)
             {
@@ -96,6 +99,8 @@ namespace TetrifactClient
                     contextProject.ServerState = SourceServerStates.Unavailable;
                 }
             }
+
+            project.ListPackages();
         }
     }
 }

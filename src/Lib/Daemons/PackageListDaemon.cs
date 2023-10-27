@@ -50,7 +50,7 @@ namespace TetrifactClient
             HttpPayloadRequest request = new HttpPayloadRequest(HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages" } ));
             request.Attempt();
 
-            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Name == project.Name);
+            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
 
             if (request.Succeeded)
             {
@@ -68,7 +68,7 @@ namespace TetrifactClient
 
                 contextProject.ServerState = SourceServerStates.Normal;
                 lock(GlobalDataContext.Instance)
-                    contextProject.AvailablePackages = data.Success.Packages;
+                    contextProject.AvailablePackages = data.Success.Packages.ToList();
             } 
             else 
             {
