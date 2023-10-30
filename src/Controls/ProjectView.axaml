@@ -2,6 +2,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		x:Class="TetrifactClient.ProjectView"
 		xmlns:vm="using:TetrifactClient"
@@ -10,20 +11,22 @@
 		<Label DockPanel.Dock="Top" Content="Name : " />
 		<TextBlock DockPanel.Dock="Top" Text="{Binding Name}"></TextBlock>
 
-		<Label DockPanel.Dock="Top" Content="State : " />
-		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerState}" />
-
-		<Label DockPanel.Dock="Top" Content="Error : " />
-		<TextBlock DockPanel.Dock="Top" Text="{Binding ServerErrorDescription}" />
+		<Panel DockPanel.Dock="Top" Name="serverErrorPan" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNullOrEmpty}}">
+			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}" />
+		</Panel>
 
 		<Button DockPanel.Dock="Top" Click="ProjectDelete_Click">Delete project</Button>
 
-		<Button Click="Button_Click_1">Test me</Button>
-        
+		<Button DockPanel.Dock="Top" Click="Button_Click_1">Test me</Button>
+
+		<TextBlock Name="txtNoBuildsAvailable">
+			No builds available for this project yet.
+		</TextBlock>
+		
         <DataGrid
 			ItemsSource="{Binding Packages}"
 			Classes="grid"
-			Name="grid"
+			Name="gridPackages"
 			IsReadOnly="True"
 			CanUserReorderColumns="True"
 			CanUserResizeColumns="True"

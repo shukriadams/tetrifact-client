@@ -20,6 +20,9 @@ namespace TetrifactClient
         private void ThisDataContextChanged(object? sender, System.EventArgs e)
         {
             this.IsVisible = this.DataContext != null;
+            Project thisContext = this.DataContext as Project;
+            txtNoBuildsAvailable.IsVisible = !thisContext.Packages.Any();
+            gridPackages.IsVisible = thisContext.Packages.Any();
         }
 
         private void ContextMenu_Opening(object? sender, CancelEventArgs e)

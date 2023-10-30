@@ -53,8 +53,6 @@ public partial class App : Application
         PackageListDaemon listDaemon = new PackageListDaemon();
         PackageDetailsDaemon detailsDaemon = new PackageDetailsDaemon();
         listDaemon.Start();
-        //detailsDaemon.Start();
-
-
+        detailsDaemon.Start();
     }
 }

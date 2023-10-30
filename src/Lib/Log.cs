@@ -38,7 +38,7 @@ namespace TetrifactClient
         /// <summary>
         /// Deletes older log files
         /// </summary>
-        public void PurgeOld()
+        public void Purge()
         {
             IEnumerable<FileInfo> files = Directory.GetFiles(_dataDirectory)
                 .Where(r => r.EndsWith("-log.txt"))
@@ -111,6 +111,7 @@ namespace TetrifactClient
                 Console.WriteLine(ex);
             }
         }
+
         #endregion
     }
 }

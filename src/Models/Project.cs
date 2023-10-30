@@ -111,6 +111,7 @@ namespace TetrifactClient
                 GetDirectories(localProjectPackagesDirectory).
                 Select(p => Path.GetFileName(p));
 
+            List<Package> newPackages = new List<Package>();
             foreach (string package in packages)
             {
                 if (this.Packages.Any(p => p.Id == package))
@@ -146,6 +147,8 @@ namespace TetrifactClient
                     throw;
                 }
             }
+
+            this.Packages = this.Packages.OrderByDescending(p => p.CreatedUtc).ToList(); ;
         }
 
         #endregion

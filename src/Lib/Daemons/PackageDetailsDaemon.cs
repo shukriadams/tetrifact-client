@@ -90,11 +90,14 @@ namespace TetrifactClient
                     File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2, Formatting.Indented));
 
                     contextProject.ServerState = SourceServerStates.Normal;
+                    contextProject.ServerErrorDescription = null;
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(request.Error))
                         contextProject.ServerErrorDescription = request.Error;
+                    else
+                        contextProject.ServerErrorDescription = "Server unavailable";
 
                     contextProject.ServerState = SourceServerStates.Unavailable;
                 }

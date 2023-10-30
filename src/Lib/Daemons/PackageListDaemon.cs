@@ -67,13 +67,16 @@ namespace TetrifactClient
                 }
 
                 contextProject.ServerState = SourceServerStates.Normal;
-                lock(GlobalDataContext.Instance)
+                contextProject.ServerErrorDescription = null;
+                lock (GlobalDataContext.Instance)
                     contextProject.AvailablePackages = data.Success.Packages.ToList();
             } 
             else 
             {
                 if (!string.IsNullOrEmpty(request.Error))
                     contextProject.ServerErrorDescription = request.Error;
+                else
+                    contextProject.ServerErrorDescription = "Server unavailable";
 
                 contextProject.ServerState = SourceServerStates.Unavailable;
             }
