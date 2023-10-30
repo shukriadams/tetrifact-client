@@ -19,7 +19,7 @@
 
 		<Button DockPanel.Dock="Top" Click="Button_Click_1">Test me</Button>
 
-		<TextBlock Name="txtNoBuildsAvailable">
+		<TextBlock DockPanel.Dock="Top" Name="txtNoBuildsAvailable">
 			No builds available for this project yet.
 		</TextBlock>
 		

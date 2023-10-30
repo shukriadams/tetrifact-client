@@ -22,7 +22,7 @@
 		</DockPanel>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Right" Width="200">
-			<local:ConsoleView DockPanel.Dock="Top" DataContext="{Binding Console}" />
+			<Button Name="btnOpenConsole" Click="On_Console_Open" DockPanel.Dock="Bottom">Console</Button>
 		</DockPanel>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left">

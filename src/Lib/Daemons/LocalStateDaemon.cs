@@ -33,7 +33,7 @@ namespace TetrifactClient.Lib.Daemons
                     }
                     catch (Exception ex)
                     {
-                        GlobalDataContext.Instance.Console.Items.Add($"Unexpected error getting package manifest : {ex.Message}");
+                        GlobalDataContext.Instance.Console.Add($"Unexpected error getting package manifest : {ex.Message}");
                         // todo : write ex to log file
                     }
                     finally

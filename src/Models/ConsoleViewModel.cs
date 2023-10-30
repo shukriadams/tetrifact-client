@@ -1,5 +1,7 @@
 ﻿using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Linq;
 
 namespace TetrifactClient
 {
@@ -7,10 +9,19 @@ namespace TetrifactClient
     {
         private ObservableCollection<string> _items = new ObservableCollection<string> { };
 
+        public int MaxItems = 2;
+
+        public void Add(string item)
+        {
+            this.Items.Insert(0, item);
+            if (this.Items.Count > MaxItems)
+                this.Items = (ObservableCollection<string>)Items.Take(MaxItems);
+        }
+
         public ObservableCollection<string> Items
         {
             get => _items;
-            set => this.RaiseAndSetIfChanged(ref _items, value);
+            private set => this.RaiseAndSetIfChanged(ref _items, value);
         }
     }
 }

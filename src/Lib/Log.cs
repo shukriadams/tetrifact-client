@@ -100,7 +100,11 @@ namespace TetrifactClient
             if (description == null)
                 description = string.Empty;
 
+            // log to other places
             Console.WriteLine($"{objectOut} {description}");
+
+            //
+            GlobalDataContext.Instance.Console.Add($"{objectOut} {description}");
 
             try
             {
