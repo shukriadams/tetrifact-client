@@ -54,6 +54,8 @@ namespace TetrifactClient
         }
 
         public string DataFolder { get; set; }
+ 
+        public int DaemonIntervalMS { get; set; }
 
         public static GlobalDataContext Instance 
         { 
@@ -75,6 +77,7 @@ namespace TetrifactClient
         {
             // default
             this.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
+            this.DaemonIntervalMS = 5000;
         }
 
         #region METHODS
@@ -126,7 +129,7 @@ namespace TetrifactClient
 
             // load packages for each project
             foreach (Project project in _instance.Projects.Projects) 
-                project.ListPackages();
+                project.PopulateAvailableProjectsList();
 
             // set up event to save config to disk whenever changed
             _instance.Projects.Projects.ToObservableChangeSet(t => t.Id)

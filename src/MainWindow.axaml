@@ -28,7 +28,6 @@
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
 			<local:ProjectView DockPanel.Dock="Top" DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />			
 		</DockPanel>
-
 		
 	</DockPanel>
 </Window>

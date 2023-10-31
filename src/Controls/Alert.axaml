@@ -2,29 +2,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" 
-		d:DesignWidth="400" 
-		d:DesignHeight="250"
-        x:Class="TetrifactClient.Prompt"
-		Classes="prompt"
-        ExtendClientAreaToDecorationsHint="True" 
-		ExtendClientAreaChromeHints="NoChrome"
-		ExtendClientAreaTitleBarHeightHint="-1"
-        Title="Prompt">
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TetrifactClient.Alert"
+        Title="Alert">
 	<DockPanel VerticalAlignment="Stretch">
-		
+
 		<TextBlock Name="txtHeader" Classes="header" DockPanel.Dock="Top" HorizontalAlignment="Center">
 			Header text
 		</TextBlock>
 
 		<StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal" Background="Beige">
-			<Button Name="btnCancel" Click="Cancel_Click" Classes="warning" Content="Cancel"></Button>
-			<Button Name="btnProceed" Click="Proceed_Click" Classes="proceed" Content="Accept"></Button>
+			<Button Name="btnProceed" Click="Proceed_Click" Classes="proceed" Content="Ok"></Button>
 		</StackPanel>
 
 		<TextBlock Name="txtText" Classes="text" DockPanel.Dock="Top">
 			Prompt text
 		</TextBlock>
-		
+
 	</DockPanel>
 </Window>

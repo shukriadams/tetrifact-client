@@ -13,97 +13,75 @@ namespace TetrifactClient
     /// </summary>
     public class PackageDetailsDaemon
     {
-        private bool _busy;
-        private int _delay = 5000;
-
         public void Start()
         {
-            Task.Run(async () => {
-                while (true)
-                {
-                    try
-                    {
-                        if (_busy)
-                            continue;
-
-                        _busy = true;
-
-                        foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                            await this.Work(project);
-                    }
-                    catch (Exception ex)
-                    {
-                        GlobalDataContext.Instance.Console.Add($"Unexpected error getting package manifest : {ex.Message}");
-                        // todo : write ex to log file
-                    }
-                    finally
-                    {
-                        _busy = false;
-
-                        // force thread pause so this loop doesn't lock CPU
-                        await Task.Delay(_delay);
-                    }
-                } // while
-            });
+            DaemonProcessRunner runner = new DaemonProcessRunner();
+            Log log = new Log();
+            runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, new Log());
         }
 
-        private async Task Work(Project project)
+        public async Task Work()
         {
-            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
-    
-            // todo : project name must be made file-system safe
-            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Id, "packages");
-
-            foreach (string availablePackage in contextProject.AvailablePackages)
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"base.json");
-                string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
-                if (File.Exists(localPackagePath))
-                    continue;
+                Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
 
-                Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
+                // todo : project name must be made file-system safe
+                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Id, "packages");
 
-                string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
-                HttpPayloadRequest request = new HttpPayloadRequest(url);
-                request.Attempt();
-
-                if (request.Succeeded)
+                foreach (string availablePackage in contextProject.AvailablePackages)
                 {
-                    string payload = Encoding.Default.GetString(request.Payload);
-                    Package data = JsonConvert.DeserializeObject<Package>(payload);
-                    if (data == null)
-                    {
-                        // handle error
+                    string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"base.json");
+                    string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
+                    if (File.Exists(localPackagePath))
                         continue;
-                    }
-                    data.Tags = data.Tags.OrderBy(t => t);
 
-                    File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+                    Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
 
-                    PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
-                    if (data == null)
+                    string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
+                    HttpPayloadRequest request = new HttpPayloadRequest(url);
+                    request.Attempt();
+
+                    if (request.Succeeded)
                     {
-                        // handle error
-                        continue;
+                        string payload = Encoding.Default.GetString(request.Payload);
+                        Package data = JsonConvert.DeserializeObject<Package>(payload);
+                        if (data == null)
+                        {
+                            // handle error
+                            continue;
+                        }
+                        data.Tags = data.Tags.OrderBy(t => t);
+
+                        File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+
+                        PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
+                        if (data == null)
+                        {
+                            // handle error
+                            continue;
+                        }
+
+                        File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2, Formatting.Indented));
+
+                        contextProject.ServerState = SourceServerStates.Normal;
+                        contextProject.ServerErrorDescription = null;
                     }
-
-                    File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2, Formatting.Indented));
-
-                    contextProject.ServerState = SourceServerStates.Normal;
-                    contextProject.ServerErrorDescription = null;
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(request.Error))
-                        contextProject.ServerErrorDescription = request.Error;
                     else
-                        contextProject.ServerErrorDescription = "Server unavailable";
+                    {
+                        if (!string.IsNullOrEmpty(request.Error))
+                            contextProject.ServerErrorDescription = request.Error;
+                        else
+                            contextProject.ServerErrorDescription = "Server unavailable";
 
-                    contextProject.ServerState = SourceServerStates.Unavailable;
+                        contextProject.ServerState = SourceServerStates.Unavailable;
+                    }
                 }
+
+                project.PopulateAvailableProjectsList();
             }
 
-            project.ListPackages();
+
         }
     }
 }

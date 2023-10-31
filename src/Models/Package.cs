@@ -23,7 +23,7 @@ namespace TetrifactClient
         /// </summary>
         public long Size { get; set; }
 
-        public IEnumerable<string> Files { get; set; }
+        public IEnumerable<PackageFile> Files { get; set; }
 
         #endregion
 
@@ -32,6 +32,7 @@ namespace TetrifactClient
         public Package()
         {
             this.Tags = new string[] { };
+            this.Files = new PackageFile[0];
         }
 
         #endregion

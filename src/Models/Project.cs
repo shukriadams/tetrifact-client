@@ -23,6 +23,13 @@ namespace TetrifactClient
         [ObservableProperty]
         private string _buildServer;
 
+        /// <summary>
+        /// Number of packages to keep locally synced.
+        /// </summary>
+        [property: JsonProperty("PackageSyncCount")]
+        [ObservableProperty]
+        private string _packageSyncCount;
+
         [property: JsonProperty("ApplicationExecutableName")]
         [ObservableProperty]
         private string _applicationExecutableName;
@@ -47,6 +54,17 @@ namespace TetrifactClient
         [property: JsonProperty("MaxDownloadFailedAttempts")]
         [ObservableProperty]
         private int? _maxDownloadFailedAttempts;
+
+        /// <summary>
+        /// packages for this project should be automatically downloaded
+        /// </summary>
+        [property: JsonProperty("Autodownload")]
+        [ObservableProperty]
+        private bool _autoDownload;
+
+        [property: JsonProperty("PurgeOldPackages")]
+        [ObservableProperty]
+        public bool _purgeOldPackages;
 
         /// <summary>
         /// Comma-separted tags remote packages must have to be eligable for download.
@@ -101,7 +119,10 @@ namespace TetrifactClient
 
         #region METHODS
 
-        public void ListPackages() 
+        /// <summary>
+        /// Populates packages collection with available projects
+        /// </summary>
+        public void PopulateAvailableProjectsList() 
         {
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
             if (!Directory.Exists(localProjectPackagesDirectory))
@@ -148,7 +169,21 @@ namespace TetrifactClient
                 }
             }
 
-            this.Packages = this.Packages.OrderByDescending(p => p.CreatedUtc).ToList(); ;
+            // sort and apply filters
+            string requiredTags = string.IsNullOrEmpty(this.RequiredTags) ? string.Empty : this.RequiredTags;
+            string ignoreTags  = string.IsNullOrEmpty(this.IgnoreTags) ? string.Empty : this.RequiredTags;
+            string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
+
+            IEnumerable<Package> tempPackages =  this.Packages.OrderByDescending(p => p.CreatedUtc).ToList();
+            if (requiredTags.Any())
+            { 
+                
+            }
+                tempPackages = tempPackages.Where(p => p.Tags.Intersect());
+
+            this.Packages = tempPackages.ToList();
+
         }
 
         #endregion

@@ -9,6 +9,8 @@ namespace TetrifactClient
     {
         /// <summary>
         /// Creates directory, waits until directory is available before returning. 
+        //  On systems with extremely high disk IO that Directory.CreateDirectory returns before
+        //  directory is readable, causing problems for subsequent ca
         /// </summary>
         /// <param name="dir"></param>
         /// <exception cref="Exception"></exception>
@@ -18,16 +20,14 @@ namespace TetrifactClient
 
             int pause = 10;
             int attempts = 0;
+            ILog log = App.UnityContainer.Resolve<ILog>();
 
             while (attempts < maxAttempts)
             {
                 if (Directory.Exists(dir)) 
                 {
                     if (attempts > 0) 
-                    { 
-                        ILog log = App.UnityContainer.Resolve<ILog>();
                         log.LogInfo($"Took {attempts} attempts to create directory {dir}");
-                    }
 
                     break;
                 }

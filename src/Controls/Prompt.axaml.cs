@@ -13,19 +13,21 @@ namespace TetrifactClient
 
         public Cancel OnAccept;
 
-        public Prompt(int width = 400, int height = 400, string header = "Hreader", string text = "text")
+        public Prompt(int width = 400, int height = 400, string header = "Header", string text = "text")
         {
             InitializeComponent();
             this.Height = height;
             this.Width = width;
-            
-            txtHeader.Text = header;
-            txtText.Text = text;
+
+            this.SetContent(header, text);
         }
 
         public void SetContent(string header, string text, string cancel = "Cancel", string proceed = "Proceed") 
-        { 
-
+        {
+            txtHeader.Text = header;
+            txtText.Text = text;
+            btnCancel.Content = cancel;
+            btnProceed.Content = proceed;
         }
 
         private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
