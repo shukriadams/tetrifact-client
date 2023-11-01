@@ -5,16 +5,19 @@
     /// </summary>
     public enum BuildTransferStates
     {
-        AvailableForDownload,       // default state, build exists remotely
-        UserIgnored,                // user explicitly states they do not want to download build 
+        AvailableForDownload,       // default state, package exists remotely
+        UserIgnored,                // user explicitly states they do not want to download package
         AutoTagIgnored,             // ignored because of tags
-        AutoQueueForDownload,       // build queued automatically
-        UserQueuedForDownload,      // user explicitly queued build for download
-        Downloading,                // build is currently being downloaded
-        DownloadFailed,             // build transfer failed and willnot resume
-        Downloaded,                 // build is available locally for starting
-        DoNotDelete,                // build is downloaded and marked as keep forever by user
-        Deleting,                   // build is queued for delete
-        Deleted                     // build was deleted
+        AutoQueueForDownload,       // package queued automatically
+        UserQueuedForDownload,      // user explicitly queued package for download
+        Downloading,                // package is currently being downloaded
+        DownloadFailed,             // package transfer failed and willnot resume
+        Downloaded,                 // package is available locally for starting
+        DoNotDelete,                // package is downloaded and marked as keep forever by user
+        AutoMarkedForDelete,        // package is marked is marked for delete by daemon
+        UserMarkedForDelete,        // package is marked for delete by user
+        Deleting,                   // package is queued for delete
+        Deleted,                    // package was deleted
+        DeleteFailed                // delete failed
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using DynamicData;
 using Newtonsoft.Json;
+using TetrifactClient.Models;
 
 namespace TetrifactClient
 {
@@ -28,7 +30,7 @@ namespace TetrifactClient
         /// </summary>
         [property: JsonProperty("PackageSyncCount")]
         [ObservableProperty]
-        private string _packageSyncCount;
+        private int _packageSyncCount;
 
         [property: JsonProperty("ApplicationExecutableName")]
         [ObservableProperty]
@@ -88,17 +90,17 @@ namespace TetrifactClient
         private string _accessKey;
 
         /// <summary>
-        /// Loaded on-the-fly by daemons
+        /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
         [ObservableProperty]
         private IList<Package> _packages;
 
         /// <summary>
-        /// Packages available remotely. Details need to be retrieved.
+        /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
         /// Loaded on-the-fly by daemons
         /// </summary>
         [ObservableProperty]
-        private IList<string> _availablePackages;
+        private IList<string> _availablePackageIds;
 
         [property: JsonProperty("ServerState")]
         [ObservableProperty]
@@ -112,7 +114,7 @@ namespace TetrifactClient
         {
             this.Id = Guid.NewGuid().ToString();
             this.Packages = new List<Package>();
-            this.AvailablePackages = new List<string>();
+            this.AvailablePackageIds = new List<string>();
         }
 
         #endregion
@@ -122,7 +124,7 @@ namespace TetrifactClient
         /// <summary>
         /// Populates packages collection with available projects
         /// </summary>
-        public void PopulateAvailableProjectsList() 
+        public void PopulateAvailableProjectsList()
         {
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
             if (!Directory.Exists(localProjectPackagesDirectory))
@@ -143,30 +145,24 @@ namespace TetrifactClient
                 if (!File.Exists(basefilePath))
                     continue;
 
-                try
-                {
-                    packageRawJson = File.ReadAllText(basefilePath);
-                }
-                catch (Exception ex)
-                {
-                    // todo : handle error
-                    throw;
-                }
+                JsonFileLoadResponse<Package> baseLoadReponse = JsonHelper.LoadJSONFile<Package>(basefilePath, true, true);
+                // Todo : handle error bettter
+                if (baseLoadReponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
+                    throw new Exception($"failed to load {basefilePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
 
-                try
-                {
-                    Package packageObject = JsonConvert.DeserializeObject<Package>(packageRawJson);
-                    if (packageObject == null)
-                        throw new Exception($"Failed to load JSON for package {package}");
+                newPackages.Add(baseLoadReponse.Payload);
 
-                    this.Packages.Add(packageObject);
+                // look for local package state
+                string localPackageStatePath = Path.Combine(localProjectPackagesDirectory, package, "local.json");
+                if (!File.Exists(localPackageStatePath))
+                    continue;
 
-                }
-                catch (Exception ex)
-                {
-                    // todo : handle
-                    throw;
-                }
+                JsonFileLoadResponse<LocalPackage> localPackageLoadResponse = JsonHelper.LoadJSONFile<LocalPackage>(localPackageStatePath, true, true);
+                // todo : handle this error with less suck
+                if (localPackageLoadResponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
+                    throw new Exception($"failed to load {localPackageStatePath}, {localPackageLoadResponse.ErrorType} {localPackageLoadResponse.Exception}");
+
+                baseLoadReponse.Payload.LocalPackage = localPackageLoadResponse.Payload;
             }
 
             // sort and apply filters
@@ -175,17 +171,30 @@ namespace TetrifactClient
             string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
             string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
 
-            IEnumerable<Package> tempPackages =  this.Packages.OrderByDescending(p => p.CreatedUtc).ToList();
+            IEnumerable<Package> tempPackages = newPackages.OrderByDescending(p => p.CreatedUtc);
             if (requiredTags.Any())
-            { 
-                
-            }
-                tempPackages = tempPackages.Where(p => p.Tags.Intersect());
+                tempPackages = from package in tempPackages 
+                    where !package.Tags.Except(requiredTagsArray).Any()
+                    select package;
+
+            if (ignoreTagsArray.Any())
+                tempPackages = from package in tempPackages
+                               where package.Tags.Except(ignoreTagsArray).Any()
+                               select package;
+
+            if (!tempPackages.Any())
+                return;
+
+            foreach (var package in tempPackages)
+                this.Packages.Add(package);
 
             this.Packages = tempPackages.ToList();
-
+            this.Packages = this.Packages
+                .OrderByDescending(p => p.CreatedUtc)
+                .ToList();
         }
 
         #endregion
     }
 }
+;

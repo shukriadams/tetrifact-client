@@ -107,16 +107,35 @@ namespace TetrifactClient
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static T LoadJSONFile<T>(string path)
+        public static JsonFileLoadResponse<T> LoadJSONFile<T>(string path, bool failIfFileNotFound, bool failIfNull)
         {
+            if (!File.Exists(path) && failIfFileNotFound)
+                return new JsonFileLoadResponse<T>(JsonFileLoadResponseErrorTypes.FileNotFound);
+
+            string rawJson;
+            try
+            {
+                rawJson = File.ReadAllText(path);
+            }
+            catch (Exception ex)
+            {
+                return new JsonFileLoadResponse<T>(JsonFileLoadResponseErrorTypes.FileLoadError, ex);
+            }
+
+            T payload = default(T);
             try 
             {
-                return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+                payload  = JsonConvert.DeserializeObject<T>(rawJson);
             } 
             catch (Exception ex) 
             {
-                throw new Exception($"Failed to load JSON file {path}", ex);
+                return new JsonFileLoadResponse<T>(JsonFileLoadResponseErrorTypes.JsonParseError, ex);
             }
+
+            if (payload == null && failIfNull)
+                return new JsonFileLoadResponse<T>(JsonFileLoadResponseErrorTypes.NullParseError);
+
+            return new JsonFileLoadResponse<T>(payload);
         }
     }
 }

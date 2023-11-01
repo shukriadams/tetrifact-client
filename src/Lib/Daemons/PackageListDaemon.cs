@@ -69,7 +69,7 @@ namespace TetrifactClient
                 contextProject.ServerState = SourceServerStates.Normal;
                 contextProject.ServerErrorDescription = null;
                 lock (GlobalDataContext.Instance)
-                    contextProject.AvailablePackages = data.Success.Packages.ToList();
+                    contextProject.AvailablePackageIds = data.Success.Packages.ToList();
             } 
             else 
             {

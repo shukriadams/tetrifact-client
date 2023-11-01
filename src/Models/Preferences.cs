@@ -29,7 +29,6 @@ namespace TetrifactClient
         {
             this.DownloadsFolder = Path.Combine(globalDataContext.DataFolder, "packages");
             this.UnpackFolder = this.DownloadsFolder;
-            this.PartialDownloads = true;
             this.LogLevel = string.Empty;
         }
 

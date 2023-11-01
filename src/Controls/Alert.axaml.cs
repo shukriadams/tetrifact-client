@@ -4,6 +4,8 @@ namespace TetrifactClient
 {
     public partial class Alert : Window
     {
+        public VoidDo OnAccept;
+
         public Alert()
         {
             InitializeComponent();
@@ -14,6 +16,13 @@ namespace TetrifactClient
             txtHeader.Text = header;
             txtText.Text = text;
             btnProceed.Content = proceed;
+        }
+
+        private void Proceed_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            this.Close();
+            if (OnAccept != null)
+                OnAccept.Invoke();
         }
     }
 }

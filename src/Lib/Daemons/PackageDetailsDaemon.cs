@@ -29,7 +29,7 @@ namespace TetrifactClient
                 // todo : project name must be made file-system safe
                 string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Id, "packages");
 
-                foreach (string availablePackage in contextProject.AvailablePackages)
+                foreach (string availablePackage in contextProject.AvailablePackageIds)
                 {
                     string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"base.json");
                     string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");

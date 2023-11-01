@@ -1,17 +1,13 @@
 using Avalonia.Controls;
-using System.ComponentModel;
 
 namespace TetrifactClient
 {
     public partial class Prompt : Window
     {
-        public delegate void Cancel();
 
-        public delegate void Accept();
+        public VoidDo OnCancel;
 
-        public Cancel OnCancel;
-
-        public Cancel OnAccept;
+        public VoidDo OnAccept;
 
         public Prompt(int width = 400, int height = 400, string header = "Header", string text = "text")
         {

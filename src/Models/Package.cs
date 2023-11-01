@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TetrifactClient.Models;
 
 namespace TetrifactClient
 {
     /// <summary>
-    /// Represents a downloadable package (build) on Tetrifact
+    /// Represents a downloadable package (build) on Tetrifact. This object is deserialzied directly from data
     /// </summary>
     public class Package
     {
@@ -25,6 +26,12 @@ namespace TetrifactClient
 
         public IEnumerable<PackageFile> Files { get; set; }
 
+        /// <summary>
+        /// If package is being processed locally in any way, this object contains all that stuff. This property itself is not 
+        /// on tetrifact, so it is not deserialized. this object must be loaded from disk after the remote package data is fetched.
+        /// </summary>
+        public LocalPackage LocalPackage { get; set; }
+
         #endregion
 
         #region CTORS
@@ -33,6 +40,7 @@ namespace TetrifactClient
         {
             this.Tags = new string[] { };
             this.Files = new PackageFile[0];
+            this.LocalPackage = new LocalPackage();
         }
 
         #endregion
