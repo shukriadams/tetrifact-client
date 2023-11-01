@@ -9,7 +9,7 @@ namespace TetrifactClient
     /// <summary>
     /// Updates package list for all projects
     /// </summary>
-    public class PackageListDaemon
+    public class PackageListDaemon : IDaemon
     {
         private bool _busy;
         private int _delay = 5000;

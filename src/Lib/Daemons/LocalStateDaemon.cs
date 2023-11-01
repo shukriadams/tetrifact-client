@@ -5,7 +5,7 @@ namespace TetrifactClient
     /// <summary>
     /// 
     /// </summary>
-    public class LocalStateDaemon
+    public class LocalStateDaemon : IDaemon
     {
         public void Start()
         {

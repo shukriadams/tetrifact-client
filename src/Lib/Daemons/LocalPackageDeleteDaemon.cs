@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TetrifactClient.Lib.Daemons
+namespace TetrifactClient
 {
-    public class LocalPackageDeleteDaemon
+    public class LocalPackageDeleteDaemon : IDaemon
     {
         public void Start()
         {

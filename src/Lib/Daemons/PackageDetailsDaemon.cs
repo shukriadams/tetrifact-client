@@ -11,7 +11,7 @@ namespace TetrifactClient
     /// <summary>
     /// Daemon for downloading metadata details of each package from remote server. Doesn't download binaries, only meta data.
     /// </summary>
-    public class PackageDetailsDaemon
+    public class PackageDetailsDaemon : IDaemon
     {
         public void Start()
         {

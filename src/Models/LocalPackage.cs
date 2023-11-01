@@ -1,4 +1,7 @@
-﻿namespace TetrifactClient.Models
+﻿using ReactiveUI;
+using System.Linq;
+
+namespace TetrifactClient.Models
 {
     /// <summary>
     /// Represents a local version of a package. 
@@ -33,7 +36,6 @@
             return this.TransferState == BuildTransferStates.AvailableForDownload;
         }
 
-
         public bool IsPlayable()
         {
             return this.TransferState == BuildTransferStates.DoNotDelete 
@@ -60,6 +62,19 @@
         {
             return this.TransferState == BuildTransferStates.AutoMarkedForDelete
                 || this.TransferState == BuildTransferStates.UserMarkedForDelete;
+        }
+
+        public bool IsQueuedForDownload() 
+        {
+            return this.TransferState == BuildTransferStates.UserQueuedForDownload
+                || this.TransferState == BuildTransferStates.AutoQueueForDownload;
+        }
+
+        public void Download(Project project) 
+        {
+            // find out if package download should be partial or full. Full is needed if no other package is available locally,
+            // or if diff between this package and previous one is over a % of total files in build.
+            //bool packageAlreadyDownlaoded = project.
         }
 
         #endregion

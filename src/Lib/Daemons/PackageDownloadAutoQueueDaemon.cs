@@ -1,17 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Unity;
+﻿using System.Threading.Tasks;
 
-namespace TetrifactClient.Lib.Daemons
+namespace TetrifactClient
 {
     /// <summary>
     /// Automatically queues packages to be downloaded. Does not
     /// </summary>
-    public class PackageDownloadAutoQueueDaemon
+    public class PackageDownloadAutoQueueDaemon : IDaemon
     {
         private ILog _log;
 
