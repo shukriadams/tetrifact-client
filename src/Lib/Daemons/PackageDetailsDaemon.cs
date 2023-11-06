@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TetrifactClient.Models;
 
 namespace TetrifactClient
 {
@@ -31,7 +29,7 @@ namespace TetrifactClient
 
                 foreach (string availablePackage in contextProject.AvailablePackageIds)
                 {
-                    string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"base.json");
+                    string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"remote.json");
                     string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
                     if (File.Exists(localPackagePath))
                         continue;
@@ -39,21 +37,28 @@ namespace TetrifactClient
                     Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
 
                     string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
-                    HttpPayloadRequest request = new HttpPayloadRequest(url);
-                    request.Attempt();
+                    HttpPayloadRequest httpRequest = new HttpPayloadRequest(url);
+                    httpRequest.Attempt();
 
-                    if (request.Succeeded)
+                    if (httpRequest.Succeeded)
                     {
-                        string payload = Encoding.Default.GetString(request.Payload);
+                        string payload = Encoding.Default.GetString(httpRequest.Payload);
                         Package data = JsonConvert.DeserializeObject<Package>(payload);
                         if (data == null)
                         {
                             // handle error
                             continue;
                         }
+
+                        // force tags to be alpbateically ordered
                         data.Tags = data.Tags.OrderBy(t => t);
 
-                        File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(data, Formatting.Indented));
+                        // package remote data in local data parent
+                        LocalPackage localPackage = new LocalPackage();
+                        localPackage.TetrifactServerAddress = project.BuildServer;
+                        localPackage.Package = data;
+
+                        File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(localPackage, Formatting.Indented));
 
                         PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
                         if (data == null)
@@ -69,8 +74,8 @@ namespace TetrifactClient
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(request.Error))
-                            contextProject.ServerErrorDescription = request.Error;
+                        if (!string.IsNullOrEmpty(httpRequest.Error))
+                            contextProject.ServerErrorDescription = httpRequest.Error;
                         else
                             contextProject.ServerErrorDescription = "Server unavailable";
 
@@ -78,7 +83,7 @@ namespace TetrifactClient
                     }
                 }
 
-                project.PopulateAvailableProjectsList();
+                project.PopulateProjectsList();
             }
 
 

@@ -1,7 +1,7 @@
-﻿using ReactiveUI;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TetrifactClient.Models
+namespace TetrifactClient
 {
     /// <summary>
     /// Represents a local version of a package. 
@@ -11,15 +11,18 @@ namespace TetrifactClient.Models
         #region PROPERTIES
 
         /// <summary>
-        /// Package id this object is connected to
+        /// Server package will be pulled from.
         /// </summary>
-        public string Id { get; set; }
+        public string TetrifactServerAddress { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public bool Ignore { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BuildTransferStates TransferState { get; set; }
 
         /// <summary>
@@ -27,16 +30,41 @@ namespace TetrifactClient.Models
         /// </summary>
         public string ErrorSummary { get; set; }
 
+        /// <summary>
+        /// Core of remote package, on tetrifact. Files are not serialized to this object, as this would create a performance bottleneck.
+        /// </summary>
+        public Package Package { get; set; }
+
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// File path full package zip is written to. If this path exists, assume download has already be performed successfully.
+        /// </summary>
+        /// <returns></returns>
+        public string GetFullDownloadFilePath() 
+        {
+           
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Directory path final package is placed in. This is the location that exe will be run from, and also which will be deleted
+        /// when package is cleaned up.
+        /// </summary>
+        /// <returns></returns>
+        public string GetExecuteDirectoryPath()
+        {
+            return string.Empty;
+        }
 
         public bool IsEligibleForAutoDownload()
         {
             return this.TransferState == BuildTransferStates.AvailableForDownload;
         }
 
-        public bool IsPlayable()
+        public bool IsExecutable()
         {
             return this.TransferState == BuildTransferStates.DoNotDelete 
                 || this.TransferState == BuildTransferStates.Downloaded;
@@ -68,13 +96,6 @@ namespace TetrifactClient.Models
         {
             return this.TransferState == BuildTransferStates.UserQueuedForDownload
                 || this.TransferState == BuildTransferStates.AutoQueueForDownload;
-        }
-
-        public void Download(Project project) 
-        {
-            // find out if package download should be partial or full. Full is needed if no other package is available locally,
-            // or if diff between this package and previous one is over a % of total files in build.
-            //bool packageAlreadyDownlaoded = project.
         }
 
         #endregion

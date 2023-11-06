@@ -40,19 +40,19 @@ namespace TetrifactClient
                 int downloadedCount = 0;
                 // Work way down packages in order of listing, marking them for autodownload as necessary
                 // This assumes packages are sorted newest to oldest
-                foreach (Package package in project.Packages) 
+                foreach (LocalPackage package in project.Packages) 
                 {
                     // mark for download
-                    if (package.LocalPackage.IsEligibleForAutoDownload())
-                        package.LocalPackage.TransferState = BuildTransferStates.AutoQueueForDownload;
+                    if (package.IsEligibleForAutoDownload())
+                        package.TransferState = BuildTransferStates.AutoQueueForDownload;
 
                     // if alreaddy marked for download, tally it up
-                    if (package.LocalPackage.IsDownloadedorQueuedForDownload())
+                    if (package.IsDownloadedorQueuedForDownload())
                         downloadedCount ++;
 
                     // if tally of (marked for) downloaded mnet, start marking for delete
-                    if (downloadedCount > project.PackageSyncCount && package.LocalPackage.CanBeAutoCleanedUp())
-                        package.LocalPackage.TransferState = BuildTransferStates.AutoMarkedForDelete;
+                    if (downloadedCount > project.PackageSyncCount && package.CanBeAutoCleanedUp())
+                        package.TransferState = BuildTransferStates.AutoMarkedForDelete;
                 }
             }
         }

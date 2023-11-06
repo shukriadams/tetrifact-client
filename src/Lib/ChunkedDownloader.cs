@@ -32,6 +32,12 @@ namespace TetrifactClient
 
         #endregion
 
+        #region PROPERTIES
+
+        public bool Succeeded { get; set; }
+
+        #endregion
+
         #region CTORS
 
         public ChunkedDownloader()
@@ -171,6 +177,8 @@ namespace TetrifactClient
                     HandleChunkAssembledEvent(count, chunkFiles.Count);
                 }
             }
+
+            this.Succeeded = true;
         }
 
         #endregion

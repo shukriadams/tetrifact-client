@@ -17,18 +17,18 @@ namespace TetrifactClient
         {
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
-                foreach (Package package in project.Packages.Where(package => package.LocalPackage.IsMarkedForDelete()))
+                foreach (LocalPackage package in project.Packages.Where(package => package.IsMarkedForDelete()))
                 {
                     // delete stuff
-                    package.LocalPackage.TransferState = BuildTransferStates.Deleting;
+                    package.TransferState = BuildTransferStates.Deleting;
 
                     try
                     {
-                        package.LocalPackage.TransferState = BuildTransferStates.Deleted;
+                        package.TransferState = BuildTransferStates.Deleted;
                     }
                     catch (Exception ex)
                     {
-                        package.LocalPackage.TransferState = BuildTransferStates.DeleteFailed;
+                        package.TransferState = BuildTransferStates.DeleteFailed;
                     }
                 }
             }

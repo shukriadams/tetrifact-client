@@ -1,6 +1,5 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -12,13 +11,6 @@ using System.Reflection;
 
 namespace TetrifactClient
 {
-    public class GlobalDataContextSerialize 
-    {
-        public IEnumerable<Project> Projects { get; set; }
-
-        public string DataFolder { get; set; }
-    }
-
     public class GlobalDataContext : ReactiveObject
     {
         #region FIELDS
@@ -73,12 +65,16 @@ namespace TetrifactClient
 
         #endregion
 
+        #region CTORS
+
         public GlobalDataContext() 
         {
             // default
-            this.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
+            this.DataFolder = PathHelper.GetInternalDirectory();
             this.DaemonIntervalMS = 5000;
         }
+
+        #endregion
 
         #region METHODS
 
@@ -129,7 +125,7 @@ namespace TetrifactClient
 
             // load packages for each project
             foreach (Project project in _instance.Projects.Projects) 
-                project.PopulateAvailableProjectsList();
+                project.PopulateProjectsList();
 
             // set up event to save config to disk whenever changed
             _instance.Projects.Projects.ToObservableChangeSet(t => t.Id)

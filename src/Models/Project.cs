@@ -5,7 +5,6 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using Newtonsoft.Json;
-using TetrifactClient.Models;
 
 namespace TetrifactClient
 {
@@ -21,9 +20,9 @@ namespace TetrifactClient
         [ObservableProperty]
         private string _id;
 
-        [property: JsonProperty("BuildServer")]
+        [property: JsonProperty("TetrifactServerAddress")]
         [ObservableProperty]
-        private string _buildServer;
+        private string _tetrifactServerAddress;
 
         /// <summary>
         /// Number of packages to keep locally synced.
@@ -93,7 +92,7 @@ namespace TetrifactClient
         /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
         [ObservableProperty]
-        private IList<Package> _packages;
+        private IList<LocalPackage> _packages;
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
@@ -113,7 +112,7 @@ namespace TetrifactClient
         public Project() 
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Packages = new List<Package>();
+            this.Packages = new List<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
         }
 
@@ -124,45 +123,34 @@ namespace TetrifactClient
         /// <summary>
         /// Populates packages collection with available projects
         /// </summary>
-        public void PopulateAvailableProjectsList()
+        public void PopulateProjectsList()
         {
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
             if (!Directory.Exists(localProjectPackagesDirectory))
                 return;
 
-            IEnumerable<string> packages = Directory.
+            IEnumerable<string> packageIds = Directory.
                 GetDirectories(localProjectPackagesDirectory).
                 Select(p => Path.GetFileName(p));
 
-            List<Package> newPackages = new List<Package>();
-            foreach (string package in packages)
+            List<LocalPackage> newPackages = new List<LocalPackage>();
+            foreach (string packageId in packageIds)
             {
-                if (this.Packages.Any(p => p.Id == package))
+                if (this.Packages.Any(p => p.Package.Id == packageId))
                     continue;
 
                 string packageRawJson = string.Empty;
-                string basefilePath = Path.Combine(localProjectPackagesDirectory, package, "base.json");
-                if (!File.Exists(basefilePath))
+                string packageCorePath = Path.Combine(localProjectPackagesDirectory, packageId, "remote.json");
+                if (!File.Exists(packageCorePath))
                     continue;
 
-                JsonFileLoadResponse<Package> baseLoadReponse = JsonHelper.LoadJSONFile<Package>(basefilePath, true, true);
+                JsonFileLoadResponse<LocalPackage> baseLoadReponse = JsonHelper.LoadJSONFile<LocalPackage>(packageCorePath, true, true);
+
                 // Todo : handle error bettter
                 if (baseLoadReponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
-                    throw new Exception($"failed to load {basefilePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
+                    throw new Exception($"failed to load {packageCorePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
 
                 newPackages.Add(baseLoadReponse.Payload);
-
-                // look for local package state
-                string localPackageStatePath = Path.Combine(localProjectPackagesDirectory, package, "local.json");
-                if (!File.Exists(localPackageStatePath))
-                    continue;
-
-                JsonFileLoadResponse<LocalPackage> localPackageLoadResponse = JsonHelper.LoadJSONFile<LocalPackage>(localPackageStatePath, true, true);
-                // todo : handle this error with less suck
-                if (localPackageLoadResponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
-                    throw new Exception($"failed to load {localPackageStatePath}, {localPackageLoadResponse.ErrorType} {localPackageLoadResponse.Exception}");
-
-                baseLoadReponse.Payload.LocalPackage = localPackageLoadResponse.Payload;
             }
 
             // sort and apply filters
@@ -171,15 +159,15 @@ namespace TetrifactClient
             string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
             string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
 
-            IEnumerable<Package> tempPackages = newPackages.OrderByDescending(p => p.CreatedUtc);
+            IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
             if (requiredTags.Any())
                 tempPackages = from package in tempPackages 
-                    where !package.Tags.Except(requiredTagsArray).Any()
+                    where !package.Package.Tags.Except(requiredTagsArray).Any()
                     select package;
 
             if (ignoreTagsArray.Any())
                 tempPackages = from package in tempPackages
-                               where package.Tags.Except(ignoreTagsArray).Any()
+                               where package.Package.Tags.Except(ignoreTagsArray).Any()
                                select package;
 
             if (!tempPackages.Any())
@@ -190,7 +178,7 @@ namespace TetrifactClient
 
             this.Packages = tempPackages.ToList();
             this.Packages = this.Packages
-                .OrderByDescending(p => p.CreatedUtc)
+                .OrderByDescending(p => p.Package.CreatedUtc)
                 .ToList();
         }
 

@@ -118,7 +118,7 @@ namespace TetrifactClient
                 errors.Add($"Package checksum on disk differs from remote - expected {package.Hash}, got {packageHashOnDisk}");
 
             // mark download progress as done
-            PackageDownloadProgress downloadProgress = PackageDownloadProgressStore.Get(_serverAddress, _packageId);
+            PackageTransferProgress downloadProgress = PackageTransferProgressStore.Get(_serverAddress, _packageId);
                 
             if (errors.Any())
             {
@@ -137,7 +137,7 @@ namespace TetrifactClient
             decimal p = (decimal)_currentFile / (decimal)_totalFiles;
             int percent = (int)Math.Round((decimal)(p * 100), 0);
 
-            PackageDownloadProgress buildStatus = PackageDownloadProgressStore.Get(_serverAddress, _packageId);
+            PackageTransferProgress buildStatus = PackageTransferProgressStore.Get(_serverAddress, _packageId);
             buildStatus.Message = $"Verify {percent}%";
 
             _currentFile++;

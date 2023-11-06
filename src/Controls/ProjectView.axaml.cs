@@ -44,28 +44,5 @@ namespace TetrifactClient
             GlobalDataContext.Save();
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
-
-        private void Button_Click_1(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            /*
-            foreach (var project in GlobalDataContext.Instance.Projects.Projects) 
-            {
-                foreach (var package in project.Packages) 
-                {
-                    var list = new List<string>();
-                    list = list.Concat(package.Tags).ToList();
-                    list.Add("lol");
-                    package.Tags = list;
-                }
-            }
-
-            string test = "";
-            */
-
-            Package p = new Package();
-            p.Id = Guid.NewGuid().ToString();
-            GlobalDataContext.Instance.FocusedProject.Packages.Add(p);
-            GlobalDataContext.Instance.FocusedProject.Name = Guid.NewGuid().ToString();
-        }
     }
 }

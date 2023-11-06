@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TetrifactClient.Models
+namespace TetrifactClient
 {
     public class PackageFiles
     {
