@@ -36,7 +36,7 @@ namespace TetrifactClient
 
                     Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
 
-                    string url = HttpHelper.UrlJoin(new string[] { project.BuildServer, "v1", "packages", availablePackage });
+                    string url = HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages", availablePackage });
                     HttpPayloadRequest httpRequest = new HttpPayloadRequest(url);
                     httpRequest.Attempt();
 
@@ -55,7 +55,7 @@ namespace TetrifactClient
 
                         // package remote data in local data parent
                         LocalPackage localPackage = new LocalPackage();
-                        localPackage.TetrifactServerAddress = project.BuildServer;
+                        localPackage.TetrifactServerAddress = project.TetrifactServerAddress;
                         localPackage.Package = data;
 
                         File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(localPackage, Formatting.Indented));

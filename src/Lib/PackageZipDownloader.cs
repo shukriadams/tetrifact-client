@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TetrifactClient
 {
-    public class PackageDownloader
+    public class PackageZipDownloader : IPackageDownloader
     {
         #region FIELDS
 
@@ -19,7 +19,7 @@ namespace TetrifactClient
 
         #region CTORS
 
-        public PackageDownloader(Preferences preferences, Project project, LocalPackage package, ILog log)
+        public PackageZipDownloader(Preferences preferences, Project project, LocalPackage package, ILog log)
         {
             _package = package;
             _log = log;
@@ -31,7 +31,7 @@ namespace TetrifactClient
 
         #region METHODS
 
-        public void DownloadAsZip()
+        public PackageTransferResponse Download()
         {
             try
             {
@@ -42,9 +42,7 @@ namespace TetrifactClient
                 string remoteZipUrl = $"{_package.TetrifactServerAddress}/v1/archives/{_package.Package.Id}";
 
                 if (Directory.Exists(finalPackagePath)) 
-                {
-                    return;
-                }
+                    return new PackageTransferResponse { Succeeded = true, Message = "Already downloaded" };
 
                 PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
                 progress.Message = "Contacting server ...";
@@ -71,17 +69,13 @@ namespace TetrifactClient
                 // unpack zip
                 PackageUnzip unpacker = new PackageUnzip(_preferences, _project, _package, zipFilePath);
                 unpacker.Unpack();
+
+                return new PackageTransferResponse { Succeeded = true };
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, $"Failed to download full build {_package.Package.Id}");
-                throw;
+                return new PackageTransferResponse { Exception = ex };
             }
-        }
-
-        public void DownloadPartial() 
-        {
-
         }
 
         #endregion

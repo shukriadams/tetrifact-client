@@ -48,12 +48,12 @@
 					</ContextMenu>
 				</DataGrid.ContextMenu>
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
-					<DataGridTextColumn Header="Date" Binding="{Binding CreatedUtc}"/>
+					<DataGridTextColumn Header="Id" Binding="{Binding Package.Id}"/>
+					<DataGridTextColumn Header="Date" Binding="{Binding Package.CreatedUtc}"/>
 					<DataGridTemplateColumn Header="Tags">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
-								<ItemsRepeater Classes="grid" ItemsSource="{Binding Tags}">
+								<ItemsRepeater Classes="grid" ItemsSource="{Binding Package.Tags}">
 									<ItemsRepeater.Layout>
 										<StackLayout Spacing="40" Orientation="Horizontal" />
 									</ItemsRepeater.Layout>

@@ -71,7 +71,7 @@ namespace TetrifactClient
         /// <param name="downstreamPackage"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static IPackageDiffQueryResponse DownloadDiff(string serverAddress, string upstreamPackage, string downstreamPackage)
+        public static PackageDiffResponse DownloadDiff(string serverAddress, string upstreamPackage, string downstreamPackage)
         {
             try
             {
@@ -79,9 +79,15 @@ namespace TetrifactClient
                 string diffRaw = webClient.DownloadString($"{serverAddress}/v1/packages/diff/{upstreamPackage}/{downstreamPackage}");
                 dynamic responseDiff = JsonConvert.DeserializeObject(diffRaw);
                 if (responseDiff == null || responseDiff.success == null)
-                    throw new Exception($"Received error response trying to get diff for packages {upstreamPackage} and {downstreamPackage}");
+                    return new PackageDiffResponse {
+                        ResponseType = PackageDiffResponseTypes.Unexpected,
+                        Message = $"Received error response trying to get diff for packages {upstreamPackage} and {downstreamPackage}" 
+                    };
 
-                return JsonConvert.DeserializeObject<PackageDiff>(responseDiff.success.packagesDiff.ToString());
+                return new PackageDiffResponse 
+                {
+                    PackageDiff = JsonConvert.DeserializeObject<PackageDiff>(responseDiff.success.packagesDiff.ToString())
+                };
             }
             catch (WebException ex)
             {
@@ -91,14 +97,22 @@ namespace TetrifactClient
                     {
                         string content = r.ReadToEnd();
                         if (content.Contains(upstreamPackage))
-                            return new UpstreamPackageNotFoundReponse { UpstreamPackageId = upstreamPackage };
+                            return new PackageDiffResponse { ResponseType = PackageDiffResponseTypes.UpstreamPackageNotFound };
                     }
 
-                throw new Exception($"Failed to download diff between packages {upstreamPackage} and {downstreamPackage}", ex);
+                return new PackageDiffResponse
+                {
+                    Message = $"Failed to download diff between packages {upstreamPackage} and {downstreamPackage}",
+                    Exception = ex
+                };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to download diff between packages {upstreamPackage} and {downstreamPackage}", ex);
+                return new PackageDiffResponse
+                {
+                    Message = $"Failed to download diff between packages {upstreamPackage} and {downstreamPackage}",
+                    Exception = ex
+                };
             }
         }
 

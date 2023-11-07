@@ -6,7 +6,25 @@ namespace TetrifactClient
 {
     public class PackageDownloadDaemon : IDaemon
     {
-        ILog _log;
+        #region FIELDS
+
+        private ILog _log;
+
+        private IPreferencesProvider _preferencesProvider;
+
+        #endregion
+        
+        #region CTORS
+
+        public PackageDownloadDaemon(IPreferencesProvider preferencesProvider) 
+        {
+            _preferencesProvider = preferencesProvider;
+        }
+
+        #endregion
+
+        #region METHODS
+
         public void Start()
         {
             DaemonProcessRunner runner = new DaemonProcessRunner();
@@ -16,8 +34,6 @@ namespace TetrifactClient
 
         public async Task Work()
         {
-            Preferences preferences = 
-
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
                 foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
@@ -32,6 +48,7 @@ namespace TetrifactClient
             // find out if package download should be partial or full. Full is needed if no other package is available locally,
             // or if diff between this package and previous one is over a % of total files in build.
             //bool packageAlreadyDownlaoded = project.
+            Preferences preferences = _preferencesProvider.GetInstance();
 
             //find closest build
             IEnumerable<LocalPackage> allPackagesFromTargetServer = GlobalDataContext.Instance.Projects.Projects
@@ -40,32 +57,39 @@ namespace TetrifactClient
                 .SelectMany(p => p)
                 .OrderByDescending(p => p.Package.CreatedUtc);
 
-            LocalPackage packageAfter = allPackagesFromTargetServer.FirstOrDefault(p => p.Package.CreatedUtc > package.Package.CreatedUtc);
-            LocalPackage packageBefore = allPackagesFromTargetServer.FirstOrDefault(p => p.Package.CreatedUtc < package.Package.CreatedUtc);
+            PackageDiff packageDiff = null;
             LocalPackage donorPackage = null;
-
-            if (packageAfter != null && packageBefore == null)
-                donorPackage = packageAfter;
-            else if (packageAfter == null && packageBefore != null)
-                donorPackage = packageBefore;
-            else
+            if (allPackagesFromTargetServer.Any()) 
             {
-                if ((packageAfter.Package.CreatedUtc - package.Package.CreatedUtc).TotalMilliseconds > (packageBefore.Package.CreatedUtc - package.Package.CreatedUtc).TotalMilliseconds)
-                    donorPackage = packageBefore;
-                else
-                    donorPackage = packageAfter;
+                foreach(LocalPackage potentialDonorPackage in allPackagesFromTargetServer)
+                {
+                    PackageDiffResponse diffLookup = JsonHelper.DownloadDiff(package.TetrifactServerAddress, potentialDonorPackage.Package.Id, package.Package.Id);
+                    if (diffLookup.ResponseType == PackageDiffResponseTypes.None) 
+                    {
+                        packageDiff = diffLookup.PackageDiff;
+                        donorPackage = potentialDonorPackage;
+                        break;
+                    }
+                }
             }
 
-            PackageDownloader downloader = new PackageDownloader(preferences, project, package, _log);
-
-            if (donorPackage == null)
-            {
-                // no donor package, download a fill zip
-            }
+            IPackageDownloader downloader = null;
+            if (packageDiff == null)
+                downloader = new PackageZipDownloader(preferences, project, package, _log);
             else
+                downloader = new PackagePartialDownloader(preferences, project, package, donorPackage, packageDiff, _log);
+
+            PackageTransferResponse result = downloader.Download();
+            if (result.Succeeded)
             {
-                // partial zip
+                // ?
+            }
+            else 
+            {
+                GlobalDataContext.Instance.Console.Add(result.Message);
             }
         }
+
+        #endregion
     }
 }

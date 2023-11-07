@@ -15,6 +15,10 @@ namespace TetrifactClient
     {
         #region FIELDS
 
+        private Project _project;
+        
+        private LocalPackage _localPackage;
+
         private string _packageId;
 
         private string _packagePath;
@@ -37,8 +41,10 @@ namespace TetrifactClient
 
         #region CTORS
 
-        public PackageVerifier(string packagePath, string serverAddress, string packageId, int threads)
+        public PackageVerifier(Project project, LocalPackage localPackage, string packagePath, string serverAddress, string packageId, int threads)
         {
+            _project = project;
+            _localPackage = localPackage;
             _serverAddress = serverAddress;
             _packageId = packageId;
             _packagePath = packagePath;
@@ -116,19 +122,11 @@ namespace TetrifactClient
             string packageHashOnDisk = HashLib.FromString(totalChecksum.ToString());
             if (packageHashOnDisk != package.Hash)
                 errors.Add($"Package checksum on disk differs from remote - expected {package.Hash}, got {packageHashOnDisk}");
-
-            // mark download progress as done
-            PackageTransferProgress downloadProgress = PackageTransferProgressStore.Get(_serverAddress, _packageId);
                 
             if (errors.Any())
             {
                 _log.LogError($"Local Build {package.Id} failed checksum");
                 _log.LogError(String.Join(",", errors));
-                downloadProgress.Succeeded = false;
-            }
-            else
-            {
-                downloadProgress.Succeeded = true;
             }
         }
 
@@ -137,7 +135,7 @@ namespace TetrifactClient
             decimal p = (decimal)_currentFile / (decimal)_totalFiles;
             int percent = (int)Math.Round((decimal)(p * 100), 0);
 
-            PackageTransferProgress buildStatus = PackageTransferProgressStore.Get(_serverAddress, _packageId);
+            PackageTransferProgress buildStatus = PackageTransferProgressStore.Get(_project, _localPackage);
             buildStatus.Message = $"Verify {percent}%";
 
             _currentFile++;

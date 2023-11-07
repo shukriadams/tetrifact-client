@@ -26,7 +26,7 @@ namespace TetrifactClient
             GlobalDataContext.Instance.Projects.Projects.Add(new Project
             {
                 Name = txtName.Text,
-                BuildServer = txtServer.Text
+                TetrifactServerAddress = txtServer.Text
             });
 
             this.Close();
@@ -39,7 +39,7 @@ namespace TetrifactClient
                 return;
 
             txtName.Text = project.Name;
-            txtServer.Text = project.BuildServer;
+            txtServer.Text = project.TetrifactServerAddress;
         }
     }
 }
