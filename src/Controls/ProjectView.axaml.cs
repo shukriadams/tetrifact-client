@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -36,6 +37,15 @@ namespace TetrifactClient
             prompt.ShowDialog(MainWindow.Instance);
             prompt.CenterOn(MainWindow.Instance);
             prompt.OnAccept += this.OnDeleteAccept;
+        }
+
+        private void OnDownloadClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.TransferState = BuildTransferStates.UserMarkedForDownload;
         }
 
         private void OnDeleteAccept() 

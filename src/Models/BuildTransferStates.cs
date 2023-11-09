@@ -8,8 +8,8 @@
         AvailableForDownload,       // default state, package exists remotely
         UserIgnored,                // user explicitly states they do not want to download package
         AutoTagIgnored,             // ignored because of tags
-        AutoQueueForDownload,       // package queued automatically
-        UserQueuedForDownload,      // user explicitly queued package for download
+        AutoMarkedForDownload,       // package queued automatically
+        UserMarkedForDownload,      // user explicitly queued package for download
         Downloading,                // package is currently being downloaded
         DownloadFailed,             // package transfer failed and willnot resume
         Downloaded,                 // package is available locally for starting

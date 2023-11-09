@@ -74,8 +74,8 @@ namespace TetrifactClient
         {
             return this.TransferState == BuildTransferStates.Downloaded
                 || this.TransferState == BuildTransferStates.Downloading
-                || this.TransferState == BuildTransferStates.AutoQueueForDownload
-                || this.TransferState == BuildTransferStates.UserQueuedForDownload;
+                || this.TransferState == BuildTransferStates.AutoMarkedForDownload
+                || this.TransferState == BuildTransferStates.UserMarkedForDownload;
         }
 
         public bool CanBeAutoCleanedUp() 
@@ -94,8 +94,8 @@ namespace TetrifactClient
 
         public bool IsQueuedForDownload() 
         {
-            return this.TransferState == BuildTransferStates.UserQueuedForDownload
-                || this.TransferState == BuildTransferStates.AutoQueueForDownload;
+            return this.TransferState == BuildTransferStates.UserMarkedForDownload
+                || this.TransferState == BuildTransferStates.AutoMarkedForDownload;
         }
 
         #endregion

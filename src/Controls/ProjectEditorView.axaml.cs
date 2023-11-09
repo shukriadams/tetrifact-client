@@ -34,12 +34,12 @@ namespace TetrifactClient
 
         private void OnTemplateSourceChanged(object? sender, SelectionChangedEventArgs e)
         {
-            Project project = (Project)cmbTemplateSource.SelectedValue;
-            if (project == null)
+            Project projectTemplate = (Project)cmbTemplateSource.SelectedValue;
+            if (projectTemplate == null)
                 return;
 
-            txtName.Text = project.Name;
-            txtServer.Text = project.TetrifactServerAddress;
+            txtName.Text = projectTemplate.Name;
+            txtServer.Text = projectTemplate.TetrifactServerAddress;
         }
     }
 }

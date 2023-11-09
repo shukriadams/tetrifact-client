@@ -34,7 +34,7 @@
 			BorderBrush="Gray">
 				<DataGrid.ContextMenu>
 					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
-						<MenuItem Header="Download" Name="mnuDownload" />
+						<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
 						<MenuItem Header="Keep" Name="mnuKeep" />
 						<MenuItem Header="Unkeep" Name="mnuUnkeep" />
 						<MenuItem Header="Ignore" Name="mnuIgnore" />
@@ -66,6 +66,7 @@
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
+					<DataGridTextColumn Header="Status" Binding="{Binding TransferState}"/>
 				</DataGrid.Columns>
         </DataGrid>
     </DockPanel>

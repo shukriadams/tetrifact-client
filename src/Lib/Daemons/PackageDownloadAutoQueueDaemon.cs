@@ -44,7 +44,7 @@ namespace TetrifactClient
                 {
                     // mark for download
                     if (package.IsEligibleForAutoDownload())
-                        package.TransferState = BuildTransferStates.AutoQueueForDownload;
+                        package.TransferState = BuildTransferStates.AutoMarkedForDownload;
 
                     // if alreaddy marked for download, tally it up
                     if (package.IsDownloadedorQueuedForDownload())
