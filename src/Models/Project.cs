@@ -92,6 +92,7 @@ namespace TetrifactClient
         /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
         [ObservableProperty]
+        [property: JsonIgnore]
         private IList<LocalPackage> _packages;
 
         /// <summary>
@@ -121,9 +122,9 @@ namespace TetrifactClient
         #region METHODS
 
         /// <summary>
-        /// Populates packages collection with available projects
+        /// Populates packages collection from disk
         /// </summary>
-        public void PopulateProjectsList()
+        public void PopulatePackageList()
         {
             string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
             if (!Directory.Exists(localProjectPackagesDirectory))
@@ -150,6 +151,7 @@ namespace TetrifactClient
                 if (baseLoadReponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
                     throw new Exception($"failed to load {packageCorePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
 
+                baseLoadReponse.Payload.DiskPath = packageCorePath;
                 newPackages.Add(baseLoadReponse.Payload);
             }
 
@@ -174,7 +176,10 @@ namespace TetrifactClient
                 return;
 
             foreach (var package in tempPackages)
+            {
                 this.Packages.Add(package);
+                package.EnableAutoSave();
+            }
 
             this.Packages = tempPackages.ToList();
             this.Packages = this.Packages

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TetrifactClient
+﻿namespace TetrifactClient
 {
     public class SourceServer
     {

@@ -83,7 +83,7 @@ namespace TetrifactClient
                     }
                 }
 
-                project.PopulateProjectsList();
+                project.PopulatePackageList();
             }
 
 

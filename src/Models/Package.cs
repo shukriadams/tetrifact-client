@@ -5,6 +5,7 @@ namespace TetrifactClient
 {
     /// <summary>
     /// Represents a downloadable package (build) on Tetrifact. This object is deserialzied directly from remote.json in local packages.
+    /// Is is not observable because it will not change.
     /// </summary>
     public class Package
     {
@@ -33,15 +34,6 @@ namespace TetrifactClient
         {
             this.Tags = new string[] { };
             this.Files = new PackageFile[0];
-        }
-
-        #endregion
-
-        #region METHODS
-
-        public void SetContext() 
-        {
-
         }
 
         #endregion

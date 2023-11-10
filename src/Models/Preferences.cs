@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-
-namespace TetrifactClient
+﻿namespace TetrifactClient
 {
     public partial class Preferences
     {
@@ -38,26 +34,6 @@ namespace TetrifactClient
             this.ParallelDownloadThreads = 10; // todo : less hardcoding of this
             this.LogLevel = string.Empty;
             this.DownloadChunkSize = 10000000;
-        }
-
-        #endregion
-
-        #region METHODS
-
-        public void Save() 
-        {
-            try
-            {
-                string raw = JsonConvert.SerializeObject(this);
-                string path = Path.Combine(PathHelper.GetInternalDirectory(), "settings.json");
-                File.WriteAllText(path, raw);
-            }
-            catch (Exception ex)
-            {
-                Alert alert = new Alert();
-                alert.SetContent("Critical error", $"Could not save settings.json to disk : {ex}");
-                alert.ShowDialog(MainWindow.Instance);
-            }
         }
 
         #endregion

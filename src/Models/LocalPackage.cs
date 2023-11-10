@@ -1,43 +1,83 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
+using System.IO;
 
 namespace TetrifactClient
 {
     /// <summary>
     /// Represents a local version of a package. 
     /// </summary>
-    public class LocalPackage
+    public partial class LocalPackage : ObservableObject
     {
         #region PROPERTIES
 
         /// <summary>
         /// Server package will be pulled from.
         /// </summary>
-        public string TetrifactServerAddress { get; set; }
+        [property: JsonProperty("TetrifactServerAddress")]
+        [ObservableProperty]
+        private string _tetrifactServerAddress;
 
         /// <summary>
         /// 
         /// </summary>
-        public bool Ignore { get; set; }
+        [property: JsonProperty("Ignore")]
+        [ObservableProperty]
+        private bool _ignore;
 
         /// <summary>
         /// 
         /// </summary>
-        public BuildTransferStates TransferState { get; set; }
+        [property: JsonProperty("TransferState")]
+        [ObservableProperty]
+        private BuildTransferStates _transferState;
 
         /// <summary>
         /// If transfer or integrity check failed, message describing failure.
         /// </summary>
-        public string ErrorSummary { get; set; }
+        [property: JsonProperty("ErrorSummary")]
+        [ObservableProperty]
+        private string _errorSummary;
 
         /// <summary>
         /// Core of remote package, on tetrifact. Files are not serialized to this object, as this would create a performance bottleneck.
         /// </summary>
-        public Package Package { get; set; }
+        [property: JsonProperty("Package")]
+        [ObservableProperty]
+        public Package _package;
+
+        /// <summary>
+        /// Not observable, not persisted to JSON file.
+        /// </summary>
+        public string DiskPath { get; set; }
 
         #endregion
 
+        public LocalPackage() 
+        {
+        }
+
         #region METHODS
+
+        public void EnableAutoSave() 
+        {
+            PropertyChanged += this.OnPropertyChanged;
+        }
+
+        public void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) 
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty( this.DiskPath))
+                    File.WriteAllText(this.DiskPath, JsonConvert.SerializeObject(this, Formatting.Indented));
+            }
+            catch (Exception ex)
+            {
+                GlobalDataContext.Instance.Console.Add(ex.ToString());
+            }
+        }
 
         /// <summary>
         /// File path full package zip is written to. If this path exists, assume download has already be performed successfully.

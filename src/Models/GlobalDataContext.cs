@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace TetrifactClient
 {
@@ -15,7 +14,7 @@ namespace TetrifactClient
     {
         #region FIELDS
 
-        private static GlobalDataContext _instance;
+        private static GlobalDataContext _thisInstance;
         private string caption = "some text";
         private Project _focusedProject;
 
@@ -30,6 +29,8 @@ namespace TetrifactClient
         public ProjectsViewModel ProjectTemplates { get; } = new ProjectsViewModel();
 
         public ConsoleViewModel Console { get; } = new ConsoleViewModel();
+
+        public Preferences Preferences { get; } = new Preferences();
 
         public LogLevels LogLevel { get; set; }
 
@@ -53,13 +54,13 @@ namespace TetrifactClient
         { 
             get 
             {
-                if (_instance == null)
+                if (_thisInstance == null)
                 {
-                    _instance = new GlobalDataContext();
+                    _thisInstance = new GlobalDataContext();
                     Load();
                 }
 
-                return _instance;
+                return _thisInstance;
             } 
         }
 
@@ -85,7 +86,7 @@ namespace TetrifactClient
 
         public static void Load() 
         {
-            string filePath = Path.Combine(_instance.DataFolder, "Settings.json");
+            string filePath = Path.Combine(_thisInstance.DataFolder, "Settings.json");
             string rawJson = null;
             GlobalDataContextSerialize persistedSettings = null;
 
@@ -121,29 +122,30 @@ namespace TetrifactClient
 
             }
 
-            _instance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
+            _thisInstance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
 
             // load packages for each project
-            foreach (Project project in _instance.Projects.Projects) 
-                project.PopulateProjectsList();
+            foreach (Project project in _thisInstance.Projects.Projects) 
+                project.PopulatePackageList();
 
             // set up event to save config to disk whenever changed
-            _instance.Projects.Projects.ToObservableChangeSet(t => t.Id)
+            _thisInstance.Projects.Projects.ToObservableChangeSet(t => t.Id)
                 .Subscribe(t => {
                     Save();
                 });
 
-            if (_instance.Projects.Projects.Any())
-                _instance.FocusedProject = _instance.Projects.Projects.First();
+            if (_thisInstance.Projects.Projects.Any())
+                _thisInstance.FocusedProject = _thisInstance.Projects.Projects.First();
         }
 
         public static void Save()
         {
             GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
-            serialize.Projects = _instance.Projects.Projects;
+            serialize.Projects = _thisInstance.Projects.Projects;
 
-            string filePath = Path.Combine(_instance.DataFolder, "Settings.json");
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(serialize, Formatting.Indented ));
+            string filePath = Path.Combine(_thisInstance.DataFolder, "Settings.json");
+            string json = JsonConvert.SerializeObject(serialize, Formatting.Indented);
+            File.WriteAllText(filePath, json);
         }
 
         #endregion

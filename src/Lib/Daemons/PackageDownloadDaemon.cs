@@ -10,15 +10,13 @@ namespace TetrifactClient
 
         private ILog _log;
 
-        private IPreferencesProvider _preferencesProvider;
-
         #endregion
         
         #region CTORS
 
-        public PackageDownloadDaemon(IPreferencesProvider preferencesProvider) 
+        public PackageDownloadDaemon() 
         {
-            _preferencesProvider = preferencesProvider;
+
         }
 
         #endregion
@@ -48,7 +46,7 @@ namespace TetrifactClient
             // find out if package download should be partial or full. Full is needed if no other package is available locally,
             // or if diff between this package and previous one is over a % of total files in build.
             //bool packageAlreadyDownlaoded = project.
-            Preferences preferences = _preferencesProvider.GetInstance();
+            Preferences preferences = GlobalDataContext.Instance.Preferences;
 
             //find closest build
             IEnumerable<LocalPackage> allPackagesFromTargetServer = GlobalDataContext.Instance.Projects.Projects
