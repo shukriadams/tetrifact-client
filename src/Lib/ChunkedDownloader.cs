@@ -138,8 +138,8 @@ namespace TetrifactClient
                     webClient.Range = new Range { Start = range.Start, End = range.End };
 
                     byte[] data = webClient.DownloadBytes(url, this.RetryAttempts); 
-                    string tempFilePath1 = Path.Combine(tempDirectory, $"{range.Index}.chunk");
-                    string tempFilePath2 = Path.Combine(tempDirectory, $"{Guid.NewGuid}.chunk");
+                    string tempFilePath1 = Path.Combine(tempDirectory, $"{Guid.NewGuid()}.chunk");
+                    string tempFilePath2 = Path.Combine(tempDirectory, $"{range.Index}.chunk");
 
                     if (!File.Exists(tempFilePath2)) 
                     {
@@ -147,12 +147,11 @@ namespace TetrifactClient
                             File.Delete(tempFilePath1);
 
                         using (FileStream fileStream = new FileStream(tempFilePath1, FileMode.Create, FileAccess.Write, FileShare.Write))
-                        {
                             fileStream.Write(data, 0, data.Length);
-                            chunkFiles.TryAdd(range.Index, tempFilePath1);
-                            File.Move(tempFilePath1, tempFilePath2);
-                            HandleChunkDownloadEvent();
-                        }
+
+                        chunkFiles.TryAdd(range.Index, tempFilePath2);
+                        File.Move(tempFilePath1, tempFilePath2);
+                        HandleChunkDownloadEvent();
                     }
                 }
                 catch (Exception ex)

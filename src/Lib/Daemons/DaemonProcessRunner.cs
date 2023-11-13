@@ -6,7 +6,7 @@ namespace TetrifactClient
     /// <summary>
     /// Abstracts away daemon threading. We do this to keep daemon loop + async call out of daemon logic, making daemon logic easier to test.
     /// </summary>
-    public class DaemonProcessRunner
+    public class DaemonProcessRunner 
     {
         public void Start(AsyncDo work, int delayms, ILog log)
         {

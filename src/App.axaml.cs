@@ -1,9 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Unity;
-
 
 namespace TetrifactClient;
 
@@ -30,6 +32,12 @@ public partial class App : Application
         UnityContainer = new UnityContainer();
         UnityContainer.RegisterType<ProjectEditorView, ProjectEditorView>();
         UnityContainer.RegisterType<ILog, Log>();
+        UnityContainer.RegisterType<IDaemon, PackageDetailsDaemon>();
+        UnityContainer.RegisterType<IDaemon, PackageDownloadAutoQueueDaemon>();
+        UnityContainer.RegisterType<IDaemon, PackageDownloadDaemon>();
+        UnityContainer.RegisterType<IDaemon, PackageListDaemon>();
+        UnityContainer.RegisterType<IDaemon, LocalStateDaemon>();
+        UnityContainer.RegisterType<IDaemon, LocalPackageDeleteDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -50,9 +58,11 @@ public partial class App : Application
         Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
 
         // start daemons
-        PackageListDaemon listDaemon = new PackageListDaemon();
-        PackageDetailsDaemon detailsDaemon = new PackageDetailsDaemon();
-        listDaemon.Start();
-        detailsDaemon.Start();
+        Type daemonType = typeof(IDaemon);
+        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes().Where(t => daemonType.IsAssignableFrom(t) && !t.IsInterface)) 
+        {
+            IDaemon daemon = App.UnityContainer.Resolve(type, null) as IDaemon; 
+            daemon.Start();
+        }
     }
 }

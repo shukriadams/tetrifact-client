@@ -17,6 +17,8 @@ namespace TetrifactClient
 
         private Preferences _preferences;
 
+        private GlobalDataContext _dataContext;
+
         private Project _project;
 
         private LocalPackage _donorPackage;
@@ -27,12 +29,12 @@ namespace TetrifactClient
 
         #region CTORS
 
-        public PackagePartialDownloader(Preferences preferences, Project project, LocalPackage package, LocalPackage donorPackage, PackageDiff packageDiff, ILog log)
+        public PackagePartialDownloader(GlobalDataContext dataContext, Project project, LocalPackage package, LocalPackage donorPackage, PackageDiff packageDiff, ILog log)
         {
             _package = package;
             _donorPackage = donorPackage;
             _log = log;
-            _preferences = preferences;
+            _dataContext = dataContext;
             _project = project;
             _packageDiff = packageDiff;
         }
@@ -44,7 +46,7 @@ namespace TetrifactClient
         public PackageTransferResponse Download() 
         {
             PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
-            string finalPackagePath = PathHelper.GetPackageDirectoryPath(_preferences, _project, _package);
+            string finalPackagePath = PathHelper.GetPackageDirectoryPath(_dataContext, _project, _package);
 
             // Download new files
             if (_packageDiff.Difference.Any()) 
@@ -101,7 +103,7 @@ namespace TetrifactClient
             List<PackageFile> copyFails = new List<PackageFile>();
             int parallels = 4;
 
-            string donorBuildPath = PathHelper.GetPackageDirectoryPath(_preferences, _project, _donorPackage);
+            string donorBuildPath = PathHelper.GetPackageDirectoryPath(_dataContext, _project, _donorPackage);
 
             // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
             PackageTransferResponse copyErrorResponse = null;

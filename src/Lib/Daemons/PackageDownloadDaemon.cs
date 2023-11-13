@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SkiaSharp;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,13 +11,16 @@ namespace TetrifactClient
 
         private ILog _log;
 
+        private GlobalDataContext _context;
+
         #endregion
         
         #region CTORS
 
         public PackageDownloadDaemon() 
         {
-
+            // todo : we need to get rid of this static ref
+            _context = GlobalDataContext.Instance;
         }
 
         #endregion
@@ -37,6 +41,7 @@ namespace TetrifactClient
                 foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
                 {
                     await this.ProcessPackage(project, package);
+                    string test = "";
                 }
             }
         }
@@ -73,17 +78,18 @@ namespace TetrifactClient
 
             IPackageDownloader downloader = null;
             if (packageDiff == null)
-                downloader = new PackageZipDownloader(preferences, project, package, _log);
+                downloader = new PackageZipDownloader(_context, project, package, _log);
             else
-                downloader = new PackagePartialDownloader(preferences, project, package, donorPackage, packageDiff, _log);
+                downloader = new PackagePartialDownloader(_context, project, package, donorPackage, packageDiff, _log);
 
             PackageTransferResponse result = downloader.Download();
             if (result.Succeeded)
             {
-                // ?
+                package.TransferState = BuildTransferStates.Downloaded;
             }
             else 
             {
+                package.TransferState = BuildTransferStates.DownloadFailed;
                 GlobalDataContext.Instance.Console.Add(result.Message);
             }
         }

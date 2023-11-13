@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TetrifactClient
 {
@@ -15,7 +13,7 @@ namespace TetrifactClient
 
         private string _zipFilePath;
 
-        private Preferences _preferences;
+        private GlobalDataContext _context;
 
         private LocalPackage _package;
 
@@ -44,14 +42,14 @@ namespace TetrifactClient
         /// </summary>
         /// <param name="archivePath"></param>
         /// <param name="targetPath"></param>
-        public PackageUnzip(Preferences preferences, Project project, LocalPackage package, string zipFilePath)
+        public PackageUnzip(GlobalDataContext context, Project project, LocalPackage package, string zipFilePath)
         {
             _zipFilePath = zipFilePath;
-            _unzipPathTempPath = PathHelper.GetPackageDirectoryTempPath(preferences, project, package);
-            _unzipFinalPath = PathHelper.GetPackageDirectoryPath(preferences, project, package);
+            _unzipPathTempPath = PathHelper.GetPackageDirectoryTempPath(context, project, package);
+            _unzipFinalPath = PathHelper.GetPackageDirectoryPath(context, project, package);
             _package = package;
             _project = project;
-            _preferences = preferences;
+            _context = context;
         }
 
         #endregion

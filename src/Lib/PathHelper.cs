@@ -15,29 +15,34 @@ namespace TetrifactClient
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
         }
 
-        public static string GetZipDownloadDirectoryPath(Preferences preferences, Project project, LocalPackage package)
+        public static string GetProjectDirectoryPath(GlobalDataContext context, Project project) 
         {
-            return Path.Combine(preferences.ProjectsRootDirectory, project.Id, "zips", $"{package.Package.Id}.zip");
+            return Path.Combine(context.GetProjectsDirectoryPath(), project.Id, "packages");
         }
 
-        public static string GetZipDownloadDirectoryTempPath(Preferences preferences, Project project, LocalPackage package)
+        public static string GetZipDownloadDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(preferences.ProjectsRootDirectory, project.Id, "zips", $"~{package.Package.Id}.zip");
+            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"{package.Package.Id}.zip");
         }
 
-        public static string GetPackageDirectoryPath(Preferences preferences, Project project, LocalPackage package)
+        public static string GetZipDownloadDirectoryTempPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(preferences.ProjectsRootDirectory, project.Id, $"{package.Package.Id}");
+            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"~{package.Package.Id}.zip");
         }
 
-        public static string GetPackageDirectoryTempPath(Preferences preferences, Project project, LocalPackage package)
+        public static string GetPackageDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(preferences.ProjectsRootDirectory, project.Id, $"~{package.Package.Id}");
+            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, "content");
         }
 
-        public static string GetPackageDirectoryDeletePath(Preferences preferences, Project project, LocalPackage package)
+        public static string GetPackageDirectoryTempPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(preferences.ProjectsRootDirectory, project.Id, $"!{package.Package.Id}");
+            return Path.Combine(GetProjectDirectoryPath(context, project), $"~{package.Package.Id}");
+        }
+
+        public static string GetPackageDirectoryDeletePath(GlobalDataContext context, Project project, LocalPackage package)
+        {
+            return Path.Combine(GetProjectDirectoryPath(context, project), $"!{package.Package.Id}");
         }
     }
 }

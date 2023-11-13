@@ -57,12 +57,16 @@ namespace TetrifactClient
                 {
                     using (WebResponse webResponse = webRequest.GetResponse())
                     {
+                        // if no content length returned, assume server does not support query
+                        if (webResponse.Headers.Get("Content-Length") == null) 
+                            return 0;
+
                         return long.Parse(webResponse.Headers.Get("Content-Length"));
                     }
                 }
-                catch (Exception ex)
+                catch (WebException ex) 
                 {
-                    Console.WriteLine($"error reading resource size for {url}, attempt {tries}");
+                    Console.WriteLine($"error reading resource size for {url}, attempt {tries}. {ex}");
                     Thread.Sleep(sleepPerTry);
                     sleepPerTry = sleepPerTry * 2; // double wait each timeout
                 }
@@ -83,7 +87,7 @@ namespace TetrifactClient
             bool error = false;
             Exception _lastException = null;
 
-            while (this.Attempts < maxTries)
+            do
             {
                 this.Attempts++;
 
@@ -105,11 +109,11 @@ namespace TetrifactClient
                     error = true;
                     _lastException = ex;
 
-                    if (ex is WebException) 
+                    if (ex is WebException)
                     {
                         WebException wex = ex as WebException;
                         // target not found, abort immediately, no need to retry
-                        if (wex.Response is HttpWebResponse && ((HttpWebResponse)wex.Response).StatusCode == HttpStatusCode.NotFound)  
+                        if (wex.Response is HttpWebResponse && ((HttpWebResponse)wex.Response).StatusCode == HttpStatusCode.NotFound)
                             break;
                     }
 
@@ -126,6 +130,7 @@ namespace TetrifactClient
                     }
                 }
             }
+            while (this.Attempts < maxTries); // put at end to ensure that loops runs at least once for maxtries = 0
 
             if (_lastException == null)
                 throw new Exception($"Too many failed attempts downloading {url}");

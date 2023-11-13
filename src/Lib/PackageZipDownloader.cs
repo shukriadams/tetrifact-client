@@ -11,7 +11,7 @@ namespace TetrifactClient
 
         private LocalPackage _package;
 
-        private Preferences _preferences;
+        private GlobalDataContext _context;
 
         private Project _project;
 
@@ -19,11 +19,11 @@ namespace TetrifactClient
 
         #region CTORS
 
-        public PackageZipDownloader(Preferences preferences, Project project, LocalPackage package, ILog log)
+        public PackageZipDownloader(GlobalDataContext context, Project project, LocalPackage package, ILog log)
         {
             _package = package;
             _log = log;
-            _preferences = preferences;
+            _context = context;
             _project = project;
         }
 
@@ -36,9 +36,9 @@ namespace TetrifactClient
             try
             {
                 HardenedWebClient webClient = new HardenedWebClient();
-                string zipFileTempPath = PathHelper.GetZipDownloadDirectoryTempPath(_preferences, _project, _package);
-                string zipFilePath = PathHelper.GetZipDownloadDirectoryPath(_preferences, _project, _package);
-                string finalPackagePath = PathHelper.GetPackageDirectoryPath(_preferences, _project, _package);
+                string zipFileTempPath = PathHelper.GetZipDownloadDirectoryTempPath(_context, _project, _package);
+                string zipFilePath = PathHelper.GetZipDownloadDirectoryPath(_context, _project, _package);
+                string finalPackagePath = PathHelper.GetPackageDirectoryPath(_context, _project, _package);
                 string remoteZipUrl = $"{_package.TetrifactServerAddress}/v1/archives/{_package.Package.Id}";
 
                 if (Directory.Exists(finalPackagePath)) 
@@ -56,8 +56,8 @@ namespace TetrifactClient
                     downloader.OnError += ex => { progress.Message = "Download failed - check logs"; };
                     downloader.Download(remoteZipUrl,
                         zipFileTempPath,
-                        _preferences.DownloadChunkSize,
-                        _preferences.ParallelDownloadThreads);
+                        _context.Preferences.DownloadChunkSize,
+                        _context.Preferences.ParallelDownloadThreads);
 
                     if (downloader.Succeeded) 
                     {
@@ -67,7 +67,7 @@ namespace TetrifactClient
                 }
 
                 // unpack zip
-                PackageUnzip unpacker = new PackageUnzip(_preferences, _project, _package, zipFilePath);
+                PackageUnzip unpacker = new PackageUnzip(_context, _project, _package, zipFilePath);
                 unpacker.Unpack();
 
                 return new PackageTransferResponse { Succeeded = true };
