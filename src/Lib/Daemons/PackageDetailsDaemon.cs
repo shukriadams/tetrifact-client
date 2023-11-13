@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,11 @@ namespace TetrifactClient
             DaemonProcessRunner runner = new DaemonProcessRunner();
             Log log = new Log();
             runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, new Log());
+        }
+
+        public void DoWork()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Work()

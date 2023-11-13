@@ -45,6 +45,11 @@ namespace TetrifactClient
             });
         }
 
+        public void DoWork()
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task Work(Project project)
         {
             HttpPayloadRequest request = new HttpPayloadRequest(HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages" } ));

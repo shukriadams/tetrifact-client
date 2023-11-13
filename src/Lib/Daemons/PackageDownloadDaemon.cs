@@ -1,5 +1,4 @@
-﻿using SkiaSharp;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,14 +12,18 @@ namespace TetrifactClient
 
         private GlobalDataContext _context;
 
+        private DaemonProcessRunner _runner;
+
         #endregion
-        
+
         #region CTORS
 
         public PackageDownloadDaemon() 
         {
             // todo : we need to get rid of this static ref
             _context = GlobalDataContext.Instance;
+            _runner = new DaemonProcessRunner();
+            _log = new Log();
         }
 
         #endregion
@@ -29,21 +32,20 @@ namespace TetrifactClient
 
         public void Start()
         {
-            DaemonProcessRunner runner = new DaemonProcessRunner();
-            _log = new Log();
-            runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, _log);
+            _runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, _log);
         }
 
-        public async Task Work()
+        public void DoWork() 
+        {
+            if (_runner != null)
+                _runner.WorkNow();
+        }
+
+        private async Task Work()
         {
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-            {
                 foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
-                {
                     await this.ProcessPackage(project, package);
-                    string test = "";
-                }
-            }
         }
 
         private async Task ProcessPackage(Project project, LocalPackage package)

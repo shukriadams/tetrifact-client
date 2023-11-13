@@ -12,6 +12,11 @@ namespace TetrifactClient
             Log log = new Log();
             runner.Start(new AsyncDo(this.Work), (int)new TimeSpan(0, 10, 0).TotalMilliseconds, new Log());
         }
+        
+        public void DoWork()
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task Work()
         {
