@@ -15,9 +15,9 @@ namespace TetrifactClient
         private int _delayms;
 
         private AsyncDo _work;
-
-        public bool AllowForceWork { get; set; }
         
+        private bool _pause;
+
         public void Start(AsyncDo work, int delayms, ILog log)
         {
             _log = log;
@@ -34,13 +34,14 @@ namespace TetrifactClient
 
         private async Task DoWork() 
         {
+            if (_busy)
+                return;
+
+            _busy = true;
+            _pause = true;
+
             try
             {
-                if (_busy)
-                    return;
-
-                _busy = true;
-
                 await _work();
             }
             catch (Exception ex)
@@ -49,10 +50,14 @@ namespace TetrifactClient
             }
             finally
             {
-                _busy = false;
 
                 // force thread pause so this loop doesn't lock CPU
-                await Task.Delay(_delayms);
+                DateTime start = DateTime.Now;
+                while (_pause && (DateTime.Now - start).TotalMilliseconds < _delayms) 
+                    await Task.Delay(100); // delay .1 seconds only, we want fast response
+
+                _pause = false;
+                _busy = false;
             }
         }
 
@@ -61,9 +66,7 @@ namespace TetrifactClient
         /// </summary>
         public async void WorkNow() 
         {
-            if (!AllowForceWork)
-                throw new Exception("Force cannot be called on this daemon, please enable explicitly");
-
+            _pause = false;
             await DoWork();
         }
     }

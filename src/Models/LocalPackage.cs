@@ -31,6 +31,7 @@ namespace TetrifactClient
         /// 
         /// </summary>
         [property: JsonProperty("TransferState")]
+        [property: JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         [ObservableProperty]
         private BuildTransferStates _transferState;
 
@@ -51,7 +52,15 @@ namespace TetrifactClient
         /// <summary>
         /// Not observable, not persisted to JSON file.
         /// </summary>
+        [property: JsonIgnore]
         public string DiskPath { get; set; }
+
+        /// <summary>
+        /// User-friendly description of what is going on with this package now. Not persisted to json.
+        /// </summary>
+        [ObservableProperty]
+        [property: JsonIgnore]
+        private string _status;
 
         #endregion
 

@@ -20,8 +20,8 @@ namespace TetrifactClient
         {
             this.IsVisible = this.DataContext != null;
             Project thisContext = this.DataContext as Project;
-            txtNoBuildsAvailable.IsVisible = !thisContext.Packages.Any();
-            gridPackages.IsVisible = thisContext.Packages.Any();
+            txtNoBuildsAvailable.IsVisible = !thisContext.Packages.Items.Any();
+            gridPackages.IsVisible = thisContext.Packages.Items.Any();
         }
 
         private void ContextMenu_Opening(object? sender, CancelEventArgs e)
@@ -44,6 +44,9 @@ namespace TetrifactClient
                 return;
 
             selectedProject.TransferState = BuildTransferStates.UserMarkedForDownload;
+            PackageDownloadDaemon daemon = App.Daemons.First(d => d.GetType() == typeof(PackageDownloadDaemon)) as PackageDownloadDaemon;
+            daemon.WorkNow();
+
         }
 
         private void OnDeleteAccept() 

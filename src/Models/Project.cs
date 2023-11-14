@@ -1,13 +1,28 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace TetrifactClient
 {
+    public class ProjectPackages : ReactiveObject
+    {
+        private ObservableCollection<LocalPackage> _items = new ObservableCollection<LocalPackage> { };
+
+        public ObservableCollection<LocalPackage> Items
+        {
+            get => _items;
+            private set => this.RaiseAndSetIfChanged(ref _items, value);
+        }
+    }
+
     public partial class Project : ObservableObject
     {
         #region FIELDS
@@ -88,21 +103,26 @@ namespace TetrifactClient
         [ObservableProperty]
         private string _accessKey;
 
+        public ProjectPackages Packages { get; } = new ProjectPackages();
+
         /// <summary>
         /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
-        [ObservableProperty]
-        [property: JsonIgnore]
-        private IList<LocalPackage> _packages;
+        //[ObservableProperty]
+        //[property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
+        //[JsonIgnore]                            // need this defined twice for autogen and local 
+        // public ObservableCollection<LocalPackage> _packages;
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
         /// Loaded on-the-fly by daemons
         /// </summary>
         [ObservableProperty]
+        [property: Newtonsoft.Json.JsonIgnore]
         private IList<string> _availablePackageIds;
 
         [property: JsonProperty("ServerState")]
+        [property: JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         [ObservableProperty]
         private SourceServerStates _serverState;
 
@@ -113,7 +133,7 @@ namespace TetrifactClient
         public Project() 
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Packages = new List<LocalPackage>();
+            //this.Packages = new ObservableCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
         }
 
@@ -126,68 +146,67 @@ namespace TetrifactClient
         /// </summary>
         public void PopulatePackageList()
         {
-            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
-            if (!Directory.Exists(localProjectPackagesDirectory))
-                return;
+                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
+                if (!Directory.Exists(localProjectPackagesDirectory))
+                    return;
 
-            IEnumerable<string> packageIds = Directory.
-                GetDirectories(localProjectPackagesDirectory).
-                Select(p => Path.GetFileName(p));
+                IEnumerable<string> packageIds = Directory.
+                    GetDirectories(localProjectPackagesDirectory).
+                    Select(p => Path.GetFileName(p));
 
-            List<LocalPackage> newPackages = new List<LocalPackage>();
-            foreach (string packageId in packageIds)
-            {
-                if (this.Packages.Any(p => p.Package.Id == packageId))
-                    continue;
+                List<LocalPackage> newPackages = new List<LocalPackage>();
+                foreach (string packageId in packageIds)
+                {
+                    if (this.Packages.Items.Any(p => p.Package.Id == packageId))
+                        continue;
 
-                string packageRawJson = string.Empty;
-                string packageCorePath = Path.Combine(localProjectPackagesDirectory, packageId, "remote.json");
-                if (!File.Exists(packageCorePath))
-                    continue;
+                    string packageRawJson = string.Empty;
+                    string packageCorePath = Path.Combine(localProjectPackagesDirectory, packageId, "remote.json");
+                    if (!File.Exists(packageCorePath))
+                        continue;
 
-                JsonFileLoadResponse<LocalPackage> baseLoadReponse = JsonHelper.LoadJSONFile<LocalPackage>(packageCorePath, true, true);
+                    JsonFileLoadResponse<LocalPackage> baseLoadReponse = JsonHelper.LoadJSONFile<LocalPackage>(packageCorePath, true, true);
 
-                // Todo : handle error bettter
-                if (baseLoadReponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
-                    throw new Exception($"failed to load {packageCorePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
+                    // Todo : handle error bettter
+                    if (baseLoadReponse.ErrorType != JsonFileLoadResponseErrorTypes.None)
+                        throw new Exception($"failed to load {packageCorePath}, {baseLoadReponse.ErrorType} {baseLoadReponse.Exception}");
 
-                baseLoadReponse.Payload.DiskPath = packageCorePath;
-                newPackages.Add(baseLoadReponse.Payload);
-            }
+                    baseLoadReponse.Payload.DiskPath = packageCorePath;
+                    newPackages.Add(baseLoadReponse.Payload);
+                }
 
-            // sort and apply filters
-            string requiredTags = string.IsNullOrEmpty(this.RequiredTags) ? string.Empty : this.RequiredTags;
-            string ignoreTags  = string.IsNullOrEmpty(this.IgnoreTags) ? string.Empty : this.RequiredTags;
-            string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                // sort and apply filters
+                string requiredTags = string.IsNullOrEmpty(this.RequiredTags) ? string.Empty : this.RequiredTags;
+                string ignoreTags = string.IsNullOrEmpty(this.IgnoreTags) ? string.Empty : this.RequiredTags;
+                string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
 
-            IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
-            if (requiredTags.Any())
-                tempPackages = from package in tempPackages 
-                    where !package.Package.Tags.Except(requiredTagsArray).Any()
-                    select package;
+                IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
+                if (requiredTags.Any())
+                    tempPackages = from package in tempPackages
+                                   where !package.Package.Tags.Except(requiredTagsArray).Any()
+                                   select package;
 
-            if (ignoreTagsArray.Any())
-                tempPackages = from package in tempPackages
-                               where package.Package.Tags.Except(ignoreTagsArray).Any()
-                               select package;
+                if (ignoreTagsArray.Any())
+                    tempPackages = from package in tempPackages
+                                   where package.Package.Tags.Except(ignoreTagsArray).Any()
+                                   select package;
 
-            if (!tempPackages.Any())
-                return;
+               if (!tempPackages.Any())
+                    return;
+                
+                foreach (var package in tempPackages) 
+                {
+                    this.Packages.Items.Add(package);
+                    package.EnableAutoSave();
+                }
 
-            foreach (var package in tempPackages)
-            {
-                this.Packages.Add(package);
-                package.EnableAutoSave();
-            }
+                //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
+                //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);
+                System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{this.Packages.Items.Count}");
 
-            this.Packages = tempPackages.ToList();
-            this.Packages = this.Packages
-                .OrderByDescending(p => p.Package.CreatedUtc)
-                .ToList();
         }
 
         #endregion
     }
 }
-;

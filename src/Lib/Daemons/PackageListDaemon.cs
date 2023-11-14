@@ -45,7 +45,7 @@ namespace TetrifactClient
             });
         }
 
-        public void DoWork()
+        public void WorkNow()
         {
             throw new NotImplementedException();
         }

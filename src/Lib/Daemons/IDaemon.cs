@@ -1,9 +1,9 @@
 ﻿namespace TetrifactClient
 {
-    internal interface IDaemon
+    public interface IDaemon
     {
         void Start();
 
-        void DoWork();
+        void WorkNow();
     }
 }

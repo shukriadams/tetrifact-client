@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace TetrifactClient
             _runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, _log);
         }
 
-        public void DoWork() 
+        public void WorkNow() 
         {
             if (_runner != null)
                 _runner.WorkNow();
@@ -43,8 +44,9 @@ namespace TetrifactClient
 
         private async Task Work()
         {
+            System.Diagnostics.Debug.WriteLine($"PackageDownloadDaemon:WORK {DateTime.Now.Second}");
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
+                foreach (LocalPackage package in project.Packages.Items.Where(package => package.IsQueuedForDownload()))
                     await this.ProcessPackage(project, package);
         }
 
@@ -54,11 +56,12 @@ namespace TetrifactClient
             // or if diff between this package and previous one is over a % of total files in build.
             //bool packageAlreadyDownlaoded = project.
             Preferences preferences = GlobalDataContext.Instance.Preferences;
+            package.Status = "Processing...";
 
             //find closest build
             IEnumerable<LocalPackage> allPackagesFromTargetServer = GlobalDataContext.Instance.Projects.Projects
                 .Where(project => project.TetrifactServerAddress == package.TetrifactServerAddress)
-                .Select(project => project.Packages.Where(package => package.IsExecutable()))
+                .Select(project => project.Packages.Items.Where(package => package.IsExecutable()))
                 .SelectMany(p => p)
                 .OrderByDescending(p => p.Package.CreatedUtc);
 

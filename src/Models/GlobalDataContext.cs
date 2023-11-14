@@ -125,8 +125,8 @@ namespace TetrifactClient
             _thisInstance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
 
             // load packages for each project
-            foreach (Project project in _thisInstance.Projects.Projects) 
-                project.PopulatePackageList();
+            //foreach (Project project in _thisInstance.Projects.Projects) 
+            //    project.PopulatePackageList();
 
             // set up event to save config to disk whenever changed
             _thisInstance.Projects.Projects.ToObservableChangeSet(t => t.Id)
@@ -144,7 +144,9 @@ namespace TetrifactClient
             serialize.Projects = _thisInstance.Projects.Projects;
 
             string filePath = Path.Combine(_thisInstance.DataFolder, "Settings.json");
-            string json = JsonConvert.SerializeObject(serialize, Formatting.Indented);
+            var settings = new JsonSerializerSettings();
+            //settings.i
+            string json = JsonConvert.SerializeObject(serialize, Formatting.Indented, settings);
             File.WriteAllText(filePath, json);
         }
 

@@ -13,7 +13,7 @@ namespace TetrifactClient
             runner.Start(new AsyncDo(this.Work), (int)new TimeSpan(0, 10, 0).TotalMilliseconds, new Log());
         }
         
-        public void DoWork()
+        public void WorkNow()
         {
             throw new NotImplementedException();
         }
@@ -22,7 +22,7 @@ namespace TetrifactClient
         {
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
-                foreach (LocalPackage package in project.Packages.Where(package => package.IsMarkedForDelete()))
+                foreach (LocalPackage package in project.Packages.Items.Where(package => package.IsMarkedForDelete()))
                 {
                     // delete stuff
                     package.TransferState = BuildTransferStates.Deleting;

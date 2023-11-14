@@ -30,7 +30,7 @@ namespace TetrifactClient
             runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, new Log());
         }
 
-        public void DoWork()
+        public void WorkNow()
         {
             throw new NotImplementedException();
         }
@@ -46,7 +46,7 @@ namespace TetrifactClient
                 int downloadedCount = 0;
                 // Work way down packages in order of listing, marking them for autodownload as necessary
                 // This assumes packages are sorted newest to oldest
-                foreach (LocalPackage package in project.Packages) 
+                foreach (LocalPackage package in project.Packages.Items) 
                 {
                     // mark for download
                     if (package.IsEligibleForAutoDownload())

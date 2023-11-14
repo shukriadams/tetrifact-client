@@ -19,13 +19,14 @@ namespace TetrifactClient
             runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, new Log());
         }
 
-        public void DoWork()
+        public void WorkNow()
         {
             throw new NotImplementedException();
         }
 
         public async Task Work()
         {
+
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
                 Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
@@ -89,10 +90,9 @@ namespace TetrifactClient
                     }
                 }
 
-                project.PopulatePackageList();
+                System.Diagnostics.Debug.WriteLine($"PackageDetailsDaemon:WORK {DateTime.Now.Second} project:{project.Name}");
+               // project.PopulatePackageList();
             }
-
-
         }
     }
 }

@@ -15,7 +15,7 @@ namespace TetrifactClient
             runner.Start(new AsyncDo(this.Work), GlobalDataContext.Instance.DaemonIntervalMS, new Log());
         }
 
-        public void DoWork()
+        public void WorkNow()
         {
             throw new NotImplementedException();
         }

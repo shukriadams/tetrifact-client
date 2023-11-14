@@ -15,7 +15,7 @@ namespace TetrifactClient
         {
             this.Items.Insert(0, item);
             if (this.Items.Count > MaxItems)
-                this.Items = (ObservableCollection<string>)Items.Take(MaxItems);
+                this.Items = new ObservableCollection<string>(Items.Take(MaxItems));
         }
 
         public ObservableCollection<string> Items
