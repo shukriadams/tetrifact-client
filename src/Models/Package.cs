@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace TetrifactClient
 {
@@ -7,24 +9,37 @@ namespace TetrifactClient
     /// Represents a downloadable package (build) on Tetrifact. This object is deserialzied directly from remote.json in local packages.
     /// Is is not observable because it will not change.
     /// </summary>
-    public class Package
+    public partial class Package : ObservableObject
     {
         #region PROPERTIES
 
-        public string Id { get; set; }
+        [property: JsonProperty("Id")]
+        [ObservableProperty]
+        private string _id;
 
-        public DateTime CreatedUtc { get; set; }
+        [property: JsonProperty("CreatedUtc")]
+        [ObservableProperty]
+        private DateTime _createdUtc;
 
-        public string Hash { get; set; }
+        [property: JsonProperty("Hash")]
+        [ObservableProperty]
+        public string _hash;
 
-        public IEnumerable<string> Tags { get; set; }
+        [property: JsonProperty("Tags")]
+        [ObservableProperty]
+        public IEnumerable<string> _tags;
 
         /// <summary>
-        /// Zero for lists of package. to get size retrieve package for a specific package.
+        /// 
         /// </summary>
-        public long Size { get; set; }
+        [property: JsonProperty("Size")]
+        [ObservableProperty]
+        public long _size;
 
-        public IEnumerable<PackageFile> Files { get; set; }
+        [ObservableProperty]
+        [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
+        [JsonIgnore]
+        public IEnumerable<PackageFile> _files;
 
         #endregion
 
@@ -32,7 +47,7 @@ namespace TetrifactClient
 
         public Package()
         {
-            this.Tags = new string[] { };
+            this.Tags = new string[0];
             this.Files = new PackageFile[0];
         }
 

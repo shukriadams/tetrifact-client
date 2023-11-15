@@ -22,7 +22,9 @@
                 </Button>
             </StackPanel>
 
-            <TextBlock DockPanel.Dock="Top" Text="No projects added yet"
+            <TextBlock 
+				DockPanel.Dock="Top" 
+			    Text="No projects added yet"
                 IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
 
             <ListBox Classes="listProjects" Tapped="listProjects_Clicked" DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Projects}">

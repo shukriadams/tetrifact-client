@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -96,7 +97,7 @@ namespace TetrifactClient
         [ObservableProperty]
         [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
         [JsonIgnore]                            // need this defined twice for autogen and local 
-        public ObservableCollection<LocalPackage> _packages;
+        public ObservableConcurrentCollection<LocalPackage> _packages;
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
@@ -118,7 +119,7 @@ namespace TetrifactClient
         public Project() 
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Packages = new ObservableCollection<LocalPackage>();
+            this.Packages = new ObservableConcurrentCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
         }
 
@@ -180,9 +181,9 @@ namespace TetrifactClient
                if (!tempPackages.Any())
                     return;
                 
+               this.Packages.AddFromEnumerable(tempPackages);
                 foreach (var package in tempPackages) 
                 {
-                    this.Packages.Add(package);
                     package.EnableAutoSave();
                 }
 

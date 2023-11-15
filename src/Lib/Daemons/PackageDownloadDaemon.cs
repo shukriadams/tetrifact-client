@@ -69,7 +69,8 @@ namespace TetrifactClient
             LocalPackage donorPackage = null;
             if (allPackagesFromTargetServer.Any()) 
             {
-                foreach(LocalPackage potentialDonorPackage in allPackagesFromTargetServer)
+                package.Status = "Checking local files first";
+                foreach (LocalPackage potentialDonorPackage in allPackagesFromTargetServer)
                 {
                     PackageDiffResponse diffLookup = JsonHelper.DownloadDiff(package.TetrifactServerAddress, potentialDonorPackage.Package.Id, package.Package.Id);
                     if (diffLookup.ResponseType == PackageDiffResponseTypes.None) 
@@ -87,14 +88,17 @@ namespace TetrifactClient
             else
                 downloader = new PackagePartialDownloader(_context, project, package, donorPackage, packageDiff, _log);
 
+            package.Status = "Downloading";
             PackageTransferResponse result = downloader.Download();
             if (result.Succeeded)
             {
                 package.TransferState = BuildTransferStates.Downloaded;
+                package.Status = "Done";
             }
             else 
             {
                 package.TransferState = BuildTransferStates.DownloadFailed;
+                package.Status = "Error, check logs";
                 GlobalDataContext.Instance.Console.Add(result.Message);
             }
         }

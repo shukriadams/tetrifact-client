@@ -67,7 +67,8 @@
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Status" Binding="{Binding Converter={x:Static local:LocalPackageStatusConverter.GetStatus}}"/>
+					<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>
+					<DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
 				</DataGrid.Columns>
         </DataGrid>
 

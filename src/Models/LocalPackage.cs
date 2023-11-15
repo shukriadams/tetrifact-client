@@ -58,6 +58,7 @@ namespace TetrifactClient
         /// <summary>
         /// User-friendly description of what is going on with this package now. Not persisted to json.
         /// </summary>
+        [property: JsonProperty("Status")]
         [ObservableProperty]
         [property: JsonIgnore]
         private string _status;

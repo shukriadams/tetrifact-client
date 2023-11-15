@@ -4,13 +4,13 @@ namespace TetrifactClient
 {
     public class LocalPackageStatusConverter
     {
-        public static readonly IValueConverter GetStatus = new FuncValueConverter<object?, string>((object arg) => {
+        public static readonly IValueConverter GetState = new FuncValueConverter<object?, string>((object arg) => {
 
-            LocalPackage s = (LocalPackage)arg;
+            BuildTransferStates? s = (BuildTransferStates)arg;
             if (s == null)
                 return string.Empty;
 
-            return $"{s.TransferState} {s.Status}";
+            return $"{s}";
         });
     }
 }
