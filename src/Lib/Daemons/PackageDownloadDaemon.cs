@@ -46,7 +46,7 @@ namespace TetrifactClient
         {
             System.Diagnostics.Debug.WriteLine($"PackageDownloadDaemon:WORK {DateTime.Now.Second}");
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                foreach (LocalPackage package in project.Packages.Items.Where(package => package.IsQueuedForDownload()))
+                foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
                     await this.ProcessPackage(project, package);
         }
 
@@ -61,7 +61,7 @@ namespace TetrifactClient
             //find closest build
             IEnumerable<LocalPackage> allPackagesFromTargetServer = GlobalDataContext.Instance.Projects.Projects
                 .Where(project => project.TetrifactServerAddress == package.TetrifactServerAddress)
-                .Select(project => project.Packages.Items.Where(package => package.IsExecutable()))
+                .Select(project => project.Packages.Where(package => package.IsExecutable()))
                 .SelectMany(p => p)
                 .OrderByDescending(p => p.Package.CreatedUtc);
 

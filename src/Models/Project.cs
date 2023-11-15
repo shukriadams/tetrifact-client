@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -8,21 +7,9 @@ using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using Newtonsoft.Json;
-using ReactiveUI;
 
 namespace TetrifactClient
 {
-    public class ProjectPackages : ReactiveObject
-    {
-        private ObservableCollection<LocalPackage> _items = new ObservableCollection<LocalPackage> { };
-
-        public ObservableCollection<LocalPackage> Items
-        {
-            get => _items;
-            private set => this.RaiseAndSetIfChanged(ref _items, value);
-        }
-    }
-
     public partial class Project : ObservableObject
     {
         #region FIELDS
@@ -103,15 +90,13 @@ namespace TetrifactClient
         [ObservableProperty]
         private string _accessKey;
 
-        public ProjectPackages Packages { get; } = new ProjectPackages();
-
         /// <summary>
         /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
-        //[ObservableProperty]
-        //[property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
-        //[JsonIgnore]                            // need this defined twice for autogen and local 
-        // public ObservableCollection<LocalPackage> _packages;
+        [ObservableProperty]
+        [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
+        [JsonIgnore]                            // need this defined twice for autogen and local 
+        public ObservableCollection<LocalPackage> _packages;
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
@@ -133,7 +118,7 @@ namespace TetrifactClient
         public Project() 
         {
             this.Id = Guid.NewGuid().ToString();
-            //this.Packages = new ObservableCollection<LocalPackage>();
+            this.Packages = new ObservableCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
         }
 
@@ -157,7 +142,7 @@ namespace TetrifactClient
                 List<LocalPackage> newPackages = new List<LocalPackage>();
                 foreach (string packageId in packageIds)
                 {
-                    if (this.Packages.Items.Any(p => p.Package.Id == packageId))
+                    if (this.Packages.Any(p => p.Package.Id == packageId))
                         continue;
 
                     string packageRawJson = string.Empty;
@@ -197,13 +182,13 @@ namespace TetrifactClient
                 
                 foreach (var package in tempPackages) 
                 {
-                    this.Packages.Items.Add(package);
+                    this.Packages.Add(package);
                     package.EnableAutoSave();
                 }
 
                 //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
                 //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);
-                System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{this.Packages.Items.Count}");
+                System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{this.Packages.Count}");
 
         }
 

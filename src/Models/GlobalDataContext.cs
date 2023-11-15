@@ -1,4 +1,5 @@
-﻿using DynamicData;
+﻿using Avalonia.Threading;
+using DynamicData;
 using DynamicData.Binding;
 using Newtonsoft.Json;
 using ReactiveUI;
@@ -125,8 +126,15 @@ namespace TetrifactClient
             _thisInstance.ProjectTemplates.Projects = ResourceLoader.DeserializeFromJson<ObservableCollection<Project>>("Templates.Projects.json");
 
             // load packages for each project
-            //foreach (Project project in _thisInstance.Projects.Projects) 
-            //    project.PopulatePackageList();
+            foreach (Project project in _thisInstance.Projects.Projects)
+            {
+                //project.PopulatePackageList();
+            }
+
+            Dispatcher.UIThread.Post(() => {
+            },
+            DispatcherPriority.Background);
+
 
             // set up event to save config to disk whenever changed
             _thisInstance.Projects.Projects.ToObservableChangeSet(t => t.Id)

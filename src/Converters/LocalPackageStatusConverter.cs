@@ -10,7 +10,7 @@ namespace TetrifactClient
             if (s == null)
                 return string.Empty;
 
-            return $"{s.TransferState}  {s.Status}";
+            return $"{s.TransferState} {s.Status}";
         });
     }
 }

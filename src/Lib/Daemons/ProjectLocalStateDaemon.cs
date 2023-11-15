@@ -27,7 +27,6 @@ namespace TetrifactClient
         public async Task Work()
         {
             Dispatcher.UIThread.Post(() => {
-
                 foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
                     project.PopulatePackageList();
 
@@ -53,7 +52,7 @@ namespace TetrifactClient
                     List<LocalPackage> newPackages = new List<LocalPackage>();
                     foreach (string packageId in packageIds)
                     {
-                        if (project.Packages.Items.Any(p => p.Package.Id == packageId))
+                        if (project.Packages.Any(p => p.Package.Id == packageId))
                             continue;
 
                         string packageRawJson = string.Empty;
@@ -91,15 +90,15 @@ namespace TetrifactClient
                     if (!tempPackages.Any())
                         return;
 
-                    project.Packages.Items.AddRange(tempPackages);
+                    project.Packages.AddRange(tempPackages);
                     //project.Packages.add
 
-                    foreach (var package in project.Packages.Items)
+                    foreach (var package in project.Packages)
                         package.EnableAutoSave();
 
                     //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
                     //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);
-                    System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{project.Packages.Items.Count}");
+                    System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{project.Packages.Count}");
                 }
 
             },

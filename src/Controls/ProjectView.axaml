@@ -21,11 +21,12 @@
 			No builds available for this project yet.
 		</TextBlock>
 		
-        <DataGrid
-			ItemsSource="{Binding Packages.Items}"
+		<DataGrid
+			ItemsSource="{Binding Packages}"
 			Classes="grid"
 			Name="gridPackages"
 			IsReadOnly="True"
+			DockPanel.Dock="Top"
 			CanUserReorderColumns="True"
 			CanUserResizeColumns="True"
 			CanUserSortColumns="False"
@@ -69,5 +70,6 @@
 					<DataGridTextColumn Header="Status" Binding="{Binding Converter={x:Static local:LocalPackageStatusConverter.GetStatus}}"/>
 				</DataGrid.Columns>
         </DataGrid>
-    </DockPanel>
+
+	</DockPanel>
 </UserControl>

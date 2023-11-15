@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -12,16 +13,28 @@ namespace TetrifactClient
             DataContextChanged += ThisDataContextChanged;
 
             // if not in v.studio, hide control if it has no data
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //    this.IsVisible = false;
+            if (!System.Diagnostics.Debugger.IsAttached)
+                this.IsVisible = false;
         }
 
         private void ThisDataContextChanged(object? sender, System.EventArgs e)
         {
             this.IsVisible = this.DataContext != null;
-            Project thisContext = this.DataContext as Project;
-            txtNoBuildsAvailable.IsVisible = !thisContext.Packages.Items.Any();
-            gridPackages.IsVisible = thisContext.Packages.Items.Any();
+            ObservableCollection<LocalPackage> datacontext = gridPackages.ItemsSource as ObservableCollection<LocalPackage>;
+            
+            if (datacontext != null) 
+            {
+                datacontext.CollectionChanged += gridChanged;
+                gridPackages.IsVisible = datacontext.Any();
+                txtNoBuildsAvailable.IsVisible = !datacontext.Any();
+            }
+        }
+
+        private void gridChanged(object? sender, System.EventArgs e) 
+        {
+            ObservableCollection<LocalPackage> datacontext = gridPackages.DataContext as ObservableCollection<LocalPackage>;
+            gridPackages.IsVisible = datacontext.Any();
+            txtNoBuildsAvailable.IsVisible = !datacontext.Any();
         }
 
         private void ContextMenu_Opening(object? sender, CancelEventArgs e)

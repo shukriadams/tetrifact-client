@@ -22,7 +22,7 @@ namespace TetrifactClient
         {
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
-                foreach (LocalPackage package in project.Packages.Items.Where(package => package.IsMarkedForDelete()))
+                foreach (LocalPackage package in project.Packages.Where(package => package.IsMarkedForDelete()))
                 {
                     // delete stuff
                     package.TransferState = BuildTransferStates.Deleting;
