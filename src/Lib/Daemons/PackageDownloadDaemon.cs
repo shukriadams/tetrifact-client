@@ -92,12 +92,12 @@ namespace TetrifactClient
             PackageTransferResponse result = downloader.Download();
             if (result.Succeeded)
             {
-                package.TransferState = BuildTransferStates.Downloaded;
+                package.TransferState = PackageTransferStates.Downloaded;
                 package.Status = "Done";
             }
             else 
             {
-                package.TransferState = BuildTransferStates.DownloadFailed;
+                package.TransferState = PackageTransferStates.DownloadFailed;
                 package.Status = "Error, check logs";
                 GlobalDataContext.Instance.Console.Add(result.Message);
             }

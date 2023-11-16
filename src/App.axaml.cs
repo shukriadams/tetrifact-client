@@ -35,13 +35,13 @@ public partial class App : Application
         UnityContainer = new UnityContainer();
         UnityContainer.RegisterType<ProjectEditorView, ProjectEditorView>();
         UnityContainer.RegisterType<ILog, Log>();
-        UnityContainer.RegisterType<IDaemon, PackageDetailsDaemon>();
-        UnityContainer.RegisterType<IDaemon, PackageDownloadAutoQueueDaemon>();
-        UnityContainer.RegisterType<IDaemon, PackageDownloadDaemon>();
-        UnityContainer.RegisterType<IDaemon, PackageListDaemon>();
-        UnityContainer.RegisterType<IDaemon, LocalStateDaemon>();
-        UnityContainer.RegisterType<IDaemon, LocalPackageDeleteDaemon>();
-        UnityContainer.RegisterType<IDaemon, ProjectLocalStateDaemon>();
+        UnityContainer.RegisterType<PackageDetailsDaemon, PackageDetailsDaemon>();
+        UnityContainer.RegisterType<PackageDownloadAutoQueueDaemon, PackageDownloadAutoQueueDaemon>();
+        UnityContainer.RegisterType<PackageDownloadDaemon, PackageDownloadDaemon>();
+        UnityContainer.RegisterType<PackageListDaemon, PackageListDaemon>();
+        UnityContainer.RegisterType<LocalStateDaemon, LocalStateDaemon>();
+        UnityContainer.RegisterType<LocalPackageDeleteDaemon, LocalPackageDeleteDaemon>();
+        UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -65,7 +65,10 @@ public partial class App : Application
         Type daemonType = typeof(IDaemon);
         foreach (Type type in Assembly.GetExecutingAssembly().GetTypes().Where(t => daemonType.IsAssignableFrom(t) && !t.IsInterface)) 
         {
-            IDaemon daemon = App.UnityContainer.Resolve(type, null) as IDaemon; 
+            if (!App.UnityContainer.IsRegistered(type))
+                continue;
+
+            IDaemon daemon = App.UnityContainer.Resolve(type, null) as IDaemon;
             daemon.Start();
             Daemons.Add(daemon);
         }

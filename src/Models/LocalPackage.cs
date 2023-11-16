@@ -33,7 +33,7 @@ namespace TetrifactClient
         [property: JsonProperty("TransferState")]
         [property: JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         [ObservableProperty]
-        private BuildTransferStates _transferState;
+        private PackageTransferStates _transferState;
 
         /// <summary>
         /// If transfer or integrity check failed, message describing failure.
@@ -47,6 +47,7 @@ namespace TetrifactClient
         /// </summary>
         [property: JsonProperty("Package")]
         [ObservableProperty]
+        [JsonIgnore]
         public Package _package;
 
         /// <summary>
@@ -111,41 +112,41 @@ namespace TetrifactClient
 
         public bool IsEligibleForAutoDownload()
         {
-            return this.TransferState == BuildTransferStates.AvailableForDownload;
+            return this.TransferState == PackageTransferStates.AvailableForDownload;
         }
 
         public bool IsExecutable()
         {
-            return this.TransferState == BuildTransferStates.DoNotDelete 
-                || this.TransferState == BuildTransferStates.Downloaded;
+            return this.TransferState == PackageTransferStates.DoNotDelete 
+                || this.TransferState == PackageTransferStates.Downloaded;
         }
 
         public bool IsDownloadedorQueuedForDownload()
         {
-            return this.TransferState == BuildTransferStates.Downloaded
-                || this.TransferState == BuildTransferStates.Downloading
-                || this.TransferState == BuildTransferStates.AutoMarkedForDownload
-                || this.TransferState == BuildTransferStates.UserMarkedForDownload;
+            return this.TransferState == PackageTransferStates.Downloaded
+                || this.TransferState == PackageTransferStates.Downloading
+                || this.TransferState == PackageTransferStates.AutoMarkedForDownload
+                || this.TransferState == PackageTransferStates.UserMarkedForDownload;
         }
 
         public bool CanBeAutoCleanedUp() 
         {
-            if (this.TransferState == BuildTransferStates.DoNotDelete)
+            if (this.TransferState == PackageTransferStates.DoNotDelete)
                 return false;
 
-            return this.TransferState == BuildTransferStates.Downloaded;
+            return this.TransferState == PackageTransferStates.Downloaded;
         }
 
         public bool IsMarkedForDelete() 
         {
-            return this.TransferState == BuildTransferStates.AutoMarkedForDelete
-                || this.TransferState == BuildTransferStates.UserMarkedForDelete;
+            return this.TransferState == PackageTransferStates.AutoMarkedForDelete
+                || this.TransferState == PackageTransferStates.UserMarkedForDelete;
         }
 
         public bool IsQueuedForDownload() 
         {
-            return this.TransferState == BuildTransferStates.UserMarkedForDownload
-                || this.TransferState == BuildTransferStates.AutoMarkedForDownload;
+            return this.TransferState == PackageTransferStates.UserMarkedForDownload
+                || this.TransferState == PackageTransferStates.AutoMarkedForDownload;
         }
 
         #endregion

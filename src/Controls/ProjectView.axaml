@@ -42,16 +42,17 @@
 						<MenuItem Header="Unignore" Name="mnuUnignore" />
 						<MenuItem Header="Run" Name="mnuRun" />
 						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" />
-						<MenuItem Header="Delete" Name="mnuDelete" />
+						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
 						<MenuItem Header="Verify" Name="mnuVerify" />
 						<MenuItem Header="Copy id" Name="mnuCopyId" />
 						<MenuItem Header="Advanced" Name="mnuAdvanced" />
 					</ContextMenu>
 				</DataGrid.ContextMenu>
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Id" Binding="{Binding Package.Id}"/>
-					<DataGridTextColumn Header="Date" Binding="{Binding Package.CreatedUtc}"/>
-					<DataGridTemplateColumn Header="Tags">
+					<DataGridTextColumn Header="Id" Width="100" Binding="{Binding Package.Id}"/>
+					<DataGridTextColumn Header="Date" Width="100" Binding="{Binding Package.CreatedUtc}"/>
+					<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>
+					<DataGridTemplateColumn Header="Tags" Width="300">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<ItemsRepeater Classes="grid" ItemsSource="{Binding Package.Tags}">
@@ -67,8 +68,7 @@
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>
-					<DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+					<DataGridTextColumn Header="Info" Width="300" Binding="{Binding Status}"/>
 				</DataGrid.Columns>
         </DataGrid>
 

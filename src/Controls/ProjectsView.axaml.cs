@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
+using System.Collections.Specialized;
 using System.Linq;
 using Unity;
 
@@ -11,6 +12,12 @@ namespace TetrifactClient
         public ProjectsView()
         {
             InitializeComponent();
+
+            listProjects.Items.CollectionChanged += (object? sender, NotifyCollectionChangedEventArgs e) =>{
+                // auto focus first item in list
+                if (listProjects.Items.Any())
+                    listProjects.SelectedIndex = 0;
+            };
         }
 
         public void OnNewProject(object? sender, RoutedEventArgs args)
@@ -20,7 +27,7 @@ namespace TetrifactClient
             settingsEditor.ShowDialog(MainWindow.Instance);
         }
 
-        private void listProjects_Clicked(object? sender, Avalonia.Input.TappedEventArgs e)
+        private void ProjectsList_Clicked(object? sender, Avalonia.Input.TappedEventArgs e)
         {
             string id = null;
             object source = e.Source;

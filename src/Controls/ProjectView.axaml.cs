@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
@@ -10,31 +10,36 @@ namespace TetrifactClient
         public ProjectView()
         {
             InitializeComponent();
-            DataContextChanged += ThisDataContextChanged;
 
             // if not in v.studio, hide control if it has no data
-            if (!System.Diagnostics.Debugger.IsAttached)
-                this.IsVisible = false;
+            //if (!System.Diagnostics.Debugger.IsAttached)
+            //    this.IsVisible = false;
+
+            gridPackages.DataContextChanged += GridDataChanged;
+
         }
 
-        private void ThisDataContextChanged(object? sender, System.EventArgs e)
+        private void GridDataChanged(object? sender, System.EventArgs e)
         {
-            this.IsVisible = this.DataContext != null;
-            ObservableCollection<LocalPackage> datacontext = gridPackages.ItemsSource as ObservableCollection<LocalPackage>;
-            
+            Project datacontext = gridPackages.DataContext as Project;
             if (datacontext != null) 
-            {
-                datacontext.CollectionChanged += gridChanged;
-                gridPackages.IsVisible = datacontext.Any();
-                txtNoBuildsAvailable.IsVisible = !datacontext.Any();
-            }
+                datacontext.Packages.CollectionChanged += gridChanged;
+
+            this.SetVisualState();
+        }
+
+        private void SetVisualState() 
+        {
+            Project datacontext = gridPackages.DataContext as Project;
+            gridPackages.IsVisible = datacontext.Packages.Any();
+            txtNoBuildsAvailable.IsVisible = !datacontext.Packages.Any();
+
+            this.IsVisible = this.DataContext != null;
         }
 
         private void gridChanged(object? sender, System.EventArgs e) 
         {
-            ObservableCollection<LocalPackage> datacontext = gridPackages.DataContext as ObservableCollection<LocalPackage>;
-            gridPackages.IsVisible = datacontext.Any();
-            txtNoBuildsAvailable.IsVisible = !datacontext.Any();
+            this.SetVisualState();
         }
 
         private void ContextMenu_Opening(object? sender, CancelEventArgs e)
@@ -56,10 +61,18 @@ namespace TetrifactClient
             if (selectedProject == null)
                 return;
 
-            selectedProject.TransferState = BuildTransferStates.UserMarkedForDownload;
+            selectedProject.TransferState = PackageTransferStates.UserMarkedForDownload;
             PackageDownloadDaemon daemon = App.Daemons.First(d => d.GetType() == typeof(PackageDownloadDaemon)) as PackageDownloadDaemon;
             daemon.WorkNow();
+        }
 
+        private void OnDeletePackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.TransferState = PackageTransferStates.UserMarkedForDelete;
         }
 
         private void OnDeleteAccept() 

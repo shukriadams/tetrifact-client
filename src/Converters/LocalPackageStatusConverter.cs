@@ -6,9 +6,18 @@ namespace TetrifactClient
     {
         public static readonly IValueConverter GetState = new FuncValueConverter<object?, string>((object arg) => {
 
-            BuildTransferStates? s = (BuildTransferStates)arg;
+            PackageTransferStates? s = (PackageTransferStates)arg;
             if (s == null)
                 return string.Empty;
+
+            if (s == PackageTransferStates.UserMarkedForDownload)
+                return "Downloading";
+            
+            if (s == PackageTransferStates.AutoMarkedForDownload)
+                return "Downloading";
+
+            if (s == PackageTransferStates.AvailableForDownload)
+                return "Available";
 
             return $"{s}";
         });

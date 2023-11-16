@@ -27,7 +27,12 @@
 			    Text="No projects added yet"
                 IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
 
-            <ListBox Classes="listProjects" Tapped="listProjects_Clicked" DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Projects}">
+            <ListBox 
+				Classes="listProjects" 
+				Tapped="ProjectsList_Clicked" 
+				DockPanel.Dock="Top" 
+				Name="listProjects" 
+				ItemsSource="{Binding Projects}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Tag="{Binding Id}" Text="{Binding Name}" />

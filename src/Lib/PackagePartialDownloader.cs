@@ -150,7 +150,7 @@ namespace TetrifactClient
                 };
 
             // write state to package
-            _package.TransferState = BuildTransferStates.Downloaded;
+            _package.TransferState = PackageTransferStates.Downloaded;
             // todo : log more info about transfer time etc?
 
             return new PackageTransferResponse { };

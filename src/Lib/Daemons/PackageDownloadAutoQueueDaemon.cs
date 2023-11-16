@@ -50,7 +50,7 @@ namespace TetrifactClient
                 {
                     // mark for download
                     if (package.IsEligibleForAutoDownload())
-                        package.TransferState = BuildTransferStates.AutoMarkedForDownload;
+                        package.TransferState = PackageTransferStates.AutoMarkedForDownload;
 
                     // if alreaddy marked for download, tally it up
                     if (package.IsDownloadedorQueuedForDownload())
@@ -58,7 +58,7 @@ namespace TetrifactClient
 
                     // if tally of (marked for) downloaded mnet, start marking for delete
                     if (downloadedCount > project.PackageSyncCount && package.CanBeAutoCleanedUp())
-                        package.TransferState = BuildTransferStates.AutoMarkedForDelete;
+                        package.TransferState = PackageTransferStates.AutoMarkedForDelete;
                 }
             }
         }

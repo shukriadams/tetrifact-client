@@ -1,15 +1,11 @@
-﻿using Avalonia.Threading;
-using DynamicData;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace TetrifactClient
 {
+    /// <summary>
+    /// Daemon to force reading of local state for each project from disk.
+    /// </summary>
     public class ProjectLocalStateDaemon : IDaemon
     {
         public void Start()
@@ -26,9 +22,8 @@ namespace TetrifactClient
 
         public async Task Work()
         {
-                foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                    project.PopulatePackageList();
-
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
+                project.PopulatePackageList();
         }
     }
 }

@@ -30,6 +30,11 @@ namespace TetrifactClient
             return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"~{package.Package.Id}.zip");
         }
 
+        public static string GetPackageDirectoryRootPath(GlobalDataContext context, Project project, LocalPackage package)
+        {
+            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id);
+        }
+
         public static string GetPackageDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
             return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, "content");

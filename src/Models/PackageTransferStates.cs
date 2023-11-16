@@ -3,7 +3,7 @@
     /// <summary>
     /// Sliding states for build. A build always has one and only one of these.
     /// </summary>
-    public enum BuildTransferStates
+    public enum PackageTransferStates
     {
         AvailableForDownload,       // default state, package exists remotely
         UserIgnored,                // user explicitly states they do not want to download package
