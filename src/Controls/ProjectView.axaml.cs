@@ -1,7 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Security;
 
 namespace TetrifactClient
 {
@@ -42,9 +44,68 @@ namespace TetrifactClient
             this.SetVisualState();
         }
 
-        private void ContextMenu_Opening(object? sender, CancelEventArgs e)
+        private void ContextMenu_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
         {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
 
+            mnuDownload.IsVisible = selectedProject.IsDownloadable();
+            mnuDelete.IsVisible = selectedProject.IsExecutable();
+            mnuIgnore.IsVisible = selectedProject.IsDownloadable() && !selectedProject.Ignore;
+            mnuUnignore.IsVisible = selectedProject.IsDownloadable() && !mnuIgnore.IsVisible;
+            mnuRun.IsVisible = selectedProject.IsExecutable();
+            mnuVerify.IsVisible = selectedProject.IsExecutable();
+            mnuKeep.IsVisible = selectedProject.IsExecutable() && !selectedProject.Keep;
+            mnuUnkeep.IsVisible = selectedProject.IsExecutable() && !mnuKeep.IsVisible;
+            mnuViewInExplorer.IsVisible = selectedProject.IsExecutable();
+            mnuVerify.IsVisible = selectedProject.IsExecutable();
+        }
+
+        private void OnIgnoreClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.Ignore = true;
+        }
+
+        private void OnUnignoreClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.Ignore = false;
+        }
+
+        private void OnTagsClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+            
+            TagsDialog dialog = new TagsDialog();
+            dialog.ShowDialog(MainWindow.Instance);
+        }
+
+        private void OnKeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.Keep = true;
+        }
+
+        private void OnUnkeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.Keep = false;
         }
 
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -81,5 +142,7 @@ namespace TetrifactClient
             GlobalDataContext.Save();
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
+
+
     }
 }

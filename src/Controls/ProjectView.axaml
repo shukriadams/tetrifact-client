@@ -36,16 +36,17 @@
 				<DataGrid.ContextMenu>
 					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
 						<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
-						<MenuItem Header="Keep" Name="mnuKeep" />
-						<MenuItem Header="Unkeep" Name="mnuUnkeep" />
-						<MenuItem Header="Ignore" Name="mnuIgnore" />
-						<MenuItem Header="Unignore" Name="mnuUnignore" />
+						<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
+						<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
+						<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
+						<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
 						<MenuItem Header="Run" Name="mnuRun" />
 						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" />
 						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
 						<MenuItem Header="Verify" Name="mnuVerify" />
 						<MenuItem Header="Copy id" Name="mnuCopyId" />
 						<MenuItem Header="Advanced" Name="mnuAdvanced" />
+						<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
 					</ContextMenu>
 				</DataGrid.ContextMenu>
 				<DataGrid.Columns>

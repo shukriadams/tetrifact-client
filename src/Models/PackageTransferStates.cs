@@ -6,8 +6,6 @@
     public enum PackageTransferStates
     {
         AvailableForDownload,       // default state, package exists remotely
-        UserIgnored,                // user explicitly states they do not want to download package
-        AutoTagIgnored,             // ignored because of tags
         AutoMarkedForDownload,       // package queued automatically
         UserMarkedForDownload,      // user explicitly queued package for download
         Downloading,                // package is currently being downloaded

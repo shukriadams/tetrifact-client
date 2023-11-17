@@ -27,6 +27,10 @@ namespace TetrifactClient
         [ObservableProperty]
         private bool _ignore;
 
+        [property: JsonProperty("Keep")]
+        [ObservableProperty]
+        private bool _keep;
+
         /// <summary>
         /// 
         /// </summary>
@@ -98,6 +102,13 @@ namespace TetrifactClient
         {
            
             return string.Empty;
+        }
+
+        public bool IsDownloadable() 
+        {
+            return this.TransferState == PackageTransferStates.AvailableForDownload
+                || this.TransferState == PackageTransferStates.Deleted
+                || this.TransferState == PackageTransferStates.DownloadFailed;
         }
 
         /// <summary>
