@@ -1,14 +1,15 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Security;
 
 namespace TetrifactClient
 {
     public partial class ProjectView : UserControl
     {
+        ILog _log;
+
         public ProjectView()
         {
             InitializeComponent();
@@ -18,7 +19,7 @@ namespace TetrifactClient
             //    this.IsVisible = false;
 
             gridPackages.DataContextChanged += GridDataChanged;
-
+            _log = new Log();
         }
 
         private void GridDataChanged(object? sender, System.EventArgs e)
@@ -69,6 +70,40 @@ namespace TetrifactClient
                 return;
 
             selectedProject.Ignore = true;
+        }
+
+        private void OnRunPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            Project project = gridPackages.DataContext as Project;
+            PackageRunner runner = new PackageRunner();
+            runner.Run(GlobalDataContext.Instance, selectedProject, project);
+        }
+
+        private void OnViewInExplorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            Project project = gridPackages.DataContext as Project;
+
+            string packageDirectory = PathHelper.GetPackageDirectoryPath(GlobalDataContext.Instance, project , selectedProject);
+            if (Directory.Exists(packageDirectory))
+            {
+                try
+                {
+                    // note : this is windows specific, need to find a cross-os friendly version 
+                    Process.Start("explorer.exe", packageDirectory);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"Error opening path {packageDirectory}", ex);
+                }
+            }
         }
 
         private void OnUnignoreClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

@@ -40,8 +40,8 @@
 						<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
 						<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
 						<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
-						<MenuItem Header="Run" Name="mnuRun" />
-						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" />
+						<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
+						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
 						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
 						<MenuItem Header="Verify" Name="mnuVerify" />
 						<MenuItem Header="Copy id" Name="mnuCopyId" />
