@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Unity;
 
 namespace TetrifactClient
 {
@@ -141,6 +142,13 @@ namespace TetrifactClient
                 return;
 
             selectedProject.Keep = false;
+        }
+
+        private void ProjectEdit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
+            editor.SetProject(gridPackages.DataContext as Project);
+            editor.ShowDialog(MainWindow.Instance);
         }
 
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

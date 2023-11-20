@@ -6,7 +6,7 @@
 		mc:Ignorable="d" 
 		d:DesignWidth="800" 
 		d:DesignHeight="450"
-		x:DataType="vm:GlobalDataContext"
+		x:DataType="vm:ProjectEditorViewModel"
 		ExtendClientAreaToDecorationsHint="True"
 		x:Class="TetrifactClient.ProjectEditorView"
         Title="ProjectEditorView">
@@ -25,11 +25,11 @@
 			</StackPanel>
 			<StackPanel Classes="flow-vertical">
 				<Label>Project Name</Label>
-				<TextBox Name="txtName"></TextBox>
+				<TextBox Name="txtName" Text="{Binding Project.Name}"></TextBox>
 			</StackPanel>
 			<StackPanel Classes="flow-vertical">
 				<Label>Build server</Label>
-				<TextBox Name="txtServer"></TextBox>
+				<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" Classes="flow-vertical">
 				<Button Name="btnCancel" Click="OnCancel" Classes="warning">Cancel</Button>

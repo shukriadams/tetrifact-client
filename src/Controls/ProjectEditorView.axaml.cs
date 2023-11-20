@@ -9,6 +9,18 @@ namespace TetrifactClient
             InitializeComponent();
         }
 
+        public void SetProject(Project project) 
+        {
+            this.DataContext = new ProjectEditorViewModel 
+            {
+                ProjectTemplates = GlobalDataContext.Instance.ProjectTemplates,
+                Project = project
+            };
+
+            // hide combobox when project already set
+            cmbTemplateSource.IsVisible = project == null;
+        }
+
         public new void ShowDialog(Window parent) 
         {
             base.ShowDialog(parent);

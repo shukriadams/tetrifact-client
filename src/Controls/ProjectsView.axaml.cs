@@ -22,9 +22,9 @@ namespace TetrifactClient
 
         public void OnNewProject(object? sender, RoutedEventArgs args)
         {
-            ProjectEditorView settingsEditor = App.UnityContainer.Resolve<ProjectEditorView>();
-            settingsEditor.DataContext = GlobalDataContext.Instance;
-            settingsEditor.ShowDialog(MainWindow.Instance);
+            ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
+            editor.SetProject(null);
+            editor.ShowDialog(MainWindow.Instance);
         }
 
         private void ProjectsList_Clicked(object? sender, Avalonia.Input.TappedEventArgs e)

@@ -15,7 +15,11 @@
 			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}" />
 		</Panel>
 
-		<Button DockPanel.Dock="Top" Click="ProjectDelete_Click">Delete project</Button>
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+			<Button Click="ProjectEdit_Click">Edit </Button>
+			<Button Click="ProjectDelete_Click">Delete</Button>
+		</StackPanel>
+
 
 		<TextBlock DockPanel.Dock="Top" Name="txtNoBuildsAvailable">
 			No builds available for this project yet.

@@ -16,7 +16,16 @@ namespace TetrifactClient
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
                 string projectDirectory = PathHelper.GetProjectDirectoryPath(GlobalDataContext.Instance, project);
-                string[] packagedirectories = Directory.GetDirectories(projectDirectory);
+                string[] packagedirectories = new string[0];
+
+                try
+                {
+                    packagedirectories = Directory.GetDirectories(projectDirectory);
+                }
+                catch (Exception ex)
+                {
+                    continue;
+                }
 
                 foreach (string dir in packagedirectories) 
                 {
