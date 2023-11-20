@@ -91,7 +91,7 @@ namespace TetrifactClient
 
             Project project = gridPackages.DataContext as Project;
 
-            string packageDirectory = PathHelper.GetPackageDirectoryPath(GlobalDataContext.Instance, project , selectedProject);
+            string packageDirectory = PathHelper.GetPackageContentDirectoryPath(GlobalDataContext.Instance, project , selectedProject);
             if (Directory.Exists(packageDirectory))
             {
                 try
@@ -101,7 +101,7 @@ namespace TetrifactClient
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError($"Error opening path {packageDirectory}", ex);
+                    _log.LogError(ex, $"Error opening path {packageDirectory}");
                 }
             }
         }

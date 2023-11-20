@@ -1,6 +1,14 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
 		x:Class="TetrifactClient.DarkTheme"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!--
+	
+	pairs : 
+	393646
+	5E596F
+	
+	-->
+	
 	
     <Design.PreviewWith>
         <Border Padding="20">
@@ -71,13 +79,16 @@
 	</Style>
 
 	<Style Selector="DataGrid.grid">
-		<Setter Property="Background" Value="LightGray"/>
+		<Setter Property="Background" Value="#5E596F"/>
+		<Setter Property="BorderThickness" Value="0,0,0,0"/>
 	</Style>
 
-	<Style Selector="ListBox.grid">
-		<Setter Property="Background" Value="LightGray"/>
+	<Style Selector="DataGridColumnHeader">
+		<!--
+			<Setter Property="Background" Value="Red"/>
+		-->
 	</Style>
-
+	
 	<Style Selector="Window.prompt > DockPanel">
 		<Setter Property="Margin" Value="10, 10, 10, 10"/>
 	</Style>
@@ -85,7 +96,6 @@
 	<Style Selector="Window.prompt > TextBlock.header">
 		<Setter Property="FontSize" Value="16"/>
 	</Style>
-
 
 
 </Styles>

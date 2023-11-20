@@ -40,7 +40,8 @@ public partial class App : Application
         UnityContainer.RegisterType<PackageDownloadDaemon, PackageDownloadDaemon>();
         UnityContainer.RegisterType<PackageListDaemon, PackageListDaemon>();
         UnityContainer.RegisterType<LocalStateDaemon, LocalStateDaemon>();
-        UnityContainer.RegisterType<LocalPackageDeleteDaemon, LocalPackageDeleteDaemon>();
+        UnityContainer.RegisterType<PackageMarkForDeleteDaemon, PackageMarkForDeleteDaemon>();
+        UnityContainer.RegisterType<PackageDeleteDaemon, PackageDeleteDaemon>();
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
     }
 
@@ -61,6 +62,10 @@ public partial class App : Application
         // create directories
         Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
 
+        // do app start housecleaning
+        AppStart appStart = new AppStart();
+        appStart.Work();
+
         // instantiate daemons using interface declaration 
         Type daemonType = typeof(IDaemon);
         foreach (Type type in Assembly.GetExecutingAssembly().GetTypes().Where(t => daemonType.IsAssignableFrom(t) && !t.IsInterface)) 
@@ -72,5 +77,7 @@ public partial class App : Application
             daemon.Start();
             Daemons.Add(daemon);
         }
+
+
     }
 }

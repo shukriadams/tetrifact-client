@@ -46,7 +46,7 @@ namespace TetrifactClient
         public PackageTransferResponse Download() 
         {
             PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
-            string finalPackagePath = PathHelper.GetPackageDirectoryPath(_dataContext, _project, _package);
+            string finalPackagePath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _package);
 
             // Download new files
             if (_packageDiff.Difference.Any()) 
@@ -103,7 +103,7 @@ namespace TetrifactClient
             List<PackageFile> copyFails = new List<PackageFile>();
             int parallels = 4;
 
-            string donorBuildPath = PathHelper.GetPackageDirectoryPath(_dataContext, _project, _donorPackage);
+            string donorBuildPath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _donorPackage);
 
             // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
             PackageTransferResponse copyErrorResponse = null;

@@ -148,10 +148,11 @@ namespace TetrifactClient
             return this.TransferState == PackageTransferStates.Downloaded;
         }
 
-        public bool IsMarkedForDelete() 
+        public bool IsMarkedForDeleteOrBeingDeleting() 
         {
             return this.TransferState == PackageTransferStates.AutoMarkedForDelete
-                || this.TransferState == PackageTransferStates.UserMarkedForDelete;
+                || this.TransferState == PackageTransferStates.UserMarkedForDelete
+                || this.TransferState == PackageTransferStates.Deleting;
         }
 
         public bool IsQueuedForDownload() 

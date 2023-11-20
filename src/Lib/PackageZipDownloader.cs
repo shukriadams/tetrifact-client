@@ -38,7 +38,7 @@ namespace TetrifactClient
                 HardenedWebClient webClient = new HardenedWebClient();
                 string zipFileTempPath = PathHelper.GetZipDownloadDirectoryTempPath(_context, _project, _package);
                 string zipFilePath = PathHelper.GetZipDownloadDirectoryPath(_context, _project, _package);
-                string finalPackagePath = PathHelper.GetPackageDirectoryPath(_context, _project, _package);
+                string finalPackagePath = PathHelper.GetPackageContentDirectoryPath(_context, _project, _package);
                 string remoteZipUrl = $"{_package.TetrifactServerAddress}/v1/archives/{_package.Package.Id}";
 
                 if (Directory.Exists(finalPackagePath)) 

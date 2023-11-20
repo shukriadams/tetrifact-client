@@ -46,7 +46,7 @@ namespace TetrifactClient
         {
             _zipFilePath = zipFilePath;
             _unzipPathTempPath = PathHelper.GetPackageDirectoryTempPath(context, project, package);
-            _unzipFinalPath = PathHelper.GetPackageDirectoryPath(context, project, package);
+            _unzipFinalPath = PathHelper.GetPackageContentDirectoryPath(context, project, package);
             _package = package;
             _project = project;
             _context = context;

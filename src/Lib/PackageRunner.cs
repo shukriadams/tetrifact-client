@@ -13,7 +13,7 @@ namespace TetrifactClient
             ProcessStartInfo gameProcessStartInfo = new ProcessStartInfo
             {
                 FileName = project.ApplicationExecutableName,
-                WorkingDirectory = PathHelper.GetPackageDirectoryPath(context, project, package)
+                WorkingDirectory = PathHelper.GetPackageContentDirectoryPath(context, project, package)
             };
 
             Process process = new Process
