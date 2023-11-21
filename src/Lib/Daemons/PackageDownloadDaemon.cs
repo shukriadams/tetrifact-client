@@ -100,6 +100,7 @@ namespace TetrifactClient
                 package.TransferState = PackageTransferStates.DownloadFailed;
                 package.Status = "Error, check logs";
                 GlobalDataContext.Instance.Console.Add(result.Message);
+                _log.LogError(result.Exception, result.Message);
             }
         }
 

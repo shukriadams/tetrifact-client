@@ -20,6 +20,7 @@ namespace TetrifactClient
             try
             {
                 HardenedWebClient webClient = new HardenedWebClient();
+                webClient.Timeout = GlobalDataContext.Instance.Timeout;
                 string rawResponse = webClient.DownloadString(url);
 
                 dynamic response = JsonConvert.DeserializeObject(rawResponse);
@@ -48,6 +49,7 @@ namespace TetrifactClient
                 // note that manifests are always fetched from primary build server
                 string manifestUrl = $"{serverAddress}/v1/packages/{packageId}";
                 HardenedWebClient webClient = new HardenedWebClient();
+                webClient.Timeout = GlobalDataContext.Instance.Timeout;
                 string manifestRaw = webClient.DownloadString(manifestUrl);
 
                 // get size of package
@@ -76,6 +78,7 @@ namespace TetrifactClient
             try
             {
                 HardenedWebClient webClient = new HardenedWebClient();
+                webClient.Timeout = GlobalDataContext.Instance.Timeout;
                 string diffRaw = webClient.DownloadString($"{serverAddress}/v1/packages/diff/{upstreamPackage}/{downstreamPackage}");
                 dynamic responseDiff = JsonConvert.DeserializeObject(diffRaw);
                 if (responseDiff == null || responseDiff.success == null)

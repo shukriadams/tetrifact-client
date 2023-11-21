@@ -18,6 +18,10 @@ namespace TetrifactClient
                 string projectDirectory = PathHelper.GetProjectDirectoryPath(GlobalDataContext.Instance, project);
                 string[] packagedirectories = new string[0];
 
+                // no need to clean projects that haven't been created on disk yet
+                if (!Directory.Exists(projectDirectory))
+                    continue;
+
                 try
                 {
                     packagedirectories = Directory.GetDirectories(projectDirectory);
@@ -32,6 +36,7 @@ namespace TetrifactClient
                     IEnumerable<string> hangingUnpacks = Directory.GetDirectories(dir)
                         .Where(dir => Path.GetFileName(dir).StartsWith("~"));
 
+                    // auto mark any existing unpack directories for delete
                     foreach (string hangingUnpack in hangingUnpacks) 
                     {
                         string movePath = Path.Combine(Path.GetDirectoryName(hangingUnpack), $"!{Path.GetFileName(hangingUnpack)}");

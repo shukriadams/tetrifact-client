@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 namespace TetrifactClient
 {
     /// <summary>
-    /// Updates package list for all projects
+    /// Gets a list of remote packages available. Packages are listed, not downloaded.
     /// </summary>
-    public class PackageListDaemon : IDaemon
+    public class PackageRemoteListDaemon : IDaemon
     {
         private bool _busy;
         private int _delay = 5000;
@@ -64,17 +65,16 @@ namespace TetrifactClient
                     return;
 
                 string payload = Encoding.Default.GetString(request.Payload);
-                Payload<PackagesLookup> data = JsonConvert.DeserializeObject<Payload<PackagesLookup>>(payload);
-                if (data == null || !string.IsNullOrEmpty(data.Error))
-                {
-                    // handle error
-                    return;
-                }
+                dynamic payloadDynamic = JsonConvert.DeserializeObject(payload);
+                if (payloadDynamic == null || payloadDynamic.success == null)
+                    throw new Exception($"Received error response : {payload}");
+
+                IEnumerable<string> packageIds = JsonConvert.DeserializeObject<IEnumerable<string>>(payloadDynamic.success.packages.ToString());
 
                 contextProject.ServerState = SourceServerStates.Normal;
                 contextProject.ServerErrorDescription = null;
                 lock (GlobalDataContext.Instance)
-                    contextProject.AvailablePackageIds = data.Success.Packages.ToList();
+                    contextProject.AvailablePackageIds = packageIds.ToList();
             } 
             else 
             {

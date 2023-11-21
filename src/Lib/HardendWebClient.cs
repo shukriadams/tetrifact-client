@@ -17,6 +17,11 @@ namespace TetrifactClient
 
         public int Attempts { get; set; }
 
+        /// <summary>
+        /// Timeout in ms.
+        /// </summary>
+        public int Timeout { get; set; } = 1000;
+
         public HardenedWebClient()
         {
             Proxy = WebRequest.DefaultWebProxy;
@@ -31,7 +36,7 @@ namespace TetrifactClient
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest request = base.GetWebRequest(uri);
-            request.Timeout = 60 * 60 * 1000;
+            request.Timeout = this.Timeout;
 
             if (this.Range != null)
             {

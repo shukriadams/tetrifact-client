@@ -20,6 +20,11 @@ namespace TetrifactClient
             return Path.Combine(context.GetProjectsDirectoryPath(), project.Id, "packages");
         }
 
+        public static string GetLogsDirectory() 
+        {
+            return Path.Join(GetInternalDirectory(), "logs");
+        }
+
         public static string GetZipDownloadDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
             return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"{package.Package.Id}.zip");

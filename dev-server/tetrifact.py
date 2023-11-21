@@ -1,7 +1,10 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re as regex
 import os
+import json
+
 port=8000
+
 class TetrifactServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -26,8 +29,13 @@ class TetrifactServer(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/json')
         self.end_headers()
 
-        with open('./packages.json', 'rb') as file: 
-            self.wfile.write(file.read()) # Read the file and send the contents 
+        response = { }
+        response['success'] = {}
+
+        with open('./packages.json', 'rb') as file:
+            response['success']['packages'] = json.loads(file.read())
+
+        self.wfile.write(json.dumps(response).encode())
 
     def do_archive(self, archive):
         archivePath = f'./archives/{archive}.zip'
@@ -63,8 +71,13 @@ class TetrifactServer(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/json')
         self.end_headers()
 
-        with open(packagePath, 'rb') as file: 
-            self.wfile.write(file.read()) # Read the file and send the contents 
+        response = { }
+        response['success'] = {}
+
+        with open(packagePath, 'rb') as file:
+            response['success']['package'] = json.loads(file.read())
+
+        self.wfile.write(json.dumps(response).encode())
 
     def do_unhandled(self):
         self.send_response(404)

@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System.Runtime.CompilerServices;
 
 namespace TetrifactClient
 {
@@ -34,13 +35,22 @@ namespace TetrifactClient
 
         private void OnSave(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-
-            GlobalDataContext.Instance.Projects.Projects.Add(new Project
+            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
+            if (context.Project == null) 
             {
-                Name = txtName.Text,
-                TetrifactServerAddress = txtServer.Text
-            });
+                GlobalDataContext.Instance.Projects.Projects.Add(new Project
+                {
+                    Name = txtName.Text,
+                    TetrifactServerAddress = txtServer.Text
+                });
+            }
+            else 
+            {
+                context.Project.Name = txtName.Text;
+                context.Project.TetrifactServerAddress = txtServer.Text;
+            }
 
+            GlobalDataContext.Save();
             this.Close();
         }
 

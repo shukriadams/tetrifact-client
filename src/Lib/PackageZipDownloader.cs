@@ -36,6 +36,7 @@ namespace TetrifactClient
             try
             {
                 HardenedWebClient webClient = new HardenedWebClient();
+                webClient.Timeout = GlobalDataContext.Instance.Timeout;
                 string zipFileTempPath = PathHelper.GetZipDownloadDirectoryTempPath(_context, _project, _package);
                 string zipFilePath = PathHelper.GetZipDownloadDirectoryPath(_context, _project, _package);
                 string finalPackagePath = PathHelper.GetPackageContentDirectoryPath(_context, _project, _package);

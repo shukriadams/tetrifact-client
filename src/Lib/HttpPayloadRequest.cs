@@ -48,7 +48,8 @@ namespace TetrifactClient
 
                     try
                     {
-                        WebClient client = new WebClient();
+                        HardenedWebClient client = new HardenedWebClient();
+                        client.Timeout = GlobalDataContext.Instance.Timeout;
                         using (MemoryStream ms = new MemoryStream())
                         using (Stream stream = client.OpenRead(this.Url))
                         {

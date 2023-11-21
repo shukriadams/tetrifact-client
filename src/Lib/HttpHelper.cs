@@ -18,7 +18,11 @@ namespace TetrifactClient
                 if (uri == null)
                     uri = new Uri(fragment);
                 else
-                    uri = new Uri(uri.ToString() + "/" + fragment.TrimStart('/').TrimEnd('/'));
+                {
+                    string existingUrl = uri.ToString();
+                    string divider = existingUrl.EndsWith("/") ? string.Empty : "/";
+                    uri = new Uri(uri.ToString() + divider + fragment.TrimStart('/').TrimEnd('/'));
+                }
             }
 
             return uri.ToString();

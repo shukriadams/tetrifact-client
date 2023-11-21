@@ -38,8 +38,7 @@ public partial class App : Application
         UnityContainer.RegisterType<PackageDetailsDaemon, PackageDetailsDaemon>();
         UnityContainer.RegisterType<PackageDownloadAutoQueueDaemon, PackageDownloadAutoQueueDaemon>();
         UnityContainer.RegisterType<PackageDownloadDaemon, PackageDownloadDaemon>();
-        UnityContainer.RegisterType<PackageListDaemon, PackageListDaemon>();
-        UnityContainer.RegisterType<LocalStateDaemon, LocalStateDaemon>();
+        UnityContainer.RegisterType<PackageRemoteListDaemon, PackageRemoteListDaemon>();
         UnityContainer.RegisterType<PackageMarkForDeleteDaemon, PackageMarkForDeleteDaemon>();
         UnityContainer.RegisterType<PackageDeleteDaemon, PackageDeleteDaemon>();
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
@@ -61,6 +60,7 @@ public partial class App : Application
 
         // create directories
         Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
+        Directory.CreateDirectory(PathHelper.GetLogsDirectory());
 
         // do app start housecleaning
         AppStart appStart = new AppStart();

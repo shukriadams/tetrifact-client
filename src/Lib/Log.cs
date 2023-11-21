@@ -28,7 +28,8 @@ namespace TetrifactClient
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 Assembly.GetExecutingAssembly().GetName().Name);
 
-            _logPath = Path.Combine(_dataDirectory, "logs", $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}-log.txt");
+            string logDirectory = PathHelper.GetLogsDirectory();
+            _logPath = Path.Combine(logDirectory, $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}-log.txt");
         }
 
         #endregion

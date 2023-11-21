@@ -76,6 +76,7 @@ namespace TetrifactClient
                 throw new Exception($"{destinationFilePath} exceeds max safe path length");
 
             HardenedWebClient client = new HardenedWebClient();
+            client.Timeout = GlobalDataContext.Instance.Timeout;
             long totalStreamLength = 0;
 
             // try to get resource in chunks, this requires we get size of resource on server.
@@ -135,6 +136,7 @@ namespace TetrifactClient
                 try
                 {
                     HardenedWebClient webClient = new HardenedWebClient();
+                    webClient.Timeout = GlobalDataContext.Instance.Timeout;
                     webClient.Range = new Range { Start = range.Start, End = range.End };
 
                     byte[] data = webClient.DownloadBytes(url, this.RetryAttempts); 

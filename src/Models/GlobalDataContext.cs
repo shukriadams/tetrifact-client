@@ -65,6 +65,8 @@ namespace TetrifactClient
             } 
         }
 
+        public int Timeout { get; set; }
+
         #endregion
 
         #region CTORS
@@ -74,6 +76,7 @@ namespace TetrifactClient
             // default
             this.DataFolder = PathHelper.GetInternalDirectory();
             this.DaemonIntervalMS = 5000;
+            this.Timeout = 3000;
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,11 @@ namespace TetrifactClient
                     if (httpRequest.Succeeded)
                     {
                         string payload = Encoding.Default.GetString(httpRequest.Payload);
-                        Package data = JsonConvert.DeserializeObject<Package>(payload);
+                        dynamic payloadDynamic = JsonConvert.DeserializeObject(payload);
+                        if (payloadDynamic == null || payloadDynamic.success == null)
+                            throw new Exception($"Received error response : {payload}");
+
+                        Package data = JsonConvert.DeserializeObject<Package>(payloadDynamic.success.package.ToString());
                         if (data == null)
                         {
                             // handle error
