@@ -10,7 +10,7 @@ namespace TetrifactClient
             InitializeComponent();
         }
 
-        public void SetProject(Project project) 
+        public void SetContext(Project project) 
         {
             this.DataContext = new ProjectEditorViewModel 
             {

@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+			 d:DesignWidth="800" 
+			 d:DesignHeight="450"
+  			 xmlns:vm="using:TetrifactClient"
+			 x:DataType="vm:TagsListViewModel"
+             x:Class="TetrifactClient.TagsList">
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top">
+			<TextBlock Text="Existing Tags"></TextBlock>
+			<ItemsRepeater Tapped="ExistingTags_Tapped" ItemsSource="{Binding ExistingTags}">
+				<ItemsRepeater.ItemTemplate>
+					<DataTemplate>
+						<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+					</DataTemplate>
+				</ItemsRepeater.ItemTemplate>
+			</ItemsRepeater>
+		</StackPanel>
+		<StackPanel DockPanel.Dock="Top">
+			<TextBlock Text="These Tags"></TextBlock>
+			<ItemsRepeater Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
+				<ItemsRepeater.ItemTemplate>
+					<DataTemplate>
+						<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+					</DataTemplate>
+				</ItemsRepeater.ItemTemplate>
+			</ItemsRepeater>
+		</StackPanel>
+		<StackPanel DockPanel.Dock="Top">
+			<TextBlock Text="New Tag"></TextBlock>
+			<TextBox Name="txtTag"></TextBox>
+		</StackPanel>
+	</DockPanel>
+</UserControl>

@@ -135,6 +135,7 @@ namespace TetrifactClient
             }
 
             Dispatcher.UIThread.Post(() => {
+
             },
             DispatcherPriority.Background);
 

@@ -23,7 +23,7 @@ namespace TetrifactClient
         public void OnNewProject(object? sender, RoutedEventArgs args)
         {
             ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
-            editor.SetProject(null);
+            editor.SetContext(null);
             editor.ShowDialog(MainWindow.Instance);
         }
 

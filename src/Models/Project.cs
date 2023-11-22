@@ -74,14 +74,14 @@ namespace TetrifactClient
         /// </summary>
         [property: JsonProperty("RequiredTags")]
         [ObservableProperty]
-        private string _requiredTags;
+        private IEnumerable<string> _requiredTags;
 
         /// <summary>
         /// Comma-separted tags remote packages will be ignored on.
         /// </summary>
         [property: JsonProperty("IgnoreTags")]
         [ObservableProperty]
-        private string _ignoreTags;
+        private IEnumerable<string> _ignoreTags;
 
         /// <summary>
         /// Access key for tetrifact server instances that are access protected.
@@ -111,6 +111,10 @@ namespace TetrifactClient
         [ObservableProperty]
         private SourceServerStates _serverState;
 
+        [property: JsonProperty("CommonTags")]
+        [ObservableProperty]
+        private IList<string> _commonTags;
+
         #endregion
 
         #region CTORS
@@ -120,6 +124,9 @@ namespace TetrifactClient
             this.Id = Guid.NewGuid().ToString();
             this.Packages = new ObservableConcurrentCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
+            this.CommonTags = new List<string>();
+            this.RequiredTags = new string[0];
+            this.IgnoreTags = new string[0];
         }
 
         #endregion
@@ -147,6 +154,7 @@ namespace TetrifactClient
 
                 string packageRawJson = string.Empty;
                 string packageCorePath = Path.Combine(localProjectPackagesDirectory, packageId, "remote.json");
+                
                 if (!File.Exists(packageCorePath))
                     continue;
 
@@ -161,30 +169,41 @@ namespace TetrifactClient
             }
 
             // sort and apply filters
-            string requiredTags = string.IsNullOrEmpty(this.RequiredTags) ? string.Empty : this.RequiredTags;
-            string ignoreTags = string.IsNullOrEmpty(this.IgnoreTags) ? string.Empty : this.RequiredTags;
-            string[] requiredTagsArray = requiredTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
-            string[] ignoreTagsArray = ignoreTags.Split(",", StringSplitOptions.RemoveEmptyEntries);
-
             IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
-            if (requiredTags.Any())
+            if (this.RequiredTags.Any())
                 tempPackages = from package in tempPackages
-                                where !package.Package.Tags.Except(requiredTagsArray).Any()
+                                where !package.Package.Tags.Except(this.RequiredTags).Any()
                                 select package;
 
-            if (ignoreTagsArray.Any())
+            if (this.IgnoreTags.Any())
                 tempPackages = from package in tempPackages
-                                where package.Package.Tags.Except(ignoreTagsArray).Any()
+                                where package.Package.Tags.Except(IgnoreTags).Any()
                                 select package;
 
             if (!tempPackages.Any())
                 return;
                 
             this.Packages.AddFromEnumerable(tempPackages);
+
+            Dictionary<string, int> _tags = new Dictionary<string, int>();
+
             foreach (var package in tempPackages) 
             {
                 package.EnableAutoSave();
+                foreach (string tag in package.Package.Tags)
+                { 
+                    if (!_tags.ContainsKey(tag))
+                        _tags.Add(tag, 0);
+
+                    _tags[tag]++;
+                }
             }
+
+            this.CommonTags = _tags
+                .Where(t => t.Value > 1)
+                .Select(t => t.Key)
+                .OrderBy(t => t)
+                .ToList();
 
             //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
             //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);

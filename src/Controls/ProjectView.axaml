@@ -3,7 +3,9 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
-		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		mc:Ignorable="d" 
+		d:DesignWidth="800" 
+		d:DesignHeight="450"
 		x:Class="TetrifactClient.ProjectView"
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
@@ -20,6 +22,7 @@
 			<Button Click="ProjectDelete_Click">Delete</Button>
 		</StackPanel>
 
+		<local:TagsList Name="tagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 
 		<TextBlock DockPanel.Dock="Top" Name="txtNoBuildsAvailable">
 			No builds available for this project yet.

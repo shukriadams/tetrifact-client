@@ -13,14 +13,22 @@ namespace TetrifactClient
 
         public ProjectView()
         {
+            this.DataContextChanged += ProjectView_DataContextChanged;
             InitializeComponent();
-
+        
             // if not in v.studio, hide control if it has no data
             //if (!System.Diagnostics.Debugger.IsAttached)
             //    this.IsVisible = false;
 
             gridPackages.DataContextChanged += GridDataChanged;
             _log = new Log();
+        }
+
+        private void ProjectView_DataContextChanged(object? sender, EventArgs e)
+        {
+            Project contextProject = gridPackages.DataContext as Project;
+            if (contextProject != null)
+                tagsList.SetContext(contextProject.CommonTags, contextProject.RequiredTags);
         }
 
         private void GridDataChanged(object? sender, System.EventArgs e)
@@ -147,7 +155,7 @@ namespace TetrifactClient
         private void ProjectEdit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
         {
             ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
-            editor.SetProject(gridPackages.DataContext as Project);
+            editor.SetContext(gridPackages.DataContext as Project);
             editor.ShowDialog(MainWindow.Instance);
         }
 
