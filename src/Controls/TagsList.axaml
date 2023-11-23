@@ -21,7 +21,7 @@
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top">
 			<TextBlock Text="These Tags"></TextBlock>
-			<ItemsRepeater Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
+			<ItemsRepeater Name="repeaterCurrentTags" Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate>
 						<TextBlock DockPanel.Dock="Left" Text="{Binding}" />

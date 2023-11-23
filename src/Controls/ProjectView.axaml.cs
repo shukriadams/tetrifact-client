@@ -13,7 +13,7 @@ namespace TetrifactClient
 
         public ProjectView()
         {
-            this.DataContextChanged += ProjectView_DataContextChanged;
+            //this.DataContextChanged += ProjectView_DataContextChanged;
             InitializeComponent();
         
             // if not in v.studio, hide control if it has no data
@@ -24,13 +24,14 @@ namespace TetrifactClient
             _log = new Log();
         }
 
+        /*
         private void ProjectView_DataContextChanged(object? sender, EventArgs e)
         {
             Project contextProject = gridPackages.DataContext as Project;
             if (contextProject != null)
                 tagsList.SetContext(contextProject.CommonTags, contextProject.RequiredTags);
         }
-
+        */
         private void GridDataChanged(object? sender, System.EventArgs e)
         {
             Project datacontext = gridPackages.DataContext as Project;

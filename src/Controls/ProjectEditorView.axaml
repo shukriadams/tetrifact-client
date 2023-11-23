@@ -5,10 +5,11 @@
 		xmlns:vm="using:TetrifactClient"
 		mc:Ignorable="d" 
 		d:DesignWidth="800" 
-		d:DesignHeight="450"
+		d:DesignHeight="550"
 		x:DataType="vm:ProjectEditorViewModel"
 		ExtendClientAreaToDecorationsHint="True"
 		x:Class="TetrifactClient.ProjectEditorView"
+    	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">
 	<DockPanel>
 		<Panel DockPanel.Dock="Top" Classes="flow-vertical">
@@ -32,6 +33,7 @@
 			<Label>Build server</Label>
 			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 		</StackPanel>
+		<local:TagsList Name="tagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>Required tags</Label>
 		</StackPanel>

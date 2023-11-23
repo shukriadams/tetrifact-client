@@ -1,5 +1,5 @@
 using Avalonia.Controls;
-using System.Runtime.CompilerServices;
+using System;
 
 namespace TetrifactClient
 {
@@ -7,7 +7,15 @@ namespace TetrifactClient
     {
         public ProjectEditorView()
         {
+            this.DataContextChanged += ProjectView_DataContextChanged;
             InitializeComponent();
+        }
+
+        private void ProjectView_DataContextChanged(object? sender, EventArgs e)
+        {
+            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
+            if (context != null)
+                tagsList.SetContext(context.Project.CommonTags, context.Project.RequiredTags);
         }
 
         public void SetContext(Project project) 

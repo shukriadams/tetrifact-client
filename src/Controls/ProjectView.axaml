@@ -22,7 +22,6 @@
 			<Button Click="ProjectDelete_Click">Delete</Button>
 		</StackPanel>
 
-		<local:TagsList Name="tagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 
 		<TextBlock DockPanel.Dock="Top" Name="txtNoBuildsAvailable">
 			No builds available for this project yet.
