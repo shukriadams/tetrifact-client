@@ -77,7 +77,7 @@ namespace TetrifactClient
         private IEnumerable<string> _requiredTags;
 
         /// <summary>
-        /// Comma-separted tags remote packages will be ignored on.
+        /// Comma-separted tags remote packages will be ignored on. 
         /// </summary>
         [property: JsonProperty("IgnoreTags")]
         [ObservableProperty]
@@ -111,7 +111,12 @@ namespace TetrifactClient
         [ObservableProperty]
         private SourceServerStates _serverState;
 
+        /// <summary>
+        /// Not persisted, generated dynamically.
+        /// </summary>
         [property: JsonProperty("CommonTags")]
+        [property: Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         [ObservableProperty]
         private IList<string> _commonTags;
 

@@ -3,7 +3,7 @@ using System;
 
 namespace TetrifactClient
 {
-    public static  class FormHelper
+    public static class WindowExtensions
     {
         /// <summary>
         /// Centers a window on a parent window, centering and size it down relative from parent.

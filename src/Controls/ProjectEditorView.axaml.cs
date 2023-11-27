@@ -14,8 +14,11 @@ namespace TetrifactClient
         private void ProjectView_DataContextChanged(object? sender, EventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
-            if (context != null)
-                tagsList.SetContext(context.Project.CommonTags, context.Project.RequiredTags);
+            if (context != null) 
+            {
+                requiredTagsList.SetContext(context.Project.CommonTags, context.Project.RequiredTags);
+                blockedTagsList.SetContext(context.Project.CommonTags, context.Project.IgnoreTags);
+            }
         }
 
         public void SetContext(Project project) 
@@ -56,6 +59,8 @@ namespace TetrifactClient
             {
                 context.Project.Name = txtName.Text;
                 context.Project.TetrifactServerAddress = txtServer.Text;
+                context.Project.IgnoreTags = blockedTagsList.Tags;
+                context.Project.RequiredTags= requiredTagsList.Tags;
             }
 
             GlobalDataContext.Save();

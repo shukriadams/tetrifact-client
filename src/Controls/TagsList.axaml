@@ -5,13 +5,16 @@
              mc:Ignorable="d" 
 			 d:DesignWidth="800" 
 			 d:DesignHeight="450"
-  			 xmlns:vm="using:TetrifactClient"
+			 xmlns:vm="using:TetrifactClient"
 			 x:DataType="vm:TagsListViewModel"
              x:Class="TetrifactClient.TagsList">
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top">
-			<TextBlock Text="Existing Tags"></TextBlock>
+			<TextBlock Text="Suggested"></TextBlock>
 			<ItemsRepeater Tapped="ExistingTags_Tapped" ItemsSource="{Binding ExistingTags}">
+				<ItemsRepeater.Layout>
+					<StackLayout Spacing="10" Orientation="Horizontal" />
+				</ItemsRepeater.Layout>
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate>
 						<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
@@ -20,18 +23,21 @@
 			</ItemsRepeater>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top">
-			<TextBlock Text="These Tags"></TextBlock>
+			<TextBlock Text="Current"></TextBlock>
 			<ItemsRepeater Name="repeaterCurrentTags" Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
+				<ItemsRepeater.Layout>
+					<StackLayout Spacing="10" Orientation="Horizontal" />
+				</ItemsRepeater.Layout>
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate>
-						<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+						<TextBlock Text="{Binding}" />
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>
 			</ItemsRepeater>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top">
-			<TextBlock Text="New Tag"></TextBlock>
 			<TextBox Name="txtTag"></TextBox>
+			<Button Click="AddNew_Click" Content="Add"></Button>
 		</StackPanel>
 	</DockPanel>
 </UserControl>

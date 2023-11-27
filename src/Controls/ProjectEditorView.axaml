@@ -33,12 +33,13 @@
 			<Label>Build server</Label>
 			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 		</StackPanel>
-		<local:TagsList Name="tagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>Required tags</Label>
+			<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>Blocked tags</Label>
+			<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
 			<Button Name="btnCancel" Click="OnCancel" Classes="warning">Cancel</Button>
