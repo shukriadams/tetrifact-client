@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using TetrifactClien;
 using TetrifactClient.Lib;
@@ -36,6 +37,12 @@ namespace TetrifactClient
 
             foreach (string tag in boundTags)
                 context.Tags.Add(tag);
+
+            panelExistingTags.IsVisible = context.ExistingTags.Any();
+
+            context.Tags.CollectionChanged += (object e, NotifyCollectionChangedEventArgs args) =>{
+                panelCurrentTags.IsVisible = context.Tags.Any();
+            };
         }
 
         private void ExistingTags_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)

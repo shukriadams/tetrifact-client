@@ -120,6 +120,10 @@ namespace TetrifactClient
         [ObservableProperty]
         private IList<string> _commonTags;
 
+        private readonly Dictionary<string, int> _rawTags = new Dictionary<string, int>();
+
+        private IEnumerable<LocalPackage> _rawPackages = new List<LocalPackage>(); 
+
         #endregion
 
         #region CTORS
@@ -175,40 +179,53 @@ namespace TetrifactClient
 
             // sort and apply filters
             IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
-            if (this.RequiredTags.Any())
-                tempPackages = from package in tempPackages
-                                where !package.Package.Tags.Except(this.RequiredTags).Any()
-                                select package;
 
-            if (this.IgnoreTags.Any())
-                tempPackages = from package in tempPackages
-                                where package.Package.Tags.Except(IgnoreTags).Any()
-                                select package;
-
-            if (!tempPackages.Any())
-                return;
-                
-            this.Packages.AddFromEnumerable(tempPackages);
-
-            Dictionary<string, int> _tags = new Dictionary<string, int>();
-
-            foreach (var package in tempPackages) 
+            // before any filtering, peak at all tags, we need thems
+            foreach (var package in tempPackages)
             {
-                package.EnableAutoSave();
                 foreach (string tag in package.Package.Tags)
-                { 
-                    if (!_tags.ContainsKey(tag))
-                        _tags.Add(tag, 0);
+                {
+                    if (!_rawTags.ContainsKey(tag))
+                        _rawTags.Add(tag, 0);
 
-                    _tags[tag]++;
+                    _rawTags[tag]++;
                 }
             }
 
-            this.CommonTags = _tags
+            this.CommonTags = _rawTags
                 .Where(t => t.Value > 1)
                 .Select(t => t.Key)
                 .OrderBy(t => t)
                 .ToList();
+
+            if (tempPackages.Any())
+                _rawPackages = _rawPackages.Concat(tempPackages);
+
+            IList<LocalPackage> filteredPackages = _rawPackages.ToList();
+
+            // refilter packages based on user prefs
+            if (this.RequiredTags.Any())
+                filteredPackages = (from package in filteredPackages
+                                  where package.Package.Tags.Any()
+                                && !package.Package.Tags.Except(this.RequiredTags).Any()
+                               select package).ToList();
+
+            if (this.IgnoreTags.Any())
+                filteredPackages = (from package in filteredPackages
+                                   where package.Package.Tags.Except(IgnoreTags).Any()
+                                select package).ToList();
+
+            int count = filteredPackages.Count;
+            for (int i = 0; i < filteredPackages.Count; i++) 
+            {
+                if (this.Packages.Any(p => p.Package.Id == filteredPackages[count - i - 1].Package.Id))
+                    filteredPackages.RemoveAt(count - i - 1);
+            }
+
+            this.Packages.AddFromEnumerable(filteredPackages);
+
+            foreach (var package in tempPackages) 
+                package.EnableAutoSave();
 
             //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
             //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);

@@ -15,18 +15,22 @@ namespace TetrifactClient
 
         [property: JsonProperty("Id")]
         [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         private string _id;
 
         [property: JsonProperty("CreatedUtc")]
         [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         private DateTime _createdUtc;
 
         [property: JsonProperty("Hash")]
         [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         public string _hash;
 
         [property: JsonProperty("Tags")]
         [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         public IEnumerable<string> _tags;
 
         /// <summary>
@@ -34,6 +38,7 @@ namespace TetrifactClient
         /// </summary>
         [property: JsonProperty("Size")]
         [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         public long _size;
 
         [ObservableProperty]

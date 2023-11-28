@@ -7,9 +7,10 @@
 			 d:DesignHeight="450"
 			 xmlns:vm="using:TetrifactClient"
 			 x:DataType="vm:TagsListViewModel"
+		 	 xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
              x:Class="TetrifactClient.TagsList">
 	<DockPanel>
-		<StackPanel DockPanel.Dock="Top">
+		<StackPanel Name="panelExistingTags"  DockPanel.Dock="Top">
 			<TextBlock Text="Suggested"></TextBlock>
 			<ItemsRepeater Tapped="ExistingTags_Tapped" ItemsSource="{Binding ExistingTags}">
 				<ItemsRepeater.Layout>
@@ -22,7 +23,7 @@
 				</ItemsRepeater.ItemTemplate>
 			</ItemsRepeater>
 		</StackPanel>
-		<StackPanel DockPanel.Dock="Top">
+		<StackPanel Name="panelCurrentTags"  DockPanel.Dock="Top">
 			<TextBlock Text="Current"></TextBlock>
 			<ItemsRepeater Name="repeaterCurrentTags" Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
 				<ItemsRepeater.Layout>

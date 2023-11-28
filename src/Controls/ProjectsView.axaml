@@ -25,7 +25,7 @@
             <TextBlock 
 				DockPanel.Dock="Top" 
 			    Text="No projects added yet"
-                IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
+                IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.HasContent}}"/>
 
             <ListBox 
 				Classes="listProjects" 
