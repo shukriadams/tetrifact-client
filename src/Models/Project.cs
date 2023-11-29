@@ -158,7 +158,7 @@ namespace TetrifactClient
             List<LocalPackage> newPackages = new List<LocalPackage>();
             foreach (string packageId in packageIds)
             {
-                if (this.Packages.Any(p => p.Package.Id == packageId))
+                if (_rawPackages.Any(p => p.Package.Id == packageId))
                     continue;
 
                 string packageRawJson = string.Empty;
@@ -178,10 +178,12 @@ namespace TetrifactClient
             }
 
             // sort and apply filters
-            IEnumerable<LocalPackage> tempPackages = newPackages.OrderByDescending(p => p.Package.CreatedUtc);
+            newPackages = newPackages
+                .OrderByDescending(p => p.Package.CreatedUtc)
+                .ToList();
 
             // before any filtering, peak at all tags, we need thems
-            foreach (var package in tempPackages)
+            foreach (var package in newPackages)
             {
                 foreach (string tag in package.Package.Tags)
                 {
@@ -198,8 +200,8 @@ namespace TetrifactClient
                 .OrderBy(t => t)
                 .ToList();
 
-            if (tempPackages.Any())
-                _rawPackages = _rawPackages.Concat(tempPackages);
+            if (newPackages.Any())
+                _rawPackages = _rawPackages.Concat(newPackages);
 
             IList<LocalPackage> filteredPackages = _rawPackages.ToList();
 
@@ -216,15 +218,16 @@ namespace TetrifactClient
                                 select package).ToList();
 
             int count = filteredPackages.Count;
-            for (int i = 0; i < filteredPackages.Count; i++) 
+            for (int i = 0; i < count; i++) 
             {
-                if (this.Packages.Any(p => p.Package.Id == filteredPackages[count - i - 1].Package.Id))
+                string id = filteredPackages[count - i - 1].Package.Id;
+                if (this.Packages.Any(p => p.Package.Id == id))
                     filteredPackages.RemoveAt(count - i - 1);
             }
 
             this.Packages.AddFromEnumerable(filteredPackages);
 
-            foreach (var package in tempPackages) 
+            foreach (var package in this.Packages) 
                 package.EnableAutoSave();
 
             //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
