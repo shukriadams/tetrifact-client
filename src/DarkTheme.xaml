@@ -48,34 +48,39 @@
 		<Setter Property="Margin" Value="0,10,0,10"/>
 	</Style>
 
+	<Style Selector="TextBlock.flow-vertical">
+		<Setter Property="Margin" Value="0,10,10,10"/>
+	</Style>
+	
 	<Style Selector="TextBlock.header1">
 		<Setter Property="FontSize" Value="18"/>
 		<Setter Property="FontWeight" Value="Bold"/>
 	</Style>
-	<Style Selector="Label.header1">
-		<Setter Property="FontSize" Value="18"/>
-		<Setter Property="FontWeight" Value="Bold"/>
-	</Style>
+
 	<Style Selector="TextBlock.warning">
 		<Setter Property="Foreground" Value="Red"/>
 	</Style>
 
-	
+	<Style Selector="Label.header1">
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
 
 	<Style Selector="Button">
-		<Setter Property="Background" Value="Orange"/>
+		<Setter Property="Background" Value="#BFBFBF"/>
 	</Style>
 
 	<Style Selector="Button.warning">
-		<Setter Property="Background" Value="Orange"/>
+		<Setter Property="Background" Value="#FA7F08"/>
 	</Style>
 
 	<Style Selector="Button.proceed">
-		<Setter Property="Background" Value="Blue"/>
+		<Setter Property="Background" Value="#127369"/>
 	</Style>
 
 	<Style Selector="Button.importantButton">
-		<Setter Property="Background" Value="Red"/>
+		<Setter Property="Background" Value="#F23030"/>
 	</Style>
 
 	<Style Selector="DataGrid.grid">
@@ -88,9 +93,13 @@
 			<Setter Property="Background" Value="Red"/>
 		-->
 	</Style>
-	
+
 	<Style Selector="Window.prompt > DockPanel">
 		<Setter Property="Margin" Value="10, 10, 10, 10"/>
+	</Style>
+
+	<Style Selector="Window.prompt.delete">
+		<Setter Property="Background" Value="#FA7F08"/>
 	</Style>
 
 	<Style Selector="Window.prompt > TextBlock.header">

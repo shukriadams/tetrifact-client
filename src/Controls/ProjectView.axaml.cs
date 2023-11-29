@@ -34,9 +34,9 @@ namespace TetrifactClient
         */
         private void GridDataChanged(object? sender, System.EventArgs e)
         {
-            Project datacontext = gridPackages.DataContext as Project;
-            if (datacontext != null) 
-                datacontext.Packages.CollectionChanged += gridChanged;
+            Project contextProject = gridPackages.DataContext as Project;
+            if (contextProject != null) 
+                contextProject.Packages.CollectionChanged += gridChanged;
 
             this.SetVisualState();
         }
@@ -162,7 +162,13 @@ namespace TetrifactClient
 
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            Prompt prompt = new Prompt(300, 400, "Delete", "really?");
+            Project context = this.DataContext as Project;
+
+            Prompt prompt = new Prompt();
+            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Name}?");
+            prompt.Height = 300;
+            prompt.Width = 400;
+            prompt.Classes.Add("delete");
             prompt.ShowDialog(MainWindow.Instance);
             prompt.CenterOn(MainWindow.Instance);
             prompt.OnAccept += this.OnDeleteAccept;

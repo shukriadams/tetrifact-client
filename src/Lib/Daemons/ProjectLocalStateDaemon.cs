@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Threading;
+using System;
 using System.Threading.Tasks;
 
 namespace TetrifactClient
@@ -22,8 +23,11 @@ namespace TetrifactClient
 
         public async Task Work()
         {
-            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                project.PopulatePackageList();
+            // run on main thread else boom
+            Dispatcher.UIThread.Post(() => {
+                foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
+                    project.PopulatePackageList();
+            }, DispatcherPriority.Background);
         }
     }
 }

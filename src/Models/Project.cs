@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -96,7 +97,7 @@ namespace TetrifactClient
         [ObservableProperty]
         [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
         [JsonIgnore]                            // need this defined twice for autogen and local 
-        public ObservableConcurrentCollection<LocalPackage> _packages;
+        public ObservableCollection<LocalPackage> _packages;
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
@@ -131,7 +132,7 @@ namespace TetrifactClient
         public Project() 
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Packages = new ObservableConcurrentCollection<LocalPackage>();
+            this.Packages = new ObservableCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
             this.CommonTags = new List<string>();
             this.RequiredTags = new string[0];
@@ -217,15 +218,17 @@ namespace TetrifactClient
                                    where package.Package.Tags.Except(IgnoreTags).Any()
                                 select package).ToList();
 
-            int count = filteredPackages.Count;
-            for (int i = 0; i < count; i++) 
+            int count = this.Packages.Count;
+            for (int i = 0; i < count; i++)
             {
-                string id = filteredPackages[count - i - 1].Package.Id;
-                if (this.Packages.Any(p => p.Package.Id == id))
-                    filteredPackages.RemoveAt(count - i - 1);
+                string id = this.Packages[count - i - 1].Package.Id;
+                if (!filteredPackages.Any(p => p.Package.Id == id))
+                    this.Packages.RemoveAt(count - i - 1);
             }
 
-            this.Packages.AddFromEnumerable(filteredPackages);
+            foreach (var filteredPackage in filteredPackages)
+                if (!this.Packages.Any(p => p.Package.Id == filteredPackage.Package.Id))
+                    this.Packages.Add(filteredPackage);
 
             foreach (var package in this.Packages) 
                 package.EnableAutoSave();

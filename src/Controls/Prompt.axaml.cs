@@ -9,13 +9,9 @@ namespace TetrifactClient
 
         public VoidDo OnAccept;
 
-        public Prompt(int width = 400, int height = 400, string header = "Header", string text = "text")
+        public Prompt()
         {
             InitializeComponent();
-            this.Height = height;
-            this.Width = width;
-
-            this.SetContent(header, text);
         }
 
         public void SetContent(string header, string text, string cancel = "Cancel", string proceed = "Proceed") 

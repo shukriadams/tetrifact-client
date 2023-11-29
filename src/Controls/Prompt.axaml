@@ -13,17 +13,17 @@
         Title="Prompt">
 	<DockPanel VerticalAlignment="Stretch">
 		
-		<TextBlock Name="txtHeader" Classes="header" DockPanel.Dock="Top" HorizontalAlignment="Center">
+		<TextBlock Name="txtHeader" Classes="header1" DockPanel.Dock="Top" HorizontalAlignment="Center">
 			Header text
 		</TextBlock>
 
 		<StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal" Background="Beige">
-			<Button Name="btnCancel" Click="Cancel_Click" Classes="warning" Content="Cancel"></Button>
+			<Button Name="btnCancel" Click="Cancel_Click" Content="Cancel"></Button>
 			<Button Name="btnProceed" Click="Proceed_Click" Classes="proceed" Content="Accept"></Button>
 		</StackPanel>
 
-		<TextBlock Name="txtText" Classes="text" DockPanel.Dock="Top">
-			Prompt text
+		<TextBlock Name="txtText" Classes="flow-vertical" TextWrapping="Wrap" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+			Prompt text Prompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt text
 		</TextBlock>
 		
 	</DockPanel>

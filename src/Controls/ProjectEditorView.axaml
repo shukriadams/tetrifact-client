@@ -15,7 +15,7 @@
 		<Panel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label Classes="header1">Preferences</Label>
 		</Panel>
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+		<StackPanel Name="panelFromTemplate" DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>From Template</Label>
 			<ComboBox Name="cmbTemplateSource" ItemsSource="{Binding ProjectTemplates.Projects}" SelectedIndex="0" SelectionChanged="OnTemplateSourceChanged">
 				<ComboBox.ItemTemplate>
@@ -34,15 +34,15 @@
 			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label>Required tags</Label>
+			<Label FontWeight="Bold">Required tags</Label>
 			<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label>Blocked tags</Label>
+			<Label FontWeight="Bold">Blocked tags</Label>
 			<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
-			<Button Name="btnCancel" Click="OnCancel" Classes="warning">Cancel</Button>
+			<Button Name="btnCancel" Click="OnCancel">Cancel</Button>
 			<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
 		</StackPanel>
 	</DockPanel>

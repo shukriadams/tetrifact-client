@@ -12,14 +12,16 @@ namespace TetrifactClient
         /// <param name="parentWindow"></param>
         public static void CenterOn(this Window currentWindow, Window parentWindow, bool fitSize = false, int fitBufferMargin = 100)
         {
-            if (fitSize) 
+            if (fitSize)
             {
                 currentWindow.Width = parentWindow.Width - fitBufferMargin;
                 currentWindow.Height = parentWindow.Height - fitBufferMargin;
             }
 
-            int x = Convert.ToInt32(parentWindow.Position.X + (parentWindow.Width / 2) - (currentWindow.Width / 2));
-            int y = Convert.ToInt32(parentWindow.Position.Y + (parentWindow.Height / 2) - (currentWindow.Height / 2));
+            int x = Convert.ToInt32(parentWindow.Position.X + (parentWindow.Width / 2) - (currentWindow.Width / 2) + (fitBufferMargin/4));
+            int y = Convert.ToInt32(parentWindow.Position.Y + (parentWindow.Height / 2) - (currentWindow.Height / 2) + (fitBufferMargin / 4));
+
+
 
             currentWindow.Position = new Avalonia.PixelPoint(x, y);
         }

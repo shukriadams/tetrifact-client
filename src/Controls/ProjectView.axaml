@@ -18,8 +18,8 @@
 		</Panel>
 
 		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-			<Button Click="ProjectEdit_Click">Edit </Button>
-			<Button Click="ProjectDelete_Click">Delete</Button>
+			<Button Classes="proceed" Click="ProjectEdit_Click">Edit </Button>
+			<Button Classes="warning" Click="ProjectDelete_Click">Delete</Button>
 		</StackPanel>
 
 

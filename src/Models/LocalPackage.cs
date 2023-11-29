@@ -75,10 +75,14 @@ namespace TetrifactClient
         }
 
         #region METHODS
-
+        private bool saveset = false;
         public void EnableAutoSave() 
         {
+            if (saveset)
+                return;
+
             PropertyChanged += this.OnPropertyChanged;
+            saveset = true;
         }
 
         public void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) 

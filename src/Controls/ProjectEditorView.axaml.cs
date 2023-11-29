@@ -7,14 +7,15 @@ namespace TetrifactClient
     {
         public ProjectEditorView()
         {
-            this.DataContextChanged += ProjectView_DataContextChanged;
+            this.DataContextChanged += This_DataContextChanged;
             InitializeComponent();
         }
 
-        private void ProjectView_DataContextChanged(object? sender, EventArgs e)
+        private void This_DataContextChanged(object? sender, EventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
-            if (context != null) 
+
+            if (context != null && context.Project != null) 
             {
                 requiredTagsList.SetContext(context.Project.CommonTags, context.Project.RequiredTags);
                 blockedTagsList.SetContext(context.Project.CommonTags, context.Project.IgnoreTags);
@@ -31,12 +32,13 @@ namespace TetrifactClient
 
             // hide combobox when project already set
             cmbTemplateSource.IsVisible = project == null;
+            panelFromTemplate.IsVisible = project == null;
         }
 
         public new void ShowDialog(Window parent) 
         {
             base.ShowDialog(parent);
-            this.CenterOn(parent);
+            this.CenterOn(parent, true);
         }
 
         private void OnCancel(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
