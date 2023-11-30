@@ -124,6 +124,10 @@
 		<Setter Property="Padding" Value="12,2,6,2"/>
 	</Style>
 
+	<Style Selector="Border.tag:pointerover">
+		<Setter Property="Background" Value="Orange"/>
+	</Style>
+	
 	<Style Selector="TextBlock.tag">
 		<Setter Property="Foreground" Value="Black"/>
 	</Style>
