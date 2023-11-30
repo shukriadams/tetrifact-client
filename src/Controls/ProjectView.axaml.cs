@@ -130,9 +130,7 @@ namespace TetrifactClient
             LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
             if (selectedProject == null)
                 return;
-            
-            TagsDialog dialog = new TagsDialog();
-            dialog.ShowDialog(MainWindow.Instance);
+           
         }
 
         private void OnKeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

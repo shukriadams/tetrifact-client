@@ -23,7 +23,7 @@
 		</StackPanel>
 
 		<TextBlock Name="txtText" Classes="flow-vertical" TextWrapping="Wrap" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-			Prompt text Prompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt textPrompt text
+			Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text	Placeholder text
 		</TextBlock>
 		
 	</DockPanel>

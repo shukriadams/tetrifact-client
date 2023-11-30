@@ -30,6 +30,8 @@ namespace TetrifactClient
                 Project = project
             };
 
+            lblFormTitle.Content = $"Settings for Project {project.Name}";
+
             // hide combobox when project already set
             cmbTemplateSource.IsVisible = project == null;
             panelFromTemplate.IsVisible = project == null;

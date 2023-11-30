@@ -25,12 +25,24 @@ namespace TetrifactClient
         {
             TagsListViewModel context = new TagsListViewModel();
             this.DataContext = context;
+
+
             InitializeComponent();
+
+            // add demo tags
+            context.ExistingTags.Add("test1");
+            context.ExistingTags.Add("test2");
+            context.Tags.Add("test1");
+            context.Tags.Add("test1");
         }
 
         public void SetContext(IEnumerable<string> existingTags, IEnumerable<string> boundTags) 
         {
             TagsListViewModel context = this.DataContext as TagsListViewModel;
+
+            // clear demo tags
+            context.ExistingTags.Clear();
+            context.Tags.Clear();
 
             foreach (string tag in existingTags)
                 context.ExistingTags.Add(tag);
@@ -41,44 +53,70 @@ namespace TetrifactClient
             panelExistingTags.IsVisible = context.ExistingTags.Any();
 
             context.Tags.CollectionChanged += (object e, NotifyCollectionChangedEventArgs args) =>{
-                panelCurrentTags.IsVisible = context.Tags.Any();
+                SetVisiblity();
             };
+
+            SetVisiblity();
         }
+
+        private void SetVisiblity() 
+        {
+            TagsListViewModel context = this.DataContext as TagsListViewModel;
+            panelCurrentTags.IsVisible = context.Tags.Any();
+        }
+
 
         private void ExistingTags_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
         {
-            TextBlock source = e.Source as TextBlock;
-            if (source == null)
+            string tag = GetTagTextFromEvent(e);
+            if (tag == null)
                 return;
 
             TagsListViewModel context = this.DataContext as TagsListViewModel;
             if (context == null)
                 return;
 
-            if (context.Tags.Any(t => t == source.Text))
+            if (context.Tags.Any(t => t == tag))
                 return;
 
-            context.Tags.Add(source.Text);
+            context.Tags.Add(tag);
             _tags = context.Tags;
+        }
+
+        private static string GetTagTextFromEvent(Avalonia.Input.TappedEventArgs e) 
+        {
+            Border tag = e.Source as Border;
+            if (e.Source is TextBlock)
+                tag = (e.Source as TextBlock).Parent.Parent as Border;
+            else if (e.Source is Image)
+                tag = (e.Source as Image).Parent.Parent as Border;
+            if (tag == null)
+                return null;
+
+            return tag.Tag as string;
         }
 
         private void SelfTags_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
         {
+            string tag = GetTagTextFromEvent(e);
+            if (tag == null)
+                return;
+
+            TagsListViewModel context = this.DataContext as TagsListViewModel;
+            if (context == null)
+                return;
+
             Prompt prompt = new Prompt();
             Window owner = this.GetOwnerWindow();
+            prompt.SetContent("Remove tag", $"Remove the tag {tag}?", "Nevermind", "Remove it");
+            prompt.Classes.Add("delete");
             prompt.ShowDialog(owner);
+            prompt.Height = 200;
+            prompt.Width = 300;
             prompt.CenterOn(owner);
 
             prompt.OnAccept =()=>{
-                TextBlock source = e.Source as TextBlock;
-                if (source == null)
-                    return;
-
-                TagsListViewModel context = this.DataContext as TagsListViewModel;
-                if (context == null)
-                    return;
-
-                context.Tags.Remove(source.Text);
+                context.Tags.Remove(tag);
                 _tags = context.Tags;
             };
         }

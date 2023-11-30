@@ -16,13 +16,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Images\delete.png" />
     <None Remove="background.jpg" />
     <None Remove="DarkTheme.xaml" />
     <None Remove="Templates\Projects.json" />
   </ItemGroup>
+
   <ItemGroup>
     <AvaloniaResource Include="DarkTheme.xaml" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**"/>
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Templates\Projects.json" />
   </ItemGroup>
@@ -41,5 +48,10 @@
     <PackageReference Include="ParallelExtensionsExtras" Version="1.2.0" />
     <PackageReference Include="ReactiveUI" Version="19.5.1" />
     <PackageReference Include="Unity" Version="5.11.10" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Resource Include="Assets\Images\Delete.png" />
   </ItemGroup>
 </Project>

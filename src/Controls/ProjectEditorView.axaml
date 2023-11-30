@@ -9,11 +9,12 @@
 		x:DataType="vm:ProjectEditorViewModel"
 		ExtendClientAreaToDecorationsHint="True"
 		x:Class="TetrifactClient.ProjectEditorView"
+		Classes="dialog"
     	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">
-	<DockPanel>
+	<DockPanel Margin="10,10,10,10">
 		<Panel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label Classes="header1">Preferences</Label>
+			<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 		</Panel>
 		<StackPanel Name="panelFromTemplate" DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>From Template</Label>
@@ -34,11 +35,11 @@
 			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label FontWeight="Bold">Required tags</Label>
+			<Label FontWeight="Bold">Require packages have tags</Label>
 			<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label FontWeight="Bold">Blocked tags</Label>
+			<Label FontWeight="Bold">Ignore packages with tags</Label>
 			<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">

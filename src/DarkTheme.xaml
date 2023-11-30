@@ -22,6 +22,12 @@
 		<Setter Property="Background" Value="#393646"/>
 		<Setter Property="Foreground" Value="#F4EEE0"/>
 	</Style>
+
+    <!-- common 1st level dialog -->
+	<Style Selector="Window.dialog">
+		<Setter Property="Background" Value="#5c5771"/>
+		<Setter Property="Foreground" Value="#c8c6d3"/>
+	</Style>
 	
 	<Style Selector="Border.projectsView">
         <Setter Property="Background" Value="#4F4557"/>
@@ -40,6 +46,10 @@
 
     <!-- layout flow control, pushes both vertical and horizontal -->
 	<Style Selector="Border.flow">
+		<Setter Property="Margin" Value="10,10,10,10"/>
+	</Style>
+	
+	<Style Selector="DockPanel.flow">
 		<Setter Property="Margin" Value="10,10,10,10"/>
 	</Style>
 
@@ -106,5 +116,16 @@
 		<Setter Property="FontSize" Value="16"/>
 	</Style>
 
+	<Style Selector="Border.tag">
+		<Setter Property="Background" Value="Gainsboro"/>
+		<Setter Property="BorderBrush" Value="Gray"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="CornerRadius" Value="3"/>
+		<Setter Property="Padding" Value="12,2,6,2"/>
+	</Style>
 
+	<Style Selector="TextBlock.tag">
+		<Setter Property="Foreground" Value="Black"/>
+	</Style>
+	
 </Styles>
