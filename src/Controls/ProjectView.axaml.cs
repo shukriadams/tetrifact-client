@@ -10,33 +10,27 @@ namespace TetrifactClient
     public partial class ProjectView : UserControl
     {
         ILog _log;
+        
+        bool _gridChangeBound = false;
 
         public ProjectView()
         {
-            //this.DataContextChanged += ProjectView_DataContextChanged;
             InitializeComponent();
-        
-            // if not in v.studio, hide control if it has no data
-            //if (!System.Diagnostics.Debugger.IsAttached)
-            //    this.IsVisible = false;
-
+            txtNoBuildsAvailable.Text = "Checking content ... ";
             gridPackages.DataContextChanged += GridDataChanged;
+
             _log = new Log();
         }
 
-        /*
-        private void ProjectView_DataContextChanged(object? sender, EventArgs e)
-        {
-            Project contextProject = gridPackages.DataContext as Project;
-            if (contextProject != null)
-                tagsList.SetContext(contextProject.CommonTags, contextProject.RequiredTags);
-        }
-        */
         private void GridDataChanged(object? sender, System.EventArgs e)
         {
             Project contextProject = gridPackages.DataContext as Project;
-            if (contextProject != null) 
+
+            if (!_gridChangeBound && contextProject != null)
+            {
                 contextProject.Packages.CollectionChanged += gridChanged;
+                _gridChangeBound = true;
+            }
 
             this.SetVisualState();
         }

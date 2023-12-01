@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -18,6 +17,10 @@ namespace TetrifactClient
         [property: JsonProperty("Name")]
         [ObservableProperty]
         private string _name;
+
+        [property: JsonProperty("Description")]
+        [ObservableProperty]
+        private string _description;
 
         [property: JsonProperty("Id")]
         [ObservableProperty]

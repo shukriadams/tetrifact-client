@@ -10,26 +10,38 @@
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
 	<DockPanel Classes="projectView" LastChildFill="True">
-		<Label DockPanel.Dock="Top" Content="Name : " />
-		<TextBlock DockPanel.Dock="Top" Text="{Binding Name}"></TextBlock>
 
-		<Panel DockPanel.Dock="Top" Name="serverErrorPan" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNullOrEmpty}}">
-			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}" />
-		</Panel>
-
-		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-			<Button Classes="proceed" Click="ProjectEdit_Click">Edit </Button>
-			<Button Classes="warning" Click="ProjectDelete_Click">Delete</Button>
+		<Grid DockPanel.Dock="Top">
+			<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
+				<Label Content="Name : " />
+				<TextBlock Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
+			</StackPanel>
+			<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
+				<Button Click="ProjectEdit_Click">
+					<Image Classes="icon" Source="/Assets/Images/Settings.png" />
+				</Button>
+				<Button Classes="warning" Click="ProjectDelete_Click">
+					<Image Classes="icon" Source="/Assets/Images/Trash.png" />
+				</Button>
+			</StackPanel>
+		</Grid>
+		
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
+			<Label Content="Description : " />
+			<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
 		</StackPanel>
 
-
-		<TextBlock DockPanel.Dock="Top" Name="txtNoBuildsAvailable">
-			No builds available for this project yet.
+		<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">
+			[NO DATA MESSAGE]
 		</TextBlock>
+
+		<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNullOrEmpty}}">
+			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
+		</Panel>
 		
 		<DataGrid
 			ItemsSource="{Binding Packages}"
-			Classes="grid"
+			Classes="grid flow-vertical"
 			Name="gridPackages"
 			IsReadOnly="True"
 			DockPanel.Dock="Top"

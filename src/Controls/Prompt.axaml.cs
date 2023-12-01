@@ -12,6 +12,33 @@ namespace TetrifactClient
         public Prompt()
         {
             InitializeComponent();
+
+            TopLevel topLevel = TopLevel.GetTopLevel(this)!;
+            topLevel.KeyDown += TopLevel_KeyDown;
+        }
+
+        private void TopLevel_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
+        {
+            if (e.Key == Avalonia.Input.Key.Escape)
+                this.Cancel();
+            else if (e.Key == Avalonia.Input.Key.Enter)
+                this.Accept();
+
+        }
+
+        private void Accept() 
+        {
+            this.Close();
+            if (OnAccept != null)
+                OnAccept.Invoke();
+        }
+
+        private void Cancel() 
+        {
+            this.Close();
+            if (OnCancel != null)
+                OnCancel.Invoke();
+
         }
 
         public void SetContent(string header, string text, string cancel = "Cancel", string proceed = "Proceed") 
@@ -24,18 +51,12 @@ namespace TetrifactClient
 
         private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            this.Close();
-            if (OnCancel != null)
-                OnCancel.Invoke();
+            this.Cancel();
         }
 
         private void Proceed_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            this.Close();
-            if (OnAccept != null)
-                OnAccept.Invoke();
+            this.Accept();
         }
-
-        
     }
 }

@@ -30,7 +30,10 @@ namespace TetrifactClient
                 Project = project
             };
 
-            lblFormTitle.Content = $"Settings for Project {project.Name}";
+            if (project == null)
+                lblFormTitle.Content = $"New project";
+            else
+                lblFormTitle.Content = $"Settings for Project {project.Name}";
 
             // hide combobox when project already set
             cmbTemplateSource.IsVisible = project == null;

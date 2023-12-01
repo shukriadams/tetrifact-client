@@ -153,8 +153,9 @@ namespace TetrifactClient
 
                         chunkFiles.TryAdd(range.Index, tempFilePath2);
                         File.Move(tempFilePath1, tempFilePath2);
-                        HandleChunkDownloadEvent();
                     }
+
+                    HandleChunkDownloadEvent();
                 }
                 catch (Exception ex)
                 {

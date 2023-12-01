@@ -52,7 +52,9 @@ namespace TetrifactClient
                 if (!File.Exists(zipFilePath))
                 {
                     ChunkedDownloader downloader = new ChunkedDownloader();
-                    downloader.OnChunkDownloaded += (file, n, total, perc) => { progress.Message = $"Downloaded {perc}%"; };
+                    downloader.OnChunkDownloaded += (file, n, total, perc) => { 
+                        progress.Message = $"Downloaded {perc}%"; 
+                    };
                     downloader.OnChunkAssembled += (file, n, total, perc) => { progress.Message = $"Copied {perc}%"; };
                     downloader.OnError += ex => { progress.Message = "Download failed - check logs"; };
                     downloader.Download(remoteZipUrl,

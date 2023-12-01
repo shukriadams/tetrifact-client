@@ -21,7 +21,7 @@
 						<Border Classes="tag" Tag="{Binding}">
 							<StackPanel Orientation="Horizontal">
 								<TextBlock DockPanel.Dock="Left" Classes="tag" Text="{Binding}" />
-								<Image Margin="5,0,0,0" Height="16" Width="16" Source="/Assets/Images/Add.png"/>
+								<Image Margin="5,0,0,0" Classes="icon" Source="/Assets/Images/Add.png"/>
 							</StackPanel>
 						</Border>
 					</DataTemplate>
@@ -39,7 +39,7 @@
 						<Border Classes="tag" Tag="{Binding}">
 							<StackPanel Orientation="Horizontal">
 								<TextBlock Classes="tag" Text="{Binding}" />
-								<Image Margin="5,0,0,0" Height="16" Width="16" Source="/Assets/Images/Delete.png"/>
+								<Image Margin="5,0,0,0" Classes="icon" Source="/Assets/Images/Delete.png"/>
 							</StackPanel>
 						</Border>
 					</DataTemplate>
