@@ -5,14 +5,13 @@
 		xmlns:vm="using:TetrifactClient"
 		mc:Ignorable="d" 
 		d:DesignWidth="800" 
-		d:DesignHeight="550"
+		d:DesignHeight="850"
 		x:DataType="vm:ProjectEditorViewModel"
-		ExtendClientAreaToDecorationsHint="True"
 		x:Class="TetrifactClient.ProjectEditorView"
 		Classes="dialog"
     	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">
-	<DockPanel Margin="10,10,10,10">
+	<DockPanel>
 		<Panel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 		</Panel>
@@ -27,12 +26,16 @@
 			</ComboBox>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label>Project Name</Label>
+			<Label>Name</Label>
 			<TextBox Name="txtName" Text="{Binding Project.Name}"></TextBox>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label>Build server</Label>
 			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
+		</StackPanel>
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+			<Label>Description (optional)</Label>
+			<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>
 		</StackPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label FontWeight="Bold">Require packages have tags</Label>

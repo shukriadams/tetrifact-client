@@ -6,18 +6,14 @@
 		d:DesignWidth="400" 
 		d:DesignHeight="250"
         x:Class="TetrifactClient.Prompt"
-		Classes="prompt"
-        ExtendClientAreaToDecorationsHint="True" 
-		ExtendClientAreaChromeHints="NoChrome"
-		ExtendClientAreaTitleBarHeightHint="-1"
-        Title="Prompt">
-	<DockPanel VerticalAlignment="Stretch">
-		
-		<TextBlock Name="txtHeader" Classes="header1" DockPanel.Dock="Top" HorizontalAlignment="Center">
+		Classes="dialog nobar">
+	<DockPanel>
+
+		<TextBlock Name="txtHeader" Classes="header1 flow-vertical" DockPanel.Dock="Top" HorizontalAlignment="Center">
 			Header text
 		</TextBlock>
 
-		<StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal" Background="Beige">
+		<StackPanel Classes="flow-vertical" HorizontalAlignment="Center" DockPanel.Dock="Bottom" Orientation="Horizontal">
 			<Button Name="btnCancel" Click="Cancel_Click" Content="Cancel"></Button>
 			<Button Name="btnProceed" Click="Proceed_Click" Classes="proceed" Content="Accept"></Button>
 		</StackPanel>
