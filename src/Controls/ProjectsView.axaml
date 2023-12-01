@@ -6,29 +6,30 @@
 	mc:Ignorable="d" 
 	d:DesignWidth="400" 
 	d:DesignHeight="250"
+    Foreground="White"
 	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
 	x:Class="TetrifactClient.ProjectsView"
-    Classes="projectsView"
 	xmlns:vm="using:TetrifactClient"
 	x:DataType="vm:ProjectsViewModel">
     <Border Classes="projectsView">
         <DockPanel Classes="projectsView" LastChildFill="True">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <TextBlock Classes="header1">
-                    Projects
-                </TextBlock>
-                <Button Click="OnNewProject">
-                    Add Project
-                </Button>
-            </StackPanel>
+			<Grid DockPanel.Dock="Top"  Classes="flow-vertical">
+				<TextBlock Classes="header1" HorizontalAlignment="Left">
+					Projects
+				</TextBlock>
+				<Button Click="OnNewProject" HorizontalAlignment="Right">
+					<Image Classes="icon" Source="/Assets/Images/Add.png" />
+				</Button>
+			</Grid>
 
             <TextBlock 
+				Classes="flow-vertical"
 				DockPanel.Dock="Top" 
 			    Text="No projects added yet"
                 IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.HasContent}}"/>
 
             <ListBox 
-				Classes="listProjects" 
+				Classes="listProjects flow-vertical"  
 				Tapped="ProjectsList_Clicked" 
 				DockPanel.Dock="Top" 
 				Name="listProjects" 

@@ -14,18 +14,30 @@ namespace TetrifactClient
     {
         #region FIELDS
 
-        [property: JsonProperty("Name")]
-        [ObservableProperty]
-        private string _name;
-
-        [property: JsonProperty("Description")]
-        [ObservableProperty]
-        private string _description;
-
+        /// <summary>
+        /// Unique id of project. Generated from GUID. All data for project is partitition on disk with this id.
+        /// </summary>
         [property: JsonProperty("Id")]
         [ObservableProperty]
         private string _id;
 
+        /// <summary>
+        /// Public name of project, not unique. Used for display purposes.
+        /// </summary>
+        [property: JsonProperty("Name")]
+        [ObservableProperty]
+        private string _name;
+
+        /// <summary>
+        /// Optional description text of project. For user convenience.
+        /// </summary>
+        [property: JsonProperty("Description")]
+        [ObservableProperty]
+        private string _description;
+
+        /// <summary>
+        /// Url of server to fetch packages from
+        /// </summary>
         [property: JsonProperty("TetrifactServerAddress")]
         [ObservableProperty]
         private string _tetrifactServerAddress;
@@ -134,12 +146,14 @@ namespace TetrifactClient
 
         public Project() 
         {
+            this.AutoDownload = true;
             this.Id = Guid.NewGuid().ToString();
             this.Packages = new ObservableCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
             this.CommonTags = new List<string>();
             this.RequiredTags = new string[0];
             this.IgnoreTags = new string[0];
+            this.PackageSyncCount = 3;
         }
 
         #endregion

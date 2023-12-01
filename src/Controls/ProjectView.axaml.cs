@@ -16,7 +16,7 @@ namespace TetrifactClient
         public ProjectView()
         {
             InitializeComponent();
-            txtNoBuildsAvailable.Text = "Checking content ... ";
+            txtNoBuildsAvailable.Text = "Loading content ...";
             gridPackages.DataContextChanged += GridDataChanged;
 
             _log = new Log();
@@ -157,7 +157,7 @@ namespace TetrifactClient
             Project context = this.DataContext as Project;
 
             Prompt prompt = new Prompt();
-            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Name}?");
+            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Name}?", "Cancel", "Delete");
             prompt.Height = 300;
             prompt.Width = 400;
             prompt.Classes.Add("delete");

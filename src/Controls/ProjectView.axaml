@@ -10,10 +10,9 @@
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
 	<DockPanel Classes="projectView" LastChildFill="True">
-
 		<Grid DockPanel.Dock="Top">
 			<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
-				<Label Content="Name : " />
+				<Label Content="Project : " />
 				<TextBlock Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
 			</StackPanel>
 			<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
@@ -26,7 +25,7 @@
 			</StackPanel>
 		</Grid>
 		
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
+		<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
 			<Label Content="Description : " />
 			<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
 		</StackPanel>
@@ -35,8 +34,10 @@
 			[NO DATA MESSAGE]
 		</TextBlock>
 
-		<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNullOrEmpty}}">
-			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
+		<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">
+			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">
+				[ERROR PLACEHOLDER TEXT]
+			</TextBlock>
 		</Panel>
 		
 		<DataGrid

@@ -74,10 +74,8 @@ public partial class App : Application
                 continue;
 
             IDaemon daemon = App.UnityContainer.Resolve(type, null) as IDaemon;
-            //daemon.Start();
-            //Daemons.Add(daemon);
+            daemon.Start();
+            Daemons.Add(daemon);
         }
-
-
     }
 }

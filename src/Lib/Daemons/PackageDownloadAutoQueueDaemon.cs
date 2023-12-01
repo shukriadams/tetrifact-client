@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TetrifactClient
@@ -43,22 +44,40 @@ namespace TetrifactClient
                 if (!project.AutoDownload)
                     continue;
 
-                int downloadedCount = 0;
-                // Work way down packages in order of listing, marking them for autodownload as necessary
-                // This assumes packages are sorted newest to oldest
-                foreach (LocalPackage package in project.Packages) 
+                int downloadedCount = project.Packages.Where(p => p.IsExecutable()).Count();
+                int aleadyQueued = project.Packages.Where(p => p.IsDownloadedorQueuedForDownload()).Count();
+                int requiredToDownload = project.PackageSyncCount - downloadedCount - aleadyQueued;
+                int queuedCount = 0;
+
+                if (requiredToDownload > 0) 
                 {
-                    // mark for download
-                    if (package.IsEligibleForAutoDownload())
-                        package.TransferState = PackageTransferStates.AutoMarkedForDownload;
+                    // Work way down packages in order of listing, marking them for autodownload as necessary
+                    // This assumes packages are sorted newest to oldest
+                    foreach (LocalPackage package in project.Packages)
+                    {
+                        // mark for download
+                        if (package.IsEligibleForAutoDownload())
+                        {
+                            package.TransferState = PackageTransferStates.AutoMarkedForDownload;
+                            queuedCount++;
+                        }
 
-                    // if alreaddy marked for download, tally it up
-                    if (package.IsDownloadedorQueuedForDownload())
-                        downloadedCount ++;
+                        if (queuedCount >= requiredToDownload)
+                            break;
+                    }
+                }
 
-                    // if tally of (marked for) downloaded mnet, start marking for delete
-                    if (downloadedCount > project.PackageSyncCount && package.CanBeAutoCleanedUp())
+                // mark for delete
+                if (downloadedCount > project.PackageSyncCount) 
+                {
+                    int removeCount = 0;
+                    foreach (LocalPackage package in project.Packages.Where(p => p.IsExecutable()).Reverse())
+                    {
                         package.TransferState = PackageTransferStates.AutoMarkedForDelete;
+                        removeCount ++;
+                        if (downloadedCount >= project.PackageSyncCount + removeCount)
+                            break;
+                    }
                 }
             }
         }

@@ -45,9 +45,14 @@ namespace TetrifactClient
         private async Task Work()
         {
             System.Diagnostics.Debug.WriteLine($"PackageDownloadDaemon:WORK {DateTime.Now.Second}");
-            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                foreach (LocalPackage package in project.Packages.Where(package => package.IsQueuedForDownload()))
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
+            {
+                IEnumerable<LocalPackage> packagesToSync = project.Packages
+                    .Where(package => package.IsQueuedForDownload());
+
+                foreach (LocalPackage package in packagesToSync)
                     await this.ProcessPackage(project, package);
+            }
         }
 
         private async Task ProcessPackage(Project project, LocalPackage package)
