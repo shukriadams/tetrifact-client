@@ -29,7 +29,7 @@ namespace TetrifactClient
         {
             GlobalDataContext context = GlobalDataContext.Instance;
 
-            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
                 foreach (LocalPackage package in project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()))
                 {
@@ -59,11 +59,9 @@ namespace TetrifactClient
                             }
                         }
                     }
-                    
+
                     if (!subDirs.Any())
-                    {
                         package.TransferState = PackageTransferStates.Deleted;
-                    }
                 }
             }
         }

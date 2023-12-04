@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Avalonia.Remote.Protocol.Viewport;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,8 @@ namespace TetrifactClient
                 {
                     if (!string.IsNullOrEmpty(request.Error))
                         contextProject.ServerErrorDescription = request.Error;
+                    else if (request.LastException != null)
+                        contextProject.ServerErrorDescription = request.LastException.Message;
                     else
                         contextProject.ServerErrorDescription = "Server unavailable";
 

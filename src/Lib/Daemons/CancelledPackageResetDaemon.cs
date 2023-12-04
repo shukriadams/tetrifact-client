@@ -33,10 +33,8 @@ namespace TetrifactClient
             {
                 IEnumerable<LocalPackage> cancelledPackages = project.Packages.Where(p => p.TransferState == PackageTransferStates.DownloadCancelled);
                 foreach (LocalPackage cancelledPackage in cancelledPackages)
-                {
                     if (project.AvailablePackageIds.Contains(cancelledPackage.Package.Id))
                         cancelledPackage.TransferState = PackageTransferStates.AvailableForDownload;
-                }
             }
         }
     }
