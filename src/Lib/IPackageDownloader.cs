@@ -1,6 +1,6 @@
 ﻿namespace TetrifactClient
 {
-    public interface IPackageDownloader
+    public interface IPackageDownloader : ICancel
     {
         PackageTransferResponse Download();
     }

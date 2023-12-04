@@ -17,7 +17,7 @@ namespace TetrifactClient
 
         private Project _project;
         
-        private LocalPackage _localPackage;
+        private LocalPackage _package;
 
         private string _packageId;
 
@@ -44,7 +44,7 @@ namespace TetrifactClient
         public PackageVerifier(Project project, LocalPackage localPackage, string packagePath, string serverAddress, string packageId, int threads)
         {
             _project = project;
-            _localPackage = localPackage;
+            _package = localPackage;
             _serverAddress = serverAddress;
             _packageId = packageId;
             _packagePath = packagePath;
@@ -135,9 +135,7 @@ namespace TetrifactClient
             decimal p = (decimal)_currentFile / (decimal)_totalFiles;
             int percent = (int)Math.Round((decimal)(p * 100), 0);
 
-            PackageTransferProgress buildStatus = PackageTransferProgressStore.Get(_project, _localPackage);
-            buildStatus.Message = $"Verify {percent}%";
-
+            _package.DownloadProgress.Message = $"Verify {percent}%";
             _currentFile++;
         }
 

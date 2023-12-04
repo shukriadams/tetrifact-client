@@ -93,8 +93,19 @@ namespace TetrifactClient
             else
                 downloader = new PackagePartialDownloader(_context, project, package, donorPackage, packageDiff, _log);
 
+            downloader.CancelCheck =()=> package.TransferState == PackageTransferStates.UserCancellingDownload;
+
             package.Status = "Downloading";
+            package.TransferState = PackageTransferStates.Downloading;
             PackageTransferResponse result = downloader.Download();
+
+            if (package.TransferState == PackageTransferStates.UserCancellingDownload)
+            {
+                package.TransferState = PackageTransferStates.DownloadCancelled;
+                package.Status = "Cancelled";
+                return;
+            }
+
             if (result.Succeeded)
             {
                 package.TransferState = PackageTransferStates.Downloaded;

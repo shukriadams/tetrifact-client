@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TetrifactClient
 {
-    public class PackagePartialDownloader : IPackageDownloader
+    public class PackagePartialDownloader : IPackageDownloader, ICancel
     {
         #region FIELDS
 
@@ -23,6 +24,12 @@ namespace TetrifactClient
         private LocalPackage _donorPackage;
 
         PackageDiff _packageDiff;
+
+        #endregion
+
+        #region PROPERTIES
+
+        public IsTrueLookup CancelCheck { get; set; }
 
         #endregion
 
@@ -44,7 +51,6 @@ namespace TetrifactClient
 
         public PackageTransferResponse Download() 
         {
-            PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
             string finalPackagePath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _package);
 
             // Download new files
@@ -55,6 +61,10 @@ namespace TetrifactClient
                 foreach (PackageFile missingFile in _packageDiff.Difference)
                     try
                     {
+                        // break out of look if cancel set from parent process
+                        if (this.CancelCheck != null && this.CancelCheck())
+                            continue;
+
                         string savePath = Path.Combine(finalPackagePath, missingFile.Path);
                         if (savePath.Length > Constants.MAX_PATH_LENGTH)
                             return new PackageTransferResponse
@@ -66,6 +76,7 @@ namespace TetrifactClient
                         FileSystemHelper.CreateDirectory(Path.GetDirectoryName(savePath));
 
                         ChunkedDownloader downloader = new ChunkedDownloader();
+                        downloader.CancelCheck = () => this.CancelCheck();
                         downloader.OnError += (ex) => {
                             downloadErrorResponse = new PackageTransferResponse 
                             {
@@ -76,7 +87,7 @@ namespace TetrifactClient
                         };
 
                         downloadCount ++;
-                        progress.Message = $"Downloading {MathHelper.Percent(downloadCount, _packageDiff.Difference.Count)}%";
+                        _package.DownloadProgress.Message = $"Downloading {MathHelper.Percent(downloadCount, _packageDiff.Difference.Count)}%";
                         downloader.Download($"{_package.TetrifactServerAddress}/v1/files/{missingFile.Id}", savePath, 1000000, 1); // 1 meg chunk size, use 1 thread only, as this process is already threaded!
 
                         // error occured, exit download process immediately
@@ -107,7 +118,11 @@ namespace TetrifactClient
             // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
             PackageTransferResponse copyErrorResponse = null;
             Parallel.ForEach(_packageDiff.Common.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = parallels }, existingFile => {
-                progress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}%";
+        
+                if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
+                    return;
+
+                _package.DownloadProgress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}%";
 
                 string newFilePath = Path.Combine(finalPackagePath, existingFile.Path);
                 if (newFilePath.Length > Constants.MAX_PATH_LENGTH)

@@ -1,39 +1,40 @@
-﻿namespace TetrifactClient
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace TetrifactClient
 {
     /// <summary>
     /// Information about package download/unzipping/verifying progress. For UX / UI. 
     /// </summary>
-    public class PackageTransferProgress
+    public partial class PackageTransferProgress : ObservableObject
     {
-        /// <summary>
-        /// Id of package being downloaded
-        /// </summary>
-        public string PackageId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Project Project { get; set; }
-
         /// <summary>
         /// bytes or files already processed.
         /// </summary>
-        public long Progress { get; set; }
+        [ObservableProperty]
+        private long _progress;
 
         /// <summary>
         /// Total nr of bytes or files needing to be processed.
         /// </summary>
-        public long Total { get; set; }
+        [ObservableProperty]
+        private long _total;
 
         /// <summary>
         /// True if fetching full zip. If not, will fetch individual files and copy others from local builds.
         /// </summary>
-        public bool IsFullDownload { get; set; }
+        [ObservableProperty]
+        private bool _isFullDownload;
 
         /// <summary>
         /// Desription about download, such as "Waiting for server", "Downloading zip", "Copying from local", "Downloading files", "Unpacking zip". 
         /// This is for user info only.
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        [ObservableProperty]
+        private string _message;
+
+        public PackageTransferProgress() 
+        {
+            this.Message = string.Empty;
+        }
     }
 }

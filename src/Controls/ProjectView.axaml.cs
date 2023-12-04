@@ -151,6 +151,15 @@ namespace TetrifactClient
             editor.ShowDialog(MainWindow.Instance);
         }
 
+        private void OnCancelDownloadClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
+            if (selectedProject == null)
+                return;
+
+            selectedProject.CancelQueueState();
+        }
+
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Project context = this.DataContext as Project;

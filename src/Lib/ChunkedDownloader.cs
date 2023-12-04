@@ -12,7 +12,7 @@ namespace TetrifactClient
     /// Downloads a file as a series of chunks, which are then re-assembled. This minimizes retry risk. Chunks must download successfully before being
     /// written to disk, and persist after download, so this process can be restarted and resume with existing chunks.
     /// </summary>
-    public class ChunkedDownloader
+    public class ChunkedDownloader : ICancel
     {
         #region FIELDS
 
@@ -33,6 +33,8 @@ namespace TetrifactClient
         #endregion
 
         #region PROPERTIES
+
+        public IsTrueLookup CancelCheck { get; set; }
 
         public bool Succeeded { get; set; }
 
@@ -135,6 +137,10 @@ namespace TetrifactClient
             {
                 try
                 {
+                    // break out of look if cancel set from parent process
+                    if (this.CancelCheck != null && this.CancelCheck())
+                        return;
+
                     HardenedWebClient webClient = new HardenedWebClient();
                     webClient.Timeout = GlobalDataContext.Instance.Timeout;
                     webClient.Range = new Range { Start = range.Start, End = range.End };
@@ -172,6 +178,10 @@ namespace TetrifactClient
 
                 foreach (var tempFile in chunkFiles.OrderBy(b => b.Key))
                 {
+                    // break out of look if cancel set from parent process
+                    if (this.CancelCheck != null && this.CancelCheck())
+                        continue;
+
                     byte[] tempFileBytes = File.ReadAllBytes(tempFile.Value);
                     destinationStream.Write(tempFileBytes, 0, tempFileBytes.Length);
                     File.Delete(tempFile.Value);

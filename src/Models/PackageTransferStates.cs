@@ -9,8 +9,10 @@
         AutoMarkedForDownload,       // package queued automatically
         UserMarkedForDownload,      // user explicitly queued package for download
         Downloading,                // package is currently being downloaded
+        UserCancellingDownload,     // user has requested package download be cancelled. this state can be entered into only if pacakge is queued for downloading, or is downloading
         DownloadFailed,             // package transfer failed and willnot resume
         Downloaded,                 // package is available locally for starting
+        DownloadCancelled,          // download was successfully cancelled
         DoNotDelete,                // package is downloaded and marked as keep forever by user
         AutoMarkedForDelete,        // package is marked is marked for delete by daemon
         UserMarkedForDelete,        // package is marked for delete by user

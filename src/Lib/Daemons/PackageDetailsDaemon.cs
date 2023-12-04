@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,6 +38,7 @@ namespace TetrifactClient
                 {
                     string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"remote.json");
                     string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
+
                     if (File.Exists(localPackagePath))
                         continue;
 

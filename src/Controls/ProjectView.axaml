@@ -57,6 +57,7 @@
 					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
 						<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
 						<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
+						<MenuItem Header="Cancel" Name="mnuCanceldownload" Click="OnCancelDownloadClick" />
 						<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
 						<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
 						<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
@@ -89,7 +90,7 @@
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Info" Width="300" Binding="{Binding Status}"/>
+					<DataGridTextColumn Header="Info" Width="300" Binding="{Binding DownloadProgress.Message}"/>
 				</DataGrid.Columns>
         </DataGrid>
 

@@ -2,6 +2,9 @@
 
 namespace TetrifactClient
 {
+    /// <summary>
+    /// REMOVE
+    /// </summary>
     public static class PackageTransferProgressStore
     {
         private static Dictionary<string, PackageTransferProgress> _progress = new Dictionary<string, PackageTransferProgress> ();
@@ -16,8 +19,8 @@ namespace TetrifactClient
                     return _progress[key];
 
                 PackageTransferProgress progress = new PackageTransferProgress ();
-                progress.Project = project;
-                progress.PackageId = package.Package.Id;
+                //progress.Project = project;
+                //progress.PackageId = package.Package.Id;
 
                 _progress.Add(key, progress);
 

@@ -68,14 +68,27 @@ namespace TetrifactClient
         [property: JsonIgnore]
         private string _status;
 
+        /// <summary>
+        /// do not persist
+        /// </summary>
+        [ObservableProperty]
+        private PackageTransferProgress _downloadProgress;
+
         #endregion
+
+        #region CTORS
 
         public LocalPackage() 
         {
+            this.DownloadProgress = new PackageTransferProgress();
         }
 
+        #endregion
+
         #region METHODS
+
         private bool saveset = false;
+
         public void EnableAutoSave() 
         {
             if (saveset)
@@ -152,11 +165,26 @@ namespace TetrifactClient
             return this.TransferState == PackageTransferStates.Downloaded;
         }
 
+        public void CancelQueueState() 
+        {
+            if (!this.IsQueuedForDownloadorDownloading())
+                return;
+
+            this.TransferState = PackageTransferStates.UserCancellingDownload;
+        }
+
         public bool IsMarkedForDeleteOrBeingDeleting() 
         {
             return this.TransferState == PackageTransferStates.AutoMarkedForDelete
                 || this.TransferState == PackageTransferStates.UserMarkedForDelete
                 || this.TransferState == PackageTransferStates.Deleting;
+        }
+
+        public bool IsQueuedForDownloadorDownloading()
+        {
+            return this.TransferState == PackageTransferStates.UserMarkedForDownload
+                || this.TransferState == PackageTransferStates.AutoMarkedForDownload
+                || this.TransferState == PackageTransferStates.Downloading;
         }
 
         public bool IsQueuedForDownload() 

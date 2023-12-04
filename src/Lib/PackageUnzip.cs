@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO.Compression;
 using System.IO;
 using System.Linq;
 
 namespace TetrifactClient
 {
-    public class PackageUnzip
+    public class PackageUnzip : ICancel
     {
         #region FIELDS
 
@@ -32,6 +30,8 @@ namespace TetrifactClient
         public long Progress { get; private set; }
 
         public long ProgressPercent { get; private set; }
+        
+        public IsTrueLookup CancelCheck { get; set; }
 
         #endregion
 
@@ -58,8 +58,7 @@ namespace TetrifactClient
 
         private void DoUnzip()
         {
-            PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
-            progress.Message = "Unpacking";
+            _package.DownloadProgress.Message = "Unpacking";
 
             using (FileStream file = new FileStream(_zipFilePath, FileMode.Open))
             using (ZipArchive archive = new ZipArchive(file))
@@ -67,17 +66,21 @@ namespace TetrifactClient
                 this.Total = archive.Entries.Where(r => r != null).Select(r => r.Length).Count();
 
                 // store size of build archive, this will be used to estimate download progress on next build
-                progress.Total = archive.Entries.Count;
+                _package.DownloadProgress.Total = archive.Entries.Count;
 
                 this.Progress = 0;
 
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
+                    // break out of look if cancel set from parent process
+                    if (this.CancelCheck != null && this.CancelCheck())
+                        continue;
+
                     if (entry == null)
                         continue;
 
-                    progress.Progress ++;
-                    progress.Message = $"Unpacking {MathHelper.Percent(progress.Progress, this.Total)}%";
+                    _package.DownloadProgress.Progress ++;
+                    _package.DownloadProgress.Message = $"Unpacking {MathHelper.Percent(_package.DownloadProgress.Progress, this.Total)}%";
 
                     using (Stream unzippedEntryStream = entry.Open())
                     {

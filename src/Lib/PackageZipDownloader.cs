@@ -17,6 +17,12 @@ namespace TetrifactClient
 
         #endregion
 
+        #region PROPERTIES
+
+        public IsTrueLookup CancelCheck { get; set; }
+
+        #endregion
+
         #region CTORS
 
         public PackageZipDownloader(GlobalDataContext context, Project project, LocalPackage package, ILog log)
@@ -45,32 +51,40 @@ namespace TetrifactClient
                 if (Directory.Exists(finalPackagePath)) 
                     return new PackageTransferResponse { Succeeded = true, Message = "Already downloaded" };
 
-                PackageTransferProgress progress = PackageTransferProgressStore.Get(_project, _package);
-                progress.Message = "Contacting server ...";
+                _package.DownloadProgress.Message = "Contacting server ...";
+
+                if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
+                    return new PackageTransferResponse { Succeeded = true, Message = "Cancelled" };
 
                 // download zip if the zip's eventual location doesn't exist yet, note, this assumes that the existing zip isn't corrupted or broken from previous download attempt
                 if (!File.Exists(zipFilePath))
                 {
                     ChunkedDownloader downloader = new ChunkedDownloader();
                     downloader.OnChunkDownloaded += (file, n, total, perc) => { 
-                        progress.Message = $"Downloaded {perc}%"; 
+                        _package.DownloadProgress.Message = $"Downloaded {perc}%"; 
                     };
-                    downloader.OnChunkAssembled += (file, n, total, perc) => { progress.Message = $"Copied {perc}%"; };
-                    downloader.OnError += ex => { progress.Message = "Download failed - check logs"; };
+                    downloader.CancelCheck = () => this.CancelCheck();
+                    downloader.OnChunkAssembled += (file, n, total, perc) => { _package.DownloadProgress.Message = $"Copied {perc}%"; };
+                    downloader.OnError += ex => { _package.DownloadProgress.Message = "Download failed - check logs"; };
                     downloader.Download(remoteZipUrl,
                         zipFileTempPath,
                         _context.Preferences.DownloadChunkSize,
                         _context.Preferences.ParallelDownloadThreads);
 
-                    if (downloader.Succeeded) 
+                    if (downloader.Succeeded)
                     {
-                        progress.Message = "Moving file";
+                        _package.DownloadProgress.Message = "Moving file";
                         File.Move(zipFileTempPath, zipFilePath);
+                    }
+                    else 
+                    {
+                        return new PackageTransferResponse { Succeeded = false, Message = "Download failed, check logs" };
                     }
                 }
 
                 // unpack zip
                 PackageUnzip unpacker = new PackageUnzip(_context, _project, _package, zipFilePath);
+                unpacker.CancelCheck = () => this.CancelCheck();
                 unpacker.Unpack();
 
                 return new PackageTransferResponse { Succeeded = true };
