@@ -65,6 +65,7 @@ namespace TetrifactClient
         private int _diffDownloadThreshold;
 
         /// <summary>
+        /// Persistent error in package operation. Leave blank if functional. 
         /// Does not persist
         /// </summary>
         [ObservableProperty]
@@ -128,6 +129,23 @@ namespace TetrifactClient
         private SourceServerStates _serverState;
 
         /// <summary>
+        /// Daemon processing this package will write status updates to this field. Use this to keep user informed about what is going on. Update
+        /// often. This is not a log, but a way to make app feel responsive at all times.
+        /// </summary>
+        [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore] 
+        [property: Newtonsoft.Json.JsonIgnore]
+        private string _currentStatus;
+
+        /// <summary>
+        /// time of last status update.
+        /// </summary>
+        [ObservableProperty]
+        [Newtonsoft.Json.JsonIgnore]
+        [property: Newtonsoft.Json.JsonIgnore]
+        private string _currentStatusDate;
+
+        /// <summary>
         /// Not persisted, generated dynamically.
         /// </summary>
         [property: JsonProperty("CommonTags")]
@@ -154,11 +172,38 @@ namespace TetrifactClient
             this.RequiredTags = new string[0];
             this.IgnoreTags = new string[0];
             this.PackageSyncCount = 3;
+            this.CurrentStatus = string.Empty;
+
         }
 
         #endregion
 
         #region METHODS
+
+        private string _stat = string.Empty;
+        private DateTime _statDate = DateTime.Now;
+        public void SetStatus(string status) 
+        {
+            _stat = status;
+            _statDate = DateTime.Now;
+        }
+
+        public void GenerateStatus() 
+        {
+            if (string.IsNullOrEmpty(_stat) && string.IsNullOrEmpty(_currentStatus))
+                return;
+
+            if (string.IsNullOrEmpty(_stat))
+            {
+                this.CurrentStatus = string.Empty;
+                this.CurrentStatusDate = string.Empty;
+            }
+            else
+            {
+                this.CurrentStatus = $"{_stat}";
+                this.CurrentStatusDate = $" ({(DateTime.Now - _statDate).ToHumanString()} ago)";
+            }
+        }
 
         /// <summary>
         /// Populates packages collection from disk
@@ -202,7 +247,6 @@ namespace TetrifactClient
 
             // before any filtering, peak at all tags, we need thems
             foreach (var package in newPackages)
-            {
                 foreach (string tag in package.Package.Tags)
                 {
                     if (!_rawTags.ContainsKey(tag))
@@ -210,7 +254,6 @@ namespace TetrifactClient
 
                     _rawTags[tag]++;
                 }
-            }
 
             this.CommonTags = _rawTags
                 .Where(t => t.Value > 1)

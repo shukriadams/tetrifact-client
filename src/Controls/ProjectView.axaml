@@ -12,8 +12,8 @@
 	<DockPanel Classes="projectView" LastChildFill="True">
 		<Grid DockPanel.Dock="Top">
 			<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
-				<Label Content="Project : " />
-				<TextBlock Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
+				<Label Classes="header1" Content="Project : " />
+				<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
 			</StackPanel>
 			<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
 				<Button Click="ProjectEdit_Click">
@@ -24,20 +24,21 @@
 				</Button>
 			</StackPanel>
 		</Grid>
-		
+
+		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+			<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
+			<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
+		</StackPanel>
+
 		<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
 			<Label Content="Description : " />
 			<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
 		</StackPanel>
 
-		<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">
-			[NO DATA MESSAGE]
-		</TextBlock>
+		<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">[NO DATA MESSAGE]</TextBlock>
 
 		<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">
-			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">
-				[ERROR PLACEHOLDER TEXT]
-			</TextBlock>
+			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
 		</Panel>
 		
 		<DataGrid

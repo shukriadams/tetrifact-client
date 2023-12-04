@@ -14,36 +14,14 @@ namespace TetrifactClient
     {
         private bool _busy;
         private int _delay = 5000;
-        
+        private ILog _log;
+
         public void Start()
         {
-            Task.Run(async () => {
-                while (true)
-                {
-                    try
-                    {
-                        if (_busy)
-                            continue;
-
-                        _busy = true;
-
-                        foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
-                            await this.Work(project);
-                    }
-                    catch (Exception ex)
-                    {
-                        GlobalDataContext.Instance.Console.Add($"Unexpected error getting package manifest : {ex}");
-                        // todo : write ex to log file
-                    }
-                    finally
-                    {
-                        _busy = false;
-
-                        // force thread pause so this loop doesn't lock CPU
-                        await Task.Delay(_delay);
-                    }
-                } // while
-            });
+            DaemonProcessRunner runner = new DaemonProcessRunner();
+            _log = new Log();
+            
+            runner.Start(new AsyncDo(this.Work), (int)new TimeSpan(0, 0, 5).TotalMilliseconds, new Log());
         }
 
         public void WorkNow()
@@ -51,41 +29,48 @@ namespace TetrifactClient
             throw new NotImplementedException();
         }
 
-        private async Task Work(Project project)
+        private async Task Work()
         {
-            HttpPayloadRequest request = new HttpPayloadRequest(HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages" } ));
-            request.Attempt();
-
-            Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
-
-            if (request.Succeeded)
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                // somehow project was deleted since call started, this is an edge case and can be ignored
-                if (contextProject == null)
-                    return;
+                Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
+                contextProject.SetStatus("Checking server for new packages");
 
-                string payload = Encoding.Default.GetString(request.Payload);
-                dynamic payloadDynamic = JsonConvert.DeserializeObject(payload);
-                if (payloadDynamic == null || payloadDynamic.success == null)
-                    throw new Exception($"Received error response : {payload}");
+                HttpPayloadRequest request = new HttpPayloadRequest(HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages" }));
+                request.Attempt();
 
-                IEnumerable<string> packageIds = JsonConvert.DeserializeObject<IEnumerable<string>>(payloadDynamic.success.packages.ToString());
+                if (request.Succeeded)
+                {
+                    // somehow project was deleted since call started, this is an edge case and can be ignored
+                    if (contextProject == null)
+                        return;
 
-                contextProject.ServerState = SourceServerStates.Normal;
-                contextProject.ServerErrorDescription = null;
-                lock (GlobalDataContext.Instance)
-                    contextProject.AvailablePackageIds = packageIds.ToList();
-            } 
-            else 
-            {
-                if (!string.IsNullOrEmpty(request.Error))
-                    contextProject.ServerErrorDescription = request.Error;
+                    string payload = Encoding.Default.GetString(request.Payload);
+                    dynamic payloadDynamic = JsonConvert.DeserializeObject(payload);
+                    if (payloadDynamic == null || payloadDynamic.success == null) 
+                    {
+                        contextProject.SetStatus("Error getting list of packages, check log");
+                        _log.LogUnstability($"Received error response : {payload}");
+                        continue;
+                    }
+
+                    IEnumerable<string> packageIds = JsonConvert.DeserializeObject<IEnumerable<string>>(payloadDynamic.success.packages.ToString());
+
+                    contextProject.ServerState = SourceServerStates.Normal;
+                    contextProject.ServerErrorDescription = null;
+                    lock (GlobalDataContext.Instance)
+                        contextProject.AvailablePackageIds = packageIds.ToList();
+                }
                 else
-                    contextProject.ServerErrorDescription = "Server unavailable";
+                {
+                    if (!string.IsNullOrEmpty(request.Error))
+                        contextProject.ServerErrorDescription = request.Error;
+                    else
+                        contextProject.ServerErrorDescription = "Server unavailable";
 
-                contextProject.ServerState = SourceServerStates.Unavailable;
+                    contextProject.ServerState = SourceServerStates.Unavailable;
+                }
             }
-
         }
     }
 }

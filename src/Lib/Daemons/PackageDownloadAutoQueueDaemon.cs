@@ -60,6 +60,8 @@ namespace TetrifactClient
                         {
                             package.TransferState = PackageTransferStates.AutoMarkedForDownload;
                             queuedCount++;
+
+                            project.SetStatus($"Queueing {package.Package.Id} for download");
                         }
 
                         if (queuedCount >= requiredToDownload)
@@ -75,6 +77,9 @@ namespace TetrifactClient
                     {
                         package.TransferState = PackageTransferStates.AutoMarkedForDelete;
                         removeCount ++;
+
+                        project.SetStatus($"Marking {package.Package.Id} for delete");
+
                         if (downloadedCount >= project.PackageSyncCount + removeCount)
                             break;
                     }

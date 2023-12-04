@@ -15,7 +15,7 @@ namespace TetrifactClient
         private int _delayms;
 
         private AsyncDo _work;
-        
+
         private bool _pause;
 
         public void Start(AsyncDo work, int delayms, ILog log)

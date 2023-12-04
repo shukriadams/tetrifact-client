@@ -23,10 +23,12 @@ namespace TetrifactClient
 
         public async Task Work()
         {
-            // run on main thread else boom
+            // run on main thread, else go boom
             Dispatcher.UIThread.Post(() => {
+
                 foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
                     project.PopulatePackageList();
+
             }, DispatcherPriority.Background);
         }
     }

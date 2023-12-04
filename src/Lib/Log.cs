@@ -81,12 +81,17 @@ namespace TetrifactClient
             Output(LogLevel.Error, item, description);
         }
 
+        public void LogUnstability(object item, string description = "")
+        {
+            Output(LogLevel.Error, item, description, false);
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="error"></param>
         /// <param name="description"></param>
-        private void Output(LogLevel logLevel, object logObject, string description)
+        private void Output(LogLevel logLevel, object logObject, string description, bool writeToFile = true)
         {
             if (_logPath == null)
                 return;
@@ -107,13 +112,16 @@ namespace TetrifactClient
             //
             GlobalDataContext.Instance.Console.Add($"{objectOut} {description}");
 
-            try
+            if (writeToFile)
             {
-                File.AppendAllText(_logPath, $"{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()} {LogLevels.Error} : {description} {objectOut}\r\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
+                try
+                {
+                    File.AppendAllText(_logPath, $"{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()} {LogLevels.Error} : {description} {objectOut}\r\n");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 

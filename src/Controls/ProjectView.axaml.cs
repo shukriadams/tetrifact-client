@@ -16,9 +16,8 @@ namespace TetrifactClient
         public ProjectView()
         {
             InitializeComponent();
-            txtNoBuildsAvailable.Text = "Loading content ...";
             gridPackages.DataContextChanged += GridDataChanged;
-
+            txtNoBuildsAvailable.Text = string.Empty;
             _log = new Log();
         }
 

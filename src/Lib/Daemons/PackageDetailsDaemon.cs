@@ -42,6 +42,7 @@ namespace TetrifactClient
                     if (File.Exists(localPackagePath))
                         continue;
 
+                    contextProject.SetStatus($"Querying server for new package {availablePackage}");
                     Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
 
                     string url = HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages", availablePackage });
@@ -83,6 +84,7 @@ namespace TetrifactClient
 
                         contextProject.ServerState = SourceServerStates.Normal;
                         contextProject.ServerErrorDescription = null;
+                        contextProject.SetStatus($"Downloaded info for package {availablePackage}");
                     }
                     else
                     {

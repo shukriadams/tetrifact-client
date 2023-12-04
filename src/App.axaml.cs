@@ -35,10 +35,11 @@ public partial class App : Application
         UnityContainer = new UnityContainer();
         UnityContainer.RegisterType<ProjectEditorView, ProjectEditorView>();
         UnityContainer.RegisterType<ILog, Log>();
+        UnityContainer.RegisterType<ProjectCurrentStatusDaemon, ProjectCurrentStatusDaemon>();
+        UnityContainer.RegisterType<PackageRemoteListDaemon, PackageRemoteListDaemon>();
         UnityContainer.RegisterType<PackageDetailsDaemon, PackageDetailsDaemon>();
         UnityContainer.RegisterType<PackageDownloadAutoQueueDaemon, PackageDownloadAutoQueueDaemon>();
         UnityContainer.RegisterType<PackageDownloadDaemon, PackageDownloadDaemon>();
-        UnityContainer.RegisterType<PackageRemoteListDaemon, PackageRemoteListDaemon>();
         UnityContainer.RegisterType<PackageMarkForDeleteDaemon, PackageMarkForDeleteDaemon>();
         UnityContainer.RegisterType<PackageDeleteDaemon, PackageDeleteDaemon>();
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
