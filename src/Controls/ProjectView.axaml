@@ -49,7 +49,7 @@
 			DockPanel.Dock="Top"
 			CanUserReorderColumns="True"
 			CanUserResizeColumns="True"
-			CanUserSortColumns="False"
+			CanUserSortColumns="True"
 			GridLinesVisibility="All"
 			BorderThickness="1" 
 			BorderBrush="Gray">

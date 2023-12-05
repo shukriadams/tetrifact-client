@@ -92,6 +92,7 @@ namespace TetrifactClient
         {
             DateTime date = dateUtc.ToLocalTime();
             string format = "yy-MM-dd HH:mm";
+
             // for date great than a day since, we don't care about time
             if (shorten && (DateTime.Now.ToLocalTime() - date).TotalHours > 24)
                 format = "yy-MM-dd";
@@ -100,6 +101,16 @@ namespace TetrifactClient
                 .Replace(".", ":"); // .net in its infinite stupidity ignores the ":" in the format string and forces fullstops, replace those
 
             return shortened;
+        }
+
+        /// <summary>
+        /// Converts datetime to a format that can be written to filename
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string ToFSString(this DateTime date) 
+        {
+            return date.ToString("yyMMdd_HHmmss");
         }
 
         public static string ToHumanString(this DateTime? dateUtc)

@@ -43,7 +43,7 @@ public partial class App : Application
         UnityContainer.RegisterType<PackageMarkForDeleteDaemon, PackageMarkForDeleteDaemon>();
         UnityContainer.RegisterType<PackageDeleteDaemon, PackageDeleteDaemon>();
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
-        UnityContainer.RegisterType<CancelledPackageResetDaemon, CancelledPackageResetDaemon>();
+        UnityContainer.RegisterType<PackageReturnToAvailablePoolDaemon, PackageReturnToAvailablePoolDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -10,153 +11,296 @@ using Newtonsoft.Json;
 
 namespace TetrifactClient
 {
-    public partial class Project : ObservableObject
+    public partial class Project : Observable
     {
         #region FIELDS
+        
+        private string _id;
+        private string _name;
+        private string _description;
+        private string _tetrifactServerAddress;
+        private int _packageSyncCount;
+        private string _applicationExecutableName;
+        private string _applicationProcessName;
+        private int _diffDownloadThreshold;
+        private string _serverErrorDescription;
+        private int? _maxDownloadFailedAttempts;
+        private bool _autoDownload;
+        private bool _purgeOldPackages;
+        private IEnumerable<string> _requiredTags;
+        private IEnumerable<string> _ignoreTags;
+        private string _accessKey;
+        private ObservableCollection<LocalPackage> _packages;
+        private IList<string> _availablePackageIds;
+        private SourceServerStates _serverState;
+        private string _currentStatus;
+        private string _currentStatusDate;
+        private IList<string> _commonTags;
+        private readonly Dictionary<string, int> _rawTags = new Dictionary<string, int>();
+        private IEnumerable<LocalPackage> _rawPackages = new List<LocalPackage>();
 
         /// <summary>
         /// Unique id of project. Generated from GUID. All data for project is partitition on disk with this id.
         /// </summary>
-        [property: JsonProperty("Id")]
-        [ObservableProperty]
-        private string _id;
+        public string Id
+        {
+            get => _id;
+            set 
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            } 
+        }
 
         /// <summary>
         /// Public name of project, not unique. Used for display purposes.
         /// </summary>
-        [property: JsonProperty("Name")]
-        [ObservableProperty]
-        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
 
         /// <summary>
         /// Optional description text of project. For user convenience.
         /// </summary>
-        [property: JsonProperty("Description")]
-        [ObservableProperty]
-        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+            }
+        }
 
         /// <summary>
         /// Url of server to fetch packages from
         /// </summary>
-        [property: JsonProperty("TetrifactServerAddress")]
-        [ObservableProperty]
-        private string _tetrifactServerAddress;
+        public string TetrifactServerAddress
+        {
+            get => _tetrifactServerAddress;
+            set
+            {
+                _tetrifactServerAddress = value;
+                OnPropertyChanged(nameof(TetrifactServerAddress));
+            }
+        }
 
-        /// <summary>
-        /// Number of packages to keep locally synced.
-        /// </summary>
-        [property: JsonProperty("PackageSyncCount")]
-        [ObservableProperty]
-        private int _packageSyncCount;
+        public int PackageSyncCount
+        {
+            get => _packageSyncCount;
+            set
+            {
+                _packageSyncCount = value;
+                OnPropertyChanged(nameof(PackageSyncCount));
+            }
+        }
 
-        [property: JsonProperty("ApplicationExecutableName")]
-        [ObservableProperty]
-        private string _applicationExecutableName;
+        public string ApplicationExecutableName
+        {
+            get => _applicationExecutableName;
+            set
+            {
+                _applicationExecutableName = value;
+                OnPropertyChanged(nameof(ApplicationExecutableName));
+            }
+        }
 
-        /// <summary>
-        /// Name of application process in windows. Used to track running instance of application and terminate if necessary.
-        /// </summary>
-        [property: JsonProperty("ApplicationProcessName")]
-        [ObservableProperty]
-        private string _applicationProcessName;
+        public string ApplicationProcessName
+        {
+            get => _applicationProcessName;
+            set
+            {
+                _applicationProcessName = value;
+                OnPropertyChanged(nameof(ApplicationProcessName));
+            }
+        }
 
-        [property: JsonProperty("DiffDownloadThreshold")]
-        [ObservableProperty]
-        private int _diffDownloadThreshold;
+        public int DiffDownloadThreshold
+        {
+            get => _diffDownloadThreshold;
+            set
+            {
+                _diffDownloadThreshold = value;
+                OnPropertyChanged(nameof(DiffDownloadThreshold));
+            }
+        }
 
         /// <summary>
         /// Persistent error in package operation. Leave blank if functional. 
-        /// Does not persist
+        /// Does not persist to JSON.
         /// </summary>
-        [ObservableProperty]
-        private string _serverErrorDescription;
+        [Newtonsoft.Json.JsonIgnore]
+        public string ServerErrorDescription
+        {
+            get => _serverErrorDescription;
+            set
+            {
+                _serverErrorDescription = value;
+                OnPropertyChanged(nameof(ServerErrorDescription));
+            }
+        }
 
-        [property: JsonProperty("MaxDownloadFailedAttempts")]
-        [ObservableProperty]
-        private int? _maxDownloadFailedAttempts;
+        public int? MaxDownloadFailedAttempts
+        {
+            get => _maxDownloadFailedAttempts;
+            set
+            {
+                _maxDownloadFailedAttempts = value;
+                OnPropertyChanged(nameof(MaxDownloadFailedAttempts));
+            }
+        }
 
         /// <summary>
         /// packages for this project should be automatically downloaded
         /// </summary>
-        [property: JsonProperty("Autodownload")]
-        [ObservableProperty]
-        private bool _autoDownload;
+        public bool AutoDownload
+        {
+            get => _autoDownload;
+            set
+            {
+                _autoDownload = value;
+                OnPropertyChanged(nameof(AutoDownload));
+            }
+        }
 
-        [property: JsonProperty("PurgeOldPackages")]
-        [ObservableProperty]
-        public bool _purgeOldPackages;
+        public bool PurgeOldPackages
+        {
+            get => _purgeOldPackages;
+            set
+            {
+                _purgeOldPackages = value;
+                OnPropertyChanged(nameof(PurgeOldPackages));
+            }
+        }
 
         /// <summary>
         /// Comma-separted tags remote packages must have to be eligable for download.
         /// </summary>
-        [property: JsonProperty("RequiredTags")]
-        [ObservableProperty]
-        private IEnumerable<string> _requiredTags;
+        public IEnumerable<string> RequiredTags
+        {
+            get => _requiredTags;
+            set
+            {
+                _requiredTags = value;
+                OnPropertyChanged(nameof(RequiredTags));
+            }
+        }
 
         /// <summary>
         /// Comma-separted tags remote packages will be ignored on. 
         /// </summary>
-        [property: JsonProperty("IgnoreTags")]
-        [ObservableProperty]
-        private IEnumerable<string> _ignoreTags;
+        public IEnumerable<string> IgnoreTags
+        {
+            get => _ignoreTags;
+            set
+            {
+                _ignoreTags = value;
+                OnPropertyChanged(nameof(IgnoreTags));
+            }
+        }
 
         /// <summary>
         /// Access key for tetrifact server instances that are access protected.
         /// </summary>
-        [property: JsonProperty("AccessKey")]
-        [ObservableProperty]
-        private string _accessKey;
+        public string AccessKey
+        {
+            get => _accessKey;
+            set
+            {
+                _accessKey = value;
+                OnPropertyChanged(nameof(AccessKey));
+            }
+        }
 
         /// <summary>
         /// Loaded on-the-fly by daemons, does not persist. Exposed as .Packages
         /// </summary>
-        [ObservableProperty]
-        [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
-        [JsonIgnore]                            // need this defined twice for autogen and local 
-        public ObservableCollection<LocalPackage> _packages;
+        [JsonIgnore]                           
+        public ObservableCollection<LocalPackage> Packages
+        {
+            get => _packages;
+            set
+            {
+                _packages = value;
+                OnPropertyChanged(nameof(Packages));
+            }
+        }
 
         /// <summary>
         /// Ids of all packages available remotely. This list is unfiltered. Details need to be retrieved.
         /// Loaded on-the-fly by daemons
         /// </summary>
-        [ObservableProperty]
-        [property: Newtonsoft.Json.JsonIgnore]
-        private IList<string> _availablePackageIds;
+        [JsonIgnore]
+        public IList<string> AvailablePackageIds
+        {
+            get => _availablePackageIds;
+            set
+            {
+                _availablePackageIds = value;
+                OnPropertyChanged(nameof(Packages));
+            }
+        }
 
-        [property: JsonProperty("ServerState")]
-        [property: JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [ObservableProperty]
-        private SourceServerStates _serverState;
+        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public SourceServerStates ServerState
+        {
+            get => _serverState;
+            set
+            {
+                _serverState = value;
+                OnPropertyChanged(nameof(ServerState));
+            }
+        }
 
         /// <summary>
         /// Daemon processing this package will write status updates to this field. Use this to keep user informed about what is going on. Update
         /// often. This is not a log, but a way to make app feel responsive at all times.
         /// </summary>
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] 
-        [property: Newtonsoft.Json.JsonIgnore]
-        private string _currentStatus;
+        [JsonIgnore] 
+        public string CurrentStatus
+        {
+            get => _currentStatus;
+            set
+            {
+                _currentStatus = value;
+                OnPropertyChanged(nameof(CurrentStatus));
+            }
+        }
 
         /// <summary>
         /// time of last status update.
         /// </summary>
-        [ObservableProperty]
         [Newtonsoft.Json.JsonIgnore]
-        [property: Newtonsoft.Json.JsonIgnore]
-        private string _currentStatusDate;
+        public string CurrentStatusDate
+        {
+            get => _currentStatusDate;
+            set
+            {
+                _currentStatusDate = value;
+                OnPropertyChanged(nameof(CurrentStatusDate));
+            }
+        }
 
         /// <summary>
         /// Not persisted, generated dynamically.
         /// </summary>
-        [property: JsonProperty("CommonTags")]
-        [property: Newtonsoft.Json.JsonIgnore]
         [JsonIgnore]
-        [ObservableProperty]
-        private IList<string> _commonTags;
-
-        private readonly Dictionary<string, int> _rawTags = new Dictionary<string, int>();
-
-        private IEnumerable<LocalPackage> _rawPackages = new List<LocalPackage>(); 
+        public IList<string> CommonTags
+        {
+            get => _commonTags;
+            set
+            {
+                _commonTags = value;
+                OnPropertyChanged(nameof(CommonTags));
+            }
+        }
 
         #endregion
 

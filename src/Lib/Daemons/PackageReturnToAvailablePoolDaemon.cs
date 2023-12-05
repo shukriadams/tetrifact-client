@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 namespace TetrifactClient
 {
     /// <summary>
-    /// Resets cancelled packages back to available if applicable. This logic is kept in its own daemon to prevent cluttering up the normal
+    /// Resets cancelled and deleted packages available if applicable. This logic is kept in its own daemon to prevent cluttering up the normal
     /// package metadata download daemons with an additional pathway.
     /// </summary>
-    public class CancelledPackageResetDaemon : IDaemon
+    public class PackageReturnToAvailablePoolDaemon : IDaemon
     {
         private ILog _log;
 
@@ -35,6 +35,12 @@ namespace TetrifactClient
                 foreach (LocalPackage cancelledPackage in cancelledPackages)
                     if (project.AvailablePackageIds.Contains(cancelledPackage.Package.Id))
                         cancelledPackage.TransferState = PackageTransferStates.AvailableForDownload;
+
+                IEnumerable<LocalPackage> deletedPackages = project.Packages.Where(p => p.TransferState == PackageTransferStates.Deleted);
+                foreach (LocalPackage deletedPackage in deletedPackages)
+                    if (project.AvailablePackageIds.Contains(deletedPackage.Package.Id))
+                        deletedPackage.TransferState = PackageTransferStates.AvailableForDownload;
+
             }
         }
     }

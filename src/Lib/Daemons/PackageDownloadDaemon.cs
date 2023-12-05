@@ -57,11 +57,14 @@ namespace TetrifactClient
 
         private async Task ProcessPackage(Project project, LocalPackage package)
         {
+            // force new transfer state, this might exist from a previous download attempt
+            package.DownloadProgress = new PackageTransferProgress();
+
             // find out if package download should be partial or full. Full is needed if no other package is available locally,
             // or if diff between this package and previous one is over a % of total files in build.
             //bool packageAlreadyDownlaoded = project.
             Preferences preferences = GlobalDataContext.Instance.Preferences;
-            package.Status = "Processing...";
+            package.DownloadProgress.Message = "Processing...";
 
             //find closest build
             IEnumerable<LocalPackage> allPackagesFromTargetServer = GlobalDataContext.Instance.Projects.Projects
@@ -74,7 +77,7 @@ namespace TetrifactClient
             LocalPackage donorPackage = null;
             if (allPackagesFromTargetServer.Any()) 
             {
-                package.Status = "Checking local files first";
+                package.DownloadProgress.Message = "Checking local files first";
                 foreach (LocalPackage potentialDonorPackage in allPackagesFromTargetServer)
                 {
                     PackageDiffResponse diffLookup = JsonHelper.DownloadDiff(package.TetrifactServerAddress, potentialDonorPackage.Package.Id, package.Package.Id);
@@ -95,26 +98,26 @@ namespace TetrifactClient
 
             downloader.CancelCheck =()=> package.TransferState == PackageTransferStates.UserCancellingDownload;
 
-            package.Status = "Downloading";
+            package.DownloadProgress.Message = "Downloading";
             package.TransferState = PackageTransferStates.Downloading;
             PackageTransferResponse result = downloader.Download();
 
             if (package.TransferState == PackageTransferStates.UserCancellingDownload)
             {
                 package.TransferState = PackageTransferStates.DownloadCancelled;
-                package.Status = "Cancelled";
+                package.DownloadProgress.Message = "Cancelled";
                 return;
             }
 
             if (result.Succeeded)
             {
                 package.TransferState = PackageTransferStates.Downloaded;
-                package.Status = "Done";
+                package.DownloadProgress.Message = string.Empty;
             }
             else 
             {
                 package.TransferState = PackageTransferStates.DownloadFailed;
-                package.Status = "Error, check logs";
+                package.DownloadProgress.Message = "Error, check logs";
                 GlobalDataContext.Instance.Console.Add(result.Message);
                 _log.LogError(result.Exception, result.Message);
             }

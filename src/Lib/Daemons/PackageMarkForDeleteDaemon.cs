@@ -31,25 +31,24 @@ namespace TetrifactClient
 
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                foreach (LocalPackage package in project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()))
+                foreach (LocalPackage packageMarkedForDelete in project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()))
                 {
-                    IEnumerable<string> subDirs = Directory.GetDirectories(PathHelper.GetPackageDirectoryPath(context, project, package));
+                    IEnumerable<string> subDirs = Directory.GetDirectories(PathHelper.GetPackageDirectoryPath(context, project, packageMarkedForDelete));
                     IEnumerable<string> unmarkedSubDirs = subDirs.Where(dir => !Path.GetFileName(dir).StartsWith("!"));
 
                     if (unmarkedSubDirs.Any())
                     {
-                        package.TransferState = PackageTransferStates.Deleting;
+                        packageMarkedForDelete.TransferState = PackageTransferStates.Deleting;
 
                         foreach (string unmarkedSubDir in unmarkedSubDirs)
                         {
-                            string packageContentPathDelete = Path.Join(Path.GetDirectoryName(unmarkedSubDir), $"!{Path.GetFileName(unmarkedSubDir)}");
+                            // move delete content to guid incase previous delete attempt failed
+                            // add time to pathname as a way to track potentially slow delete issues
+                            // todo : warn if another ! marked dir already exists here
+                            string packageContentPathDelete = Path.Join(Path.GetDirectoryName(unmarkedSubDir), $"!{Guid.NewGuid()}-{DateTime.UtcNow.ToFSString()}");
 
                             try
                             {
-                                // if content directory is not marked, try marking
-                                if (Directory.Exists(packageContentPathDelete))
-                                    continue;
-
                                 Directory.Move(unmarkedSubDir, packageContentPathDelete);
                             }
                             catch (Exception)
@@ -60,8 +59,13 @@ namespace TetrifactClient
                         }
                     }
 
-                    if (!subDirs.Any())
-                        package.TransferState = PackageTransferStates.Deleted;
+                    // package is marked for delete only when all its sub dirs are deleted. The actual deleting is done by another
+                    // daemon, the PackageDeleteDaemon, which deletes directories marked for delete by this daemon.
+                    if (!subDirs.Any()) 
+                    {
+                        packageMarkedForDelete.TransferState = PackageTransferStates.Deleted;
+                        packageMarkedForDelete.DownloadProgress.Message = "Deleted";
+                    }
                 }
             }
         }

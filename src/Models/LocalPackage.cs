@@ -62,9 +62,12 @@ namespace TetrifactClient
 
         /// <summary>
         /// User-friendly description of what is going on with this package now. Not persisted to json.
+        /// 
+        /// PHASE OUT
         /// </summary>
         [property: JsonProperty("Status")]
         [ObservableProperty]
+        [Obsolete]
         [property: JsonIgnore]
         private string _status;
 

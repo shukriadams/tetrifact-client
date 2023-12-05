@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace TetrifactClient
 {
@@ -9,42 +7,92 @@ namespace TetrifactClient
     /// Represents a downloadable package (build) on Tetrifact. This object is deserialzied directly from remote.json in local packages.
     /// Is is not observable because it will not change.
     /// </summary>
-    public partial class Package : ObservableObject
+    public partial class Package : Observable
     {
-        #region PROPERTIES
+        #region FIELDS
 
-        [property: JsonProperty("Id")]
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         private string _id;
 
-        [property: JsonProperty("CreatedUtc")]
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
         private DateTime _createdUtc;
 
-        [property: JsonProperty("Hash")]
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
-        public string _hash;
+        private string _hash;
 
-        [property: JsonProperty("Tags")]
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
-        public IEnumerable<string> _tags;
+        private IEnumerable<string> _tags;
+        
+        private long _size;
+
+        private IEnumerable<PackageFile> _files;
+
+        #endregion
+
+
+        #region PROPERTIES
+
+        public string Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        public DateTime CreatedUtc
+        {
+            get => _createdUtc;
+            set
+            {
+                _createdUtc = value;
+                OnPropertyChanged(nameof(CreatedUtc));
+            }
+        }
+
+        public string Hash
+        {
+            get => _hash;
+            set
+            {
+                _hash = value;
+                OnPropertyChanged(nameof(Hash));
+            }
+        }
+
+        public IEnumerable<string> Tags
+        {
+            get => _tags;
+            set
+            {
+                _tags = value;
+                OnPropertyChanged(nameof(Tags));
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        [property: JsonProperty("Size")]
-        [ObservableProperty]
-        [Newtonsoft.Json.JsonIgnore] // ignore local partial declaration 
-        public long _size;
+        public long Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                OnPropertyChanged(nameof(Size));
+            }
+        }
 
-        [ObservableProperty]
-        [property: Newtonsoft.Json.JsonIgnore] // need this defined twice for autogen and local 
-        [JsonIgnore]
-        public IEnumerable<PackageFile> _files;
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<PackageFile> Files
+        {
+            get => _files;
+            set
+            {
+                _files = value;
+                OnPropertyChanged(nameof(Files));
+            }
+        }
 
         #endregion
 
