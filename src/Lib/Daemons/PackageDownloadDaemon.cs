@@ -91,15 +91,17 @@ namespace TetrifactClient
             }
 
             IPackageDownloader downloader = null;
+            /*
             if (packageDiff == null)
                 downloader = new PackageZipDownloader(_context, project, package, _log);
             else
+            */
                 downloader = new PackagePartialDownloader(_context, project, package, donorPackage, packageDiff, _log);
 
             downloader.CancelCheck =()=> package.TransferState == PackageTransferStates.UserCancellingDownload;
 
             package.DownloadProgress.Message = "Downloading";
-            package.TransferState = PackageTransferStates.Downloading;
+            package.IsDownloading = true;
             PackageTransferResponse result = downloader.Download();
 
             if (package.TransferState == PackageTransferStates.UserCancellingDownload)
@@ -108,6 +110,8 @@ namespace TetrifactClient
                 package.DownloadProgress.Message = "Cancelled";
                 return;
             }
+
+            package.IsDownloading = false;
 
             if (result.Succeeded)
             {

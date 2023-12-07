@@ -81,7 +81,7 @@ namespace TetrifactClient
             Output(LogLevel.Error, item, description);
         }
 
-        public void LogUnstability(object item, string description = "")
+        public void LogInstability(object item, string description = "")
         {
             Output(LogLevel.Error, item, description, false);
         }

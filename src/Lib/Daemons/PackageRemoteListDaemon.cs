@@ -51,7 +51,7 @@ namespace TetrifactClient
                     if (payloadDynamic == null || payloadDynamic.success == null) 
                     {
                         contextProject.SetStatus("Error getting list of packages, check log");
-                        _log.LogUnstability($"Received error response : {payload}");
+                        _log.LogInstability($"Received error response : {payload}");
                         continue;
                     }
 

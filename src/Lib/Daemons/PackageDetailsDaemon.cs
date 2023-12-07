@@ -36,14 +36,14 @@ namespace TetrifactClient
 
                 foreach (string availablePackage in contextProject.AvailablePackageIds)
                 {
-                    string localPackagePath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"remote.json");
-                    string localPackagePathFiles = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
+                    string packageHeadPath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"remote.json");
+                    string packageFilesPath = Path.Combine(localProjectPackagesDirectory, availablePackage, $"files.json");
 
-                    if (File.Exists(localPackagePath))
+                    if (File.Exists(packageHeadPath))
                         continue;
 
                     contextProject.SetStatus($"Querying server for new package {availablePackage}");
-                    Directory.CreateDirectory(Path.GetDirectoryName(localPackagePath));
+                    Directory.CreateDirectory(Path.GetDirectoryName(packageHeadPath));
 
                     string url = HttpHelper.UrlJoin(new string[] { project.TetrifactServerAddress, "v1", "packages", availablePackage });
                     HttpPayloadRequest httpRequest = new HttpPayloadRequest(url);
@@ -56,31 +56,28 @@ namespace TetrifactClient
                         if (payloadDynamic == null || payloadDynamic.success == null)
                             throw new Exception($"Received error response : {payload}");
 
-                        Package data = JsonConvert.DeserializeObject<Package>(payloadDynamic.success.package.ToString());
-                        if (data == null)
+                        Package package = JsonConvert.DeserializeObject<Package>(payloadDynamic.success.package.ToString());
+                        if (package == null)
                         {
                             // handle error
                             continue;
                         }
 
+                        // write package files to own file
+                        File.WriteAllText(packageFilesPath, JsonConvert.SerializeObject(package.Files, Formatting.Indented));
+                        
+                        // empty package files before writing to "head" file
+                        package.Files = new PackageFile[0];
+
                         // force tags to be alpbateically ordered
-                        data.Tags = data.Tags.OrderBy(t => t);
+                        package.Tags = package.Tags.OrderBy(t => t);
 
                         // package remote data in local data parent
                         LocalPackage localPackage = new LocalPackage();
                         localPackage.TetrifactServerAddress = project.TetrifactServerAddress;
-                        localPackage.Package = data;
+                        localPackage.Package = package;
 
-                        File.WriteAllText(localPackagePath, JsonConvert.SerializeObject(localPackage, Formatting.Indented));
-
-                        PackageFiles data2 = JsonConvert.DeserializeObject<PackageFiles>(payload);
-                        if (data == null)
-                        {
-                            // handle error
-                            continue;
-                        }
-
-                        File.WriteAllText(localPackagePathFiles, JsonConvert.SerializeObject(data2, Formatting.Indented));
+                        File.WriteAllText(packageHeadPath, JsonConvert.SerializeObject(localPackage, Formatting.Indented));
 
                         contextProject.ServerState = SourceServerStates.Normal;
                         contextProject.ServerErrorDescription = null;

@@ -58,6 +58,7 @@ namespace TetrifactClient
             mnuDelete.IsVisible = selectedProject.IsExecutable();
             mnuIgnore.IsVisible = selectedProject.IsDownloadable() && !selectedProject.Ignore;
             mnuUnignore.IsVisible = selectedProject.IsDownloadable() && !mnuIgnore.IsVisible;
+            mnuCanceldownload.IsVisible = selectedProject.IsQueuedForDownloadorDownloading();
             mnuRun.IsVisible = selectedProject.IsExecutable();
             mnuVerify.IsVisible = selectedProject.IsExecutable();
             mnuKeep.IsVisible = selectedProject.IsExecutable() && !selectedProject.Keep;

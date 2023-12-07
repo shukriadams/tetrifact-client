@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -9,55 +8,115 @@ namespace TetrifactClient
     /// <summary>
     /// Represents a local version of a package. 
     /// </summary>
-    public partial class LocalPackage : ObservableObject
+    public class LocalPackage : Observable
     {
+        #region FIELDS
+
+        private string _tetrifactServerAddress;
+        private bool _ignore;
+        private bool _isDownloading;
+        private bool _keep;
+        private PackageTransferStates _transferState;
+        private string _errorSummary;
+        private Package _package;
+        private string _status;
+        private PackageTransferProgress _downloadProgress;
+
+        #endregion
+
         #region PROPERTIES
 
         /// <summary>
         /// Server package will be pulled from.
         /// </summary>
-        [property: JsonProperty("TetrifactServerAddress")]
-        [ObservableProperty]
-        private string _tetrifactServerAddress;
+        public string TetrifactServerAddress
+        {
+            get => _tetrifactServerAddress;
+            set
+            {
+                _tetrifactServerAddress = value;
+                OnPropertyChanged(nameof(TetrifactServerAddress));
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        [property: JsonProperty("Ignore")]
-        [ObservableProperty]
-        private bool _ignore;
+        public bool Ignore
+        {
+            get => _ignore;
+            set
+            {
+                _ignore = value;
+                OnPropertyChanged(nameof(Ignore));
+            }
+        }
 
-        [property: JsonProperty("Keep")]
-        [ObservableProperty]
-        private bool _keep;
+        /// <summary>
+        /// Marked as true when downloading starts, does
+        /// </summary>
+        [JsonIgnore]
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            set
+            {
+                _isDownloading = value;
+                OnPropertyChanged(nameof(IsDownloading));
+            }
+        }
+
+        public bool Keep
+        {
+            get => _keep;
+            set
+            {
+                _keep = value;
+                OnPropertyChanged(nameof(Keep));
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        [property: JsonProperty("TransferState")]
         [property: JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [ObservableProperty]
-        private PackageTransferStates _transferState;
+        public PackageTransferStates TransferState
+        {
+            get => _transferState;
+            set
+            {
+                _transferState = value;
+                OnPropertyChanged(nameof(TransferState));
+            }
+        }
 
-        /// <summary>
-        /// If transfer or integrity check failed, message describing failure.
-        /// </summary>
-        [property: JsonProperty("ErrorSummary")]
-        [ObservableProperty]
-        private string _errorSummary;
+        public string ErrorSummary
+        {
+            get => _errorSummary;
+            set
+            {
+                _errorSummary = value;
+                OnPropertyChanged(nameof(ErrorSummary));
+            }
+        }
 
         /// <summary>
         /// Core of remote package, on tetrifact. Files are not serialized to this object, as this would create a performance bottleneck.
         /// </summary>
-        [property: JsonProperty("Package")]
-        [ObservableProperty]
-        [JsonIgnore]
-        public Package _package;
+        public Package Package
+        {
+            get => _package;
+            set
+            {
+                _package = value;
+                OnPropertyChanged(nameof(Package));
+            }
+        }
 
         /// <summary>
         /// Not observable, not persisted to JSON file.
         /// </summary>
-        [property: JsonIgnore]
+        [JsonIgnore]
         public string DiskPath { get; set; }
 
         /// <summary>
@@ -65,22 +124,36 @@ namespace TetrifactClient
         /// 
         /// PHASE OUT
         /// </summary>
-        [property: JsonProperty("Status")]
-        [ObservableProperty]
         [Obsolete]
-        [property: JsonIgnore]
-        private string _status;
+        [JsonIgnore]
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
 
         /// <summary>
         /// do not persist
         /// </summary>
-        [ObservableProperty]
-        private PackageTransferProgress _downloadProgress;
+        [JsonIgnore]
+        public PackageTransferProgress DownloadProgress 
+        {
+            get => _downloadProgress;
+            set
+            {
+                _downloadProgress = value;
+                OnPropertyChanged(nameof(DownloadProgress));
+            }
+        }
 
         #endregion
 
         #region CTORS
-
+            
         public LocalPackage() 
         {
             this.DownloadProgress = new PackageTransferProgress();
@@ -120,7 +193,6 @@ namespace TetrifactClient
         /// <returns></returns>
         public string GetFullDownloadFilePath() 
         {
-           
             return string.Empty;
         }
 
@@ -155,7 +227,6 @@ namespace TetrifactClient
         public bool IsDownloadedorQueuedForDownload()
         {
             return this.TransferState == PackageTransferStates.Downloaded
-                || this.TransferState == PackageTransferStates.Downloading
                 || this.TransferState == PackageTransferStates.AutoMarkedForDownload
                 || this.TransferState == PackageTransferStates.UserMarkedForDownload;
         }
@@ -187,13 +258,14 @@ namespace TetrifactClient
         {
             return this.TransferState == PackageTransferStates.UserMarkedForDownload
                 || this.TransferState == PackageTransferStates.AutoMarkedForDownload
-                || this.TransferState == PackageTransferStates.Downloading;
+                || this.IsDownloading;
         }
 
         public bool IsQueuedForDownload() 
         {
             return this.TransferState == PackageTransferStates.UserMarkedForDownload
-                || this.TransferState == PackageTransferStates.AutoMarkedForDownload;
+                || this.TransferState == PackageTransferStates.AutoMarkedForDownload
+                && !this.IsDownloading;
         }
 
         #endregion

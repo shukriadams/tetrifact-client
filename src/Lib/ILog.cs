@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="error"></param>
         /// <param name="description"></param>
-        void LogUnstability(object error, string description = "");
+        void LogInstability(object error, string description = "");
 
         void LogInfo(object info, string description = "");
 

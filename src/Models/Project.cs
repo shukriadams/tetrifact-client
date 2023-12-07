@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using DynamicData;
 using Newtonsoft.Json;
 
@@ -358,8 +356,7 @@ namespace TetrifactClient
             if (!Directory.Exists(localProjectPackagesDirectory))
                 return;
 
-            IEnumerable<string> packageIds = Directory.
-                GetDirectories(localProjectPackagesDirectory).
+            IEnumerable<string> packageIds = Directory.GetDirectories(localProjectPackagesDirectory).
                 Select(p => Path.GetFileName(p));
 
             List<LocalPackage> newPackages = new List<LocalPackage>();

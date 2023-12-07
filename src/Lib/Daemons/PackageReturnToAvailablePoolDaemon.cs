@@ -36,6 +36,12 @@ namespace TetrifactClient
                     if (project.AvailablePackageIds.Contains(cancelledPackage.Package.Id))
                         cancelledPackage.TransferState = PackageTransferStates.AvailableForDownload;
 
+                // if a package is marked as usercancelled but isn't downloading, app restarted while cancelling. marked as cancelled
+                IEnumerable<LocalPackage> cancellingPackages = project.Packages.Where(p => p.TransferState == PackageTransferStates.UserCancellingDownload);
+                foreach (LocalPackage cancellingPackage in cancellingPackages)
+                    if (!cancellingPackage.IsDownloading)
+                        cancellingPackage.TransferState = PackageTransferStates.DownloadCancelled;
+
                 IEnumerable<LocalPackage> deletedPackages = project.Packages.Where(p => p.TransferState == PackageTransferStates.Deleted);
                 foreach (LocalPackage deletedPackage in deletedPackages)
                     if (project.AvailablePackageIds.Contains(deletedPackage.Package.Id))
