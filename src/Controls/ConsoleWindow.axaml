@@ -7,16 +7,14 @@
  		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:ConsoleViewModel"
 		Title="Console">
-	<StackPanel>
-		<TextBlock Text="Console" Classes="header1" />
-		<ListBox Name="listProjects" ItemsSource="{Binding Items}">
+	<DockPanel>
+		<TextBlock DockPanel.Dock="Top" Text="Console" Classes="header1" />
+		<ListBox DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Items}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding}" />
-					</StackPanel>
+					<TextBlock Text="{Binding}" TextWrapping="Wrap" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-	</StackPanel>
+	</DockPanel>
 </Window>

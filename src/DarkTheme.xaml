@@ -104,7 +104,11 @@
 	</Style>
 
 	<Style Selector="DataGrid.grid">
-		<Setter Property="Margin" Value="0,10,0,10"/>	
+		<Setter Property="Margin" Value="0,10,0,10"/>
+	</Style>
+
+	<Style Selector="DataGrid.grid[IsEnabled=False]">
+		<Setter Property="Foreground" Value="Gray"/>
 	</Style>
 
 	<Style Selector="DataGrid.flow-vertical">

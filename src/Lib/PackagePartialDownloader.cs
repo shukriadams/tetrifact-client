@@ -76,9 +76,22 @@ namespace TetrifactClient
             int parallels = 4;
 
 
+
             // Download new files
             if (filesToDownload.Any()) 
             {
+                // check if download file paths are too long
+                foreach (PackageFile fileToDownload in filesToDownload) 
+                {
+                    string savePath = Path.Combine(finalPackagePath, fileToDownload.Path);
+                    if (savePath.Length > Constants.MAX_PATH_LENGTH)
+                        return new PackageTransferResponse
+                        {
+                            Result = PackageTransferResultTypes.FilePathTooLong,
+                            Message = $"Path {savePath} is too long to save to disk. Try moving save path to a location closer to root of disk."
+                        };
+                }
+
                 int downloadCount = 0;
                 int totalDownloadCount = filesToDownload.Count();
                 PackageTransferResponse downloadErrorResponse = null;
@@ -96,17 +109,6 @@ namespace TetrifactClient
                             return;
 
                         string savePath = Path.Combine(finalPackagePath, missingFile.Path);
-                        if (savePath.Length > Constants.MAX_PATH_LENGTH)
-                        {
-                            downloadErrorResponse = new PackageTransferResponse
-                            {
-                                Result = PackageTransferResultTypes.FilePathTooLong,
-                                Message = $"Path {savePath}"
-                            };
-
-                            return;
-                        }
-
                         FileSystemHelper.CreateDirectory(Path.GetDirectoryName(savePath));
 
                         ChunkedDownloader downloader = new ChunkedDownloader();
@@ -124,7 +126,7 @@ namespace TetrifactClient
                         _package.DownloadProgress.Message = $"Downloading {MathHelper.Percent(downloadCount, totalDownloadCount)}% ({downloadCount}/{totalDownloadCount})";
                         downloader.Download($"{_package.TetrifactServerAddress}/v1/files/{missingFile.Id}", savePath, 1000000, 1); // 1 meg chunk size, use 1 thread only, as this process is already threaded!
 
-
+                        GlobalDataContext.Instance.Console.Add($"Downloaded {savePath}");
                     }
                     catch (Exception ex)
                     {
@@ -175,6 +177,8 @@ namespace TetrifactClient
 
                     // check and copy file, if that returns false, copy failed, we need to directly download file
                     bool fileCopied = VerifyAndCopyFile(donorFilePath, newFilePath, existingFile.Hash, _package.Package.Id);
+                    
+                    GlobalDataContext.Instance.Console.Add($"Copied doner {newFilePath}");
 
                     if (fileCopied)
                     {

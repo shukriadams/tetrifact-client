@@ -48,6 +48,7 @@ namespace TetrifactClient
 
                     string payload = Encoding.Default.GetString(request.Payload);
                     dynamic payloadDynamic = JsonConvert.DeserializeObject(payload);
+                    
                     if (payloadDynamic == null || payloadDynamic.success == null) 
                     {
                         contextProject.SetStatus("Error getting list of packages, check log");
@@ -59,6 +60,7 @@ namespace TetrifactClient
 
                     contextProject.ServerState = SourceServerStates.Normal;
                     contextProject.ServerErrorDescription = null;
+
                     lock (GlobalDataContext.Instance)
                         contextProject.AvailablePackageIds = packageIds.ToList();
                 }

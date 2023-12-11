@@ -64,7 +64,7 @@
 						<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
 						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
 						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
-						<MenuItem Header="Verify" Name="mnuVerify" />
+						<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
 						<MenuItem Header="Copy id" Name="mnuCopyId" />
 						<MenuItem Header="Advanced" Name="mnuAdvanced" />
 						<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />

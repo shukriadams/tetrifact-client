@@ -63,7 +63,6 @@ namespace TetrifactClient
             mnuVerify.IsVisible = selectedProject.IsExecutable();
             mnuKeep.IsVisible = selectedProject.IsExecutable() && !selectedProject.Keep;
             mnuUnkeep.IsVisible = selectedProject.IsExecutable() && !mnuKeep.IsVisible;
-            mnuViewInExplorer.IsVisible = selectedProject.IsExecutable();
             mnuVerify.IsVisible = selectedProject.IsExecutable();
         }
 
@@ -117,6 +116,11 @@ namespace TetrifactClient
                 return;
 
             selectedProject.Ignore = false;
+        }
+
+        private void OnVerifyClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+
         }
 
         private void OnTagsClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
