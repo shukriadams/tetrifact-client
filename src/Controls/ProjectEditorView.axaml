@@ -4,14 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vm="using:TetrifactClient"
 		mc:Ignorable="d" 
-		d:DesignWidth="800" 
-		d:DesignHeight="950"
+		d:DesignWidth="600" 
+		d:DesignHeight="750"
 		x:DataType="vm:ProjectEditorViewModel"
 		x:Class="TetrifactClient.ProjectEditorView"
 		Classes="dialog"
     	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">
-	<DockPanel>
+	<DockPanel LastChildFill="True">
 		<Panel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 		</Panel>
@@ -33,6 +33,21 @@
 		</StackPanel>
 
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+			<Label>Build server</Label>
+			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
+		</StackPanel>
+
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+			<Label Content="Save Path" />
+			<TextBox Name="txtSavePath" Text="{Binding Project.PackageSavePath}" />
+		</StackPanel>
+
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+			<Label>Description (optional)</Label>
+			<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>
+		</StackPanel>
+
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label Content="Number of packages to sync" />
 			<TextBox Name="txtSyncCount" Text="{Binding Project.PackageSyncCount}" />
 		</StackPanel>
@@ -40,30 +55,22 @@
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<CheckBox Name="cbAutoDownload" Content="Automatically download" IsChecked="{Binding Project.AutoDownload}" />
 		</StackPanel>
-		
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label>Build server</Label>
-			<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
-		</StackPanel>
 
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label>Description (optional)</Label>
-			<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>
-		</StackPanel>
-		
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label FontWeight="Bold">Require packages have tags</Label>
-			<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
-		</StackPanel>
-		
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label FontWeight="Bold">Ignore packages with tags</Label>
-			<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
-		</StackPanel>
-		
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
+		<StackPanel DockPanel.Dock="Bottom" Classes="flow-vertical" Orientation="Horizontal">
 			<Button Name="btnCancel" Click="OnCancel">Cancel</Button>
 			<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
+		</StackPanel>
+
+		<StackPanel DockPanel.Dock="Top">
+			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+				<Label FontWeight="Bold">Require packages have tags</Label>
+				<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
+			</StackPanel>
+
+			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+				<Label FontWeight="Bold">Ignore packages with tags</Label>
+				<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
+			</StackPanel>
 		</StackPanel>
 	</DockPanel>
 </Window>

@@ -91,11 +91,14 @@ namespace TetrifactClient
             }
 
             IPackageDownloader downloader = null;
-            /*
-            if (packageDiff == null)
+            bool downloadZip = packageDiff == null;
+            
+            // false disable download zip, this is for dev only
+            downloadZip = false;
+
+            if (downloadZip)
                 downloader = new PackageZipDownloader(_context, project, package, _log);
             else
-            */
                 downloader = new PackagePartialDownloader(_context, project, package, donorPackage, packageDiff, _log);
 
             downloader.CancelCheck =()=> package.TransferState == PackageTransferStates.UserCancellingDownload;

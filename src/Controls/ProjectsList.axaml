@@ -8,7 +8,7 @@
 	d:DesignHeight="250"
     Foreground="White"
 	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
-	x:Class="TetrifactClient.ProjectsView"
+	x:Class="TetrifactClient.ProjectsList"
 	xmlns:vm="using:TetrifactClient"
 	x:DataType="vm:ProjectsViewModel">
     <Border Classes="projectsView">

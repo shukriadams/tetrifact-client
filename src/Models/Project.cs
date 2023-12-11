@@ -25,6 +25,7 @@ namespace TetrifactClient
         private int? _maxDownloadFailedAttempts;
         private bool _autoDownload;
         private bool _purgeOldPackages;
+        private string _packageSavePath;
         private IEnumerable<string> _requiredTags;
         private IEnumerable<string> _ignoreTags;
         private string _accessKey;
@@ -63,6 +64,18 @@ namespace TetrifactClient
             }
         }
 
+        /// <summary>
+        /// Path on local system packages are saved to. 
+        /// </summary>
+        public string PackageSavePath
+        {
+            get => _packageSavePath;
+            set
+            {
+                _packageSavePath = value;
+                OnPropertyChanged(nameof(PackageSavePath));
+            }
+        }
 
         /// <summary>
         /// Optional description text of project. For user convenience.

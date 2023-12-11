@@ -18,7 +18,7 @@
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left" Width="200" Background="#4F4557">
 			<Border Padding="10">
-				<local:ProjectsView DockPanel.Dock="Top" DataContext="{Binding Projects}" />
+				<local:ProjectsList DockPanel.Dock="Top" DataContext="{Binding Projects}" />
 			</Border>
 		</DockPanel>
 

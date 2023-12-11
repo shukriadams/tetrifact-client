@@ -7,9 +7,9 @@ using Unity;
 
 namespace TetrifactClient
 {
-    public partial class ProjectsView : UserControl
+    public partial class ProjectsList : UserControl
     {
-        public ProjectsView()
+        public ProjectsList()
         {
             InitializeComponent();
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,8 +13,6 @@ namespace TetrifactClient
         private ILog _log;
 
         private LocalPackage _package;
-
-        private Preferences _preferences;
 
         private GlobalDataContext _dataContext;
 
@@ -56,7 +53,7 @@ namespace TetrifactClient
             IEnumerable<PackageFile> filesToDownload = new PackageFile[0];
             int countall = 0;
 
-            if (_packageDiff != null) 
+            if (_packageDiff != null)
             {
                 countall = _packageDiff.Common.Count();
                 filesToDownload = _packageDiff.Difference;
