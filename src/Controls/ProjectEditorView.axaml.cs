@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using System;
+using System.Threading.Tasks;
 
 namespace TetrifactClient
 {
@@ -21,6 +22,8 @@ namespace TetrifactClient
                 blockedTagsList.SetContext(context.Project.CommonTags, context.Project.IgnoreTags);
             }
         }
+
+
 
         public void SetContext(Project project) 
         {
@@ -50,10 +53,29 @@ namespace TetrifactClient
         {
             this.Close();
         }
+        
+        private void OnPathSelect(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
+            if (context == null)
+                return;
+
+            Task.Run(async () =>
+            {
+                OpenFolderDialog dialog = new OpenFolderDialog();
+                string path = await dialog.ShowAsync(this);
+
+                if (!string.IsNullOrEmpty(path))
+                    context.Project.PackageSavePath = path;
+
+            });
+
+        }
 
         private void OnSave(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
+
             if (context.Project == null) 
             {
                 GlobalDataContext.Instance.Projects.Projects.Add(new Project
@@ -69,6 +91,15 @@ namespace TetrifactClient
                 context.Project.IgnoreTags = blockedTagsList.Tags;
                 context.Project.RequiredTags= requiredTagsList.Tags;
             }
+
+            if (string.IsNullOrEmpty(context.Project.Name))
+                return;
+
+            if (string.IsNullOrEmpty(context.Project.PackageSavePath))
+                return;
+
+            if (string.IsNullOrEmpty(context.Project.TetrifactServerAddress))
+                return;
 
             GlobalDataContext.Save();
             this.Close();
