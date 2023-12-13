@@ -21,6 +21,12 @@
         void LogError(string description);
 
         void LogInfo(string description);
+        
+        /// <summary>
+        /// A core operation that we always want to log info about, regardless of log level. Ths i
+        /// </summary>
+        /// <param name="description"></param>
+        void LogOperation(string description);
 
         void LogDebug(string description);
 

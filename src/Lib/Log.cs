@@ -1,4 +1,5 @@
-﻿using Splat;
+﻿using Avalonia;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,6 +88,30 @@ namespace TetrifactClient
             Output(LogLevel.Error, item, description, false);
         }
 
+        public void LogOperation(string operation)
+        {
+            if (_logPath == null)
+                return;
+
+            if (operation == null)
+                operation = string.Empty;
+
+            // log to other places
+            Console.WriteLine(operation);
+
+            //
+            GlobalDataContext.Instance.Console.Add(operation);
+
+            try
+            {
+                File.AppendAllText(_logPath, $"{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()} OPERATION : {operation}\r\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -117,7 +142,7 @@ namespace TetrifactClient
             {
                 try
                 {
-                    File.AppendAllText(_logPath, $"{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()} {LogLevels.Error} : {description} {objectOut}\r\n");
+                    File.AppendAllText(_logPath, $"{DateTime.UtcNow.ToShortDateString()} {DateTime.UtcNow.ToLongTimeString()} {logLevel} : {description} {objectOut}\r\n");
                 }
                 catch (Exception ex)
                 {

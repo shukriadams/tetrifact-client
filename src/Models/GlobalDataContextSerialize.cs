@@ -6,6 +6,8 @@ namespace TetrifactClient
     {
         public IEnumerable<Project> Projects { get; set; }
 
-        public string DataFolder { get; set; }
+        public string ProjectsRootDirectory { get; set; }
+
+        public int Timeout { get; set; }
     }
 }

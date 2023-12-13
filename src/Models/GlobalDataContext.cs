@@ -67,6 +67,9 @@ namespace TetrifactClient
             } 
         }
 
+        /// <summary>
+        /// Milliseconds
+        /// </summary>
         public int Timeout { get; set; }
 
         public string ProjectsRootDirectory { get; set; }
@@ -123,8 +126,10 @@ namespace TetrifactClient
                 if (persistedSettings.Projects != null)
                     Instance.Projects.Projects.AddRange(persistedSettings.Projects);
 
-                if (persistedSettings.DataFolder != null)
-                    Instance.DataFolder = persistedSettings.DataFolder;
+                if (persistedSettings.ProjectsRootDirectory!= null)
+                    Instance.ProjectsRootDirectory = persistedSettings.ProjectsRootDirectory;
+
+                Instance.Timeout = persistedSettings.Timeout;
 
             }
 
@@ -155,13 +160,26 @@ namespace TetrifactClient
         public static void Save()
         {
             GlobalDataContextSerialize serialize = new GlobalDataContextSerialize();
+
+            // manually copy over the stuff we want to serialize
             serialize.Projects = _thisInstance.Projects.Projects;
+            serialize.ProjectsRootDirectory = _thisInstance.ProjectsRootDirectory;
+            serialize.Timeout = _thisInstance.Timeout;
 
             string filePath = Path.Combine(_thisInstance.DataFolder, "Settings.json");
             var settings = new JsonSerializerSettings();
             //settings.i
             string json = JsonConvert.SerializeObject(serialize, Formatting.Indented, settings);
-            File.WriteAllText(filePath, json);
+            
+            try
+            {
+                File.WriteAllText(filePath, json);
+            }
+            catch (Exception ex)
+            {
+                _thisInstance.Console.Add(ex.ToString());
+            }
+                
         }
 
         #endregion

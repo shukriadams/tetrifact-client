@@ -94,7 +94,7 @@ namespace TetrifactClient
             IPackageDownloader downloader = null;
             bool downloadZip = packageDiff == null;
             
-            // false disable download zip, this is for dev only
+            // force disable download zip, this is for dev only
             downloadZip = false;
 
             if (downloadZip)
@@ -106,7 +106,11 @@ namespace TetrifactClient
 
             package.DownloadProgress.Message = "Downloading";
             package.IsDownloading = true;
+            DateTime start = DateTime.Now;
             PackageTransferResponse result = downloader.Download();
+            TimeSpan downloadTime = DateTime.Now - start;
+            
+            _log.LogOperation($"Took {Math.Round(downloadTime.TotalMinutes, 0)} minutes to download package {package.Package.Id} {(result.Succeeded ? "successfully" : "with errors")}.");
 
             if (package.TransferState == PackageTransferStates.UserCancellingDownload)
             {
