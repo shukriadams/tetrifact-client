@@ -9,90 +9,97 @@
 		x:Class="TetrifactClient.ProjectView"
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
-	<DockPanel Classes="projectView" LastChildFill="True">
-		<Grid DockPanel.Dock="Top">
-			<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
-				<Label Classes="header1" Content="Project : " />
-				<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
+	<DockPanel>
+		<DockPanel Name="noProjectContent">
+			<TextBlock>
+				No project. Create one.
+			</TextBlock>
+		</DockPanel>
+		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True">
+			<Grid DockPanel.Dock="Top">
+				<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
+					<Label Classes="header1" Content="Project : " />
+					<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
+				</StackPanel>
+				<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
+					<Button Click="ProjectEdit_Click">
+						<Image Classes="icon" Source="/Assets/Images/Settings.png" />
+					</Button>
+					<Button Classes="warning" Click="ProjectDelete_Click">
+						<Image Classes="icon" Source="/Assets/Images/Trash.png" />
+					</Button>
+				</StackPanel>
+			</Grid>
+
+			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+				<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
+				<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
 			</StackPanel>
-			<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
-				<Button Click="ProjectEdit_Click">
-					<Image Classes="icon" Source="/Assets/Images/Settings.png" />
-				</Button>
-				<Button Classes="warning" Click="ProjectDelete_Click">
-					<Image Classes="icon" Source="/Assets/Images/Trash.png" />
-				</Button>
+
+			<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
+				<Label Content="Description : " />
+				<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
 			</StackPanel>
-		</Grid>
 
-		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-			<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
-			<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
-		</StackPanel>
+			<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">[NO DATA MESSAGE]</TextBlock>
 
-		<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
-			<Label Content="Description : " />
-			<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
-		</StackPanel>
-
-		<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">[NO DATA MESSAGE]</TextBlock>
-
-		<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">
-			<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
-		</Panel>
+			<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">
+				<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
+			</Panel>
 		
-		<DataGrid
-			ItemsSource="{Binding Packages}"
-			Classes="grid flow-vertical"
-			Name="gridPackages"
-			IsReadOnly="True"
-			DockPanel.Dock="Top"
-			CanUserReorderColumns="True"
-			CanUserResizeColumns="True"
-			CanUserSortColumns="True"
-			GridLinesVisibility="All"
-			BorderThickness="1" 
-			BorderBrush="Gray">
-				<DataGrid.ContextMenu>
-					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
-						<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
-						<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
-						<MenuItem Header="Cancel" Name="mnuCanceldownload" Click="OnCancelDownloadClick" />
-						<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
-						<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
-						<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
-						<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
-						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
-						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
-						<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
-						<MenuItem Header="Copy id" Name="mnuCopyId" />
-						<MenuItem Header="Advanced" Name="mnuAdvanced" />
-						<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
-					</ContextMenu>
-				</DataGrid.ContextMenu>
-				<DataGrid.Columns>
-					<DataGridTextColumn Header="Id" Width="100" Binding="{Binding Package.Id}"/>
-					<DataGridTextColumn Header="Date" Width="100" Binding="{Binding Package.CreatedUtc}"/>
-					<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>
-					<DataGridTemplateColumn Header="Tags" Width="300">
-						<DataGridTemplateColumn.CellTemplate>
-							<DataTemplate>
-								<ItemsRepeater Classes="grid" ItemsSource="{Binding Package.Tags}">
-									<ItemsRepeater.Layout>
-										<StackLayout Spacing="40" Orientation="Horizontal" />
-									</ItemsRepeater.Layout>
-									<ItemsRepeater.ItemTemplate>
-										<DataTemplate>
-											<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
-										</DataTemplate>
-									</ItemsRepeater.ItemTemplate>
-								</ItemsRepeater>
-							</DataTemplate>
-						</DataGridTemplateColumn.CellTemplate>
-					</DataGridTemplateColumn>
-					<DataGridTextColumn Header="Info" Width="300" Binding="{Binding DownloadProgress.Message}"/>
-				</DataGrid.Columns>
-        </DataGrid>
+			<DataGrid
+				ItemsSource="{Binding Packages}"
+				Classes="grid flow-vertical"
+				Name="gridPackages"
+				IsReadOnly="True"
+				DockPanel.Dock="Top"
+				CanUserReorderColumns="True"
+				CanUserResizeColumns="True"
+				CanUserSortColumns="True"
+				GridLinesVisibility="All"
+				BorderThickness="1" 
+				BorderBrush="Gray">
+					<DataGrid.ContextMenu>
+						<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
+							<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
+							<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
+							<MenuItem Header="Cancel" Name="mnuCanceldownload" Click="OnCancelDownloadClick" />
+							<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
+							<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
+							<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
+							<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
+							<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
+							<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
+							<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
+							<MenuItem Header="Copy id" Name="mnuCopyId" />
+							<MenuItem Header="Advanced" Name="mnuAdvanced" />
+							<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
+						</ContextMenu>
+					</DataGrid.ContextMenu>
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Id" Width="100" Binding="{Binding Package.Id}"/>
+						<DataGridTextColumn Header="Date" Width="100" Binding="{Binding Package.CreatedUtc}"/>
+						<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>
+						<DataGridTemplateColumn Header="Tags" Width="300">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate>
+									<ItemsRepeater Classes="grid" ItemsSource="{Binding Package.Tags}">
+										<ItemsRepeater.Layout>
+											<StackLayout Spacing="40" Orientation="Horizontal" />
+										</ItemsRepeater.Layout>
+										<ItemsRepeater.ItemTemplate>
+											<DataTemplate>
+												<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+											</DataTemplate>
+										</ItemsRepeater.ItemTemplate>
+									</ItemsRepeater>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTextColumn Header="Info" Width="300" Binding="{Binding DownloadProgress.Message}"/>
+					</DataGrid.Columns>
+			</DataGrid>
 
+		</DockPanel>
 	</DockPanel>
 </UserControl>

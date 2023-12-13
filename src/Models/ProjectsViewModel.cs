@@ -5,6 +5,7 @@ namespace TetrifactClient
 {
     public class ProjectsViewModel : ReactiveObject
     {
+
         private ObservableCollection<Project> _projects = new ObservableCollection<Project> { };
 
         public ObservableCollection<Project> Projects

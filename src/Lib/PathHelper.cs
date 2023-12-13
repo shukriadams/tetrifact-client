@@ -1,58 +1,49 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.IO;
 
 namespace TetrifactClient
 {
     public static class PathHelper
     {
-        /// <summary>
-        /// Gets apps core data directory, this is directory where preferences/settings/logs etc are always stored. 
-        /// </summary>
-        /// <returns></returns>
-        public static string GetInternalDirectory() 
+        public static string Combine(string path1, string path2) 
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
+            path1 = path1.Replace("\\", "/");
+            path2 = path2.Replace("\\", "/");
+            return Path.Combine(path1, path2);
         }
 
-        public static string GetProjectDirectoryPath(GlobalDataContext context, Project project) 
+        public static string GetLogsDirectory(GlobalDataContext context) 
         {
-            return Path.Combine(context.GetProjectsDirectoryPath(), project.Id, "packages");
-        }
-
-        public static string GetLogsDirectory() 
-        {
-            return Path.Join(GetInternalDirectory(), "logs");
+            return Path.Join(context.DataFolder, "logs");
         }
 
         public static string GetZipDownloadDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"{package.Package.Id}.zip");
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, $"{package.Package.Id}.zip");
         }
 
         public static string GetZipDownloadDirectoryTempPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, $"~{package.Package.Id}.zip");
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, $"~{package.Package.Id}.zip");
         }
 
         public static string GetPackageDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id);
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, package.Package.Id);
         }
 
         public static string GetPackageContentDirectoryPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), package.Package.Id, "content");
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, package.Package.Id, "_");
         }
 
         public static string GetPackageDirectoryTempPath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), $"~{package.Package.Id}");
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, package.Package.Id, $"~");
         }
 
         public static string GetPackageDirectoryDeletePath(GlobalDataContext context, Project project, LocalPackage package)
         {
-            return Path.Combine(GetProjectDirectoryPath(context, project), $"!{package.Package.Id}");
+            return Path.Combine(context.ProjectsRootDirectory, project.Id, package.Package.Id, $"!");
         }
     }
 }

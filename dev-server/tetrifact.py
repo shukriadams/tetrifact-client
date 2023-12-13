@@ -16,6 +16,11 @@ class TetrifactServer(BaseHTTPRequestHandler):
             print(self.path)
             print(packageid)
             self.do_package(packageid)
+        elif self.path.startswith('/v1/files/'):
+            fileid = regex.search(r'\/v1\/files\/(.*)', self.path).group(1)
+            print(self.path)
+            print(fileid)
+            self.do_file(fileid)
         elif self.path.startswith('/v1/archives/'):
             archiveid = regex.search(r'\/v1\/archives\/(.*)', self.path).group(1)
             print(self.path)
@@ -56,6 +61,26 @@ class TetrifactServer(BaseHTTPRequestHandler):
         with open(archivePath, 'rb') as file: 
             self.wfile.write(file.read()) # Read the file and send the contents 
             
+    def do_file(self, id):
+        filePath = f'./files/{id}'
+
+        if not os.path.isfile(filePath):
+            self.send_response(404)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(f'file {id} not found'.encode())
+            return
+
+        self.send_response(200)
+        self.send_header('Content-type','text/json')
+        self.end_headers()
+
+        response = { }
+        response['success'] = {}
+
+        with open(filePath, 'rb') as file: 
+            self.wfile.write(file.read()) # Read the file and send the contents 
+
     def do_package(self, package):
     
         packagePath = f'./packages/{package}.json'

@@ -56,12 +56,19 @@ namespace TetrifactClient
             if (_packageDiff != null)
             {
                 countall = _packageDiff.Common.Count();
-                filesToDownload = _packageDiff.Difference;
+                filesToDownload = _packageDiff.Difference;  
             }
             else
             {
                 // load files from disk
-                string packageFilesListPath = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), _project.Id, "packages", _package.Package.Id, "files.json");
+                string packageFilesListPath = Path.Combine(GlobalDataContext.Instance.ProjectsRootDirectory, _project.Id, _package.Package.Id, "files.json");
+                if (!File.Exists(packageFilesListPath))
+                    return new PackageTransferResponse
+                    {
+                        Result = PackageTransferResultTypes.PackageNotFound,
+                        Message = "Manifest not found"
+                    };
+
                 JsonFileLoadResponse<IEnumerable<PackageFile>> jsonLoadResponse = JsonHelper.LoadJSONFile<IEnumerable<PackageFile>>(packageFilesListPath, true, true);
                 if (jsonLoadResponse.Payload == null)
                     throw new Exception($"Failed to load full Package {_package.Package.Id} in project {_project.Name}, error {jsonLoadResponse.ErrorType}.", jsonLoadResponse.Exception);
@@ -105,7 +112,8 @@ namespace TetrifactClient
                         if (this.CancelCheck != null && this.CancelCheck())
                             return;
 
-                        string savePath = Path.Combine(finalPackagePath, missingFile.Path);
+                        // NOTE : Path combine returns only path2 if slashes mismatch
+                        string savePath = Path.Join(finalPackagePath, missingFile.Path);
                         FileSystemHelper.CreateDirectory(Path.GetDirectoryName(savePath));
 
                         ChunkedDownloader downloader = new ChunkedDownloader();
@@ -198,7 +206,6 @@ namespace TetrifactClient
                     {
                         Result = PackageTransferResultTypes.LocalCopyFail,
                         Message = $"Files : {string.Join(", ", copyFails)}"
-
                     };
             }
 
@@ -209,7 +216,9 @@ namespace TetrifactClient
             _package.TransferState = PackageTransferStates.Downloaded;
             // todo : log more info about transfer time etc?
 
-            return new PackageTransferResponse { };
+            return new PackageTransferResponse {
+                Succeeded = true
+            };
         }
 
         private bool VerifyAndCopyFile(string donorFilePath, string newFilePath, string donorSHA256, string packageId)

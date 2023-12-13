@@ -176,15 +176,8 @@ namespace TetrifactClient
 
         public void OnPropertyChanged(object? sender, PropertyChangedEventArgs e) 
         {
-            try
-            {
-                if (!string.IsNullOrEmpty( this.DiskPath))
-                    File.WriteAllText(this.DiskPath, JsonConvert.SerializeObject(this, Formatting.Indented));
-            }
-            catch (Exception ex)
-            {
-                GlobalDataContext.Instance.Console.Add(ex.ToString());
-            }
+            if (!string.IsNullOrEmpty( this.DiskPath))
+                File.WriteAllText(this.DiskPath, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
         /// <summary>

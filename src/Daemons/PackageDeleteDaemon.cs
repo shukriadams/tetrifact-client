@@ -24,33 +24,24 @@ namespace TetrifactClient
 
         public async Task Work()
         {
-            GlobalDataContext context = GlobalDataContext.Instance;
-
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
-                string projectDirectory = PathHelper.GetProjectDirectoryPath(GlobalDataContext.Instance, project);
-                if (!Directory.Exists(projectDirectory))
-                    continue;
-
-                string[] packagedirectories = Directory.GetDirectories(projectDirectory);
-
-                foreach (string packagedirectory in packagedirectories)
+                foreach (LocalPackage package in project.Packages)
                 {
-                    IEnumerable<string> markedDirectories = Directory.GetDirectories(packagedirectory)
-                        .Where(dir => Path.GetFileName(dir).StartsWith("!"));
+                    string markedDirectory = Path.Join(GlobalDataContext.Instance.ProjectsRootDirectory, project.Id, package.Package.Id, "!_");
+                    if (!Directory.Exists(markedDirectory))
+                        continue;
 
-                    foreach (string markedDirectory in markedDirectories) 
+                    try
                     {
-                        try
-                        {
-                            // delete stuff
-                            Directory.Delete(markedDirectory, true);
-                        }
-                        catch (Exception ex)
-                        {
-                            _log.LogError(ex);
-                        }
+                        // delete stuff
+                        Directory.Delete(markedDirectory, true);
                     }
+                    catch (Exception ex)
+                    {
+                        _log.LogError(ex);
+                    }
+
                 }
             }
         }

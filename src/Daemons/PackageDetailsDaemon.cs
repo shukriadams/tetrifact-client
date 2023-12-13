@@ -32,7 +32,7 @@ namespace TetrifactClient
                 Project contextProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault(p => p.Id == project.Id);
 
                 // todo : project name must be made file-system safe
-                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), project.Id, "packages");
+                string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.ProjectsRootDirectory, project.Id);
 
                 foreach (string availablePackage in contextProject.AvailablePackageIds)
                 {

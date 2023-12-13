@@ -39,17 +39,7 @@
 				<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 			</StackPanel>
 
-			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-				<Label Content="Save Path" />
-				<Grid DockPanel.Dock="Top">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"></ColumnDefinition>
-						<ColumnDefinition Width="30"></ColumnDefinition>
-					</Grid.ColumnDefinitions>
-					<TextBox Name="txtSavePath" Text="{Binding Project.PackageSavePath}" />
-					<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
-				</Grid>
-			</StackPanel>
+
 
 			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 				<Label>Description (optional)</Label>

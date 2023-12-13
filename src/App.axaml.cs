@@ -61,8 +61,8 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
 
         // create directories
-        Directory.CreateDirectory(GlobalDataContext.Instance.GetProjectsDirectoryPath());
-        Directory.CreateDirectory(PathHelper.GetLogsDirectory());
+        Directory.CreateDirectory(GlobalDataContext.Instance.ProjectsRootDirectory);
+        Directory.CreateDirectory(PathHelper.GetLogsDirectory(GlobalDataContext.Instance));
 
         // do app start housecleaning
         AppStart appStart = new AppStart();

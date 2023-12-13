@@ -31,37 +31,29 @@ namespace TetrifactClient
 
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                foreach (LocalPackage packageMarkedForDelete in project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()))
+                IList<LocalPackage> cloned = project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()).ToList();
+
+                for (int i = 0; i < cloned.Count; i ++ )
                 {
-                    IEnumerable<string> subDirs = Directory.GetDirectories(PathHelper.GetPackageDirectoryPath(context, project, packageMarkedForDelete));
-                    IEnumerable<string> unmarkedSubDirs = subDirs.Where(dir => !Path.GetFileName(dir).StartsWith("!"));
+                    LocalPackage packageMarkedForDelete = cloned[i];
 
-                    if (unmarkedSubDirs.Any())
+                    string packageDirectory = Path.Combine(context.ProjectsRootDirectory, project.Id, packageMarkedForDelete.Package.Id, "_");
+                    string deletePath = Path.Combine(context.ProjectsRootDirectory, project.Id, packageMarkedForDelete.Package.Id, "!_");
+
+                    if (Directory.Exists(packageDirectory) && !Directory.Exists(deletePath))
                     {
-                        packageMarkedForDelete.TransferState = PackageTransferStates.Deleting;
-
-                        foreach (string unmarkedSubDir in unmarkedSubDirs)
+                        try
                         {
-                            // move delete content to guid incase previous delete attempt failed
-                            // add time to pathname as a way to track potentially slow delete issues
-                            // todo : warn if another ! marked dir already exists here
-                            string packageContentPathDelete = Path.Join(Path.GetDirectoryName(unmarkedSubDir), $"!{Guid.NewGuid()}-{DateTime.UtcNow.ToFSString()}");
-
-                            try
-                            {
-                                Directory.Move(unmarkedSubDir, packageContentPathDelete);
-                            }
-                            catch (Exception)
-                            {
-                                // ignore errors here, they will be caused by access locks
-                                continue;
-                            }
+                            Directory.Move(packageDirectory, deletePath);
+                        }
+                        catch (Exception)
+                        {
+                            // ignore errors here, they will be caused by access locks
+                            continue;
                         }
                     }
 
-                    // package is marked for delete only when all its sub dirs are deleted. The actual deleting is done by another
-                    // daemon, the PackageDeleteDaemon, which deletes directories marked for delete by this daemon.
-                    if (!subDirs.Any()) 
+                    if (!Directory.Exists(packageDirectory) && !Directory.Exists(deletePath))
                     {
                         packageMarkedForDelete.TransferState = PackageTransferStates.Deleted;
                         packageMarkedForDelete.DownloadProgress.Message = "Deleted";

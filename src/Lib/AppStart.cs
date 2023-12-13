@@ -15,7 +15,7 @@ namespace TetrifactClient
             // clean out any hanging unpacks
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                string projectDirectory = PathHelper.GetProjectDirectoryPath(GlobalDataContext.Instance, project);
+                string projectDirectory = Path.Join(GlobalDataContext.Instance.ProjectsRootDirectory, project.Id);
                 string[] packagedirectories = new string[0];
 
                 // no need to clean projects that haven't been created on disk yet

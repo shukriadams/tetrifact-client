@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using System;
-using System.Threading.Tasks;
 
 namespace TetrifactClient
 {
@@ -23,8 +22,6 @@ namespace TetrifactClient
             }
         }
 
-
-
         public void SetContext(Project project) 
         {
             this.DataContext = new ProjectEditorViewModel 
@@ -39,8 +36,7 @@ namespace TetrifactClient
                 lblFormTitle.Content = $"Settings for Project {project.Name}";
 
             // hide combobox when project already set
-            cmbTemplateSource.IsVisible = project == null;
-            panelFromTemplate.IsVisible = project == null;
+            panelFromTemplate.IsVisible = string.IsNullOrEmpty(project.TetrifactServerAddress);
         }
 
         public new void ShowDialog(Window parent) 
@@ -54,34 +50,22 @@ namespace TetrifactClient
             this.Close();
         }
         
-        private void OnPathSelect(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
-            if (context == null)
-                return;
 
-            Task.Run(async () =>
-            {
-                OpenFolderDialog dialog = new OpenFolderDialog();
-                string path = await dialog.ShowAsync(this);
-
-                if (!string.IsNullOrEmpty(path))
-                    context.Project.PackageSavePath = path;
-
-            });
-
-        }
 
         private void OnSave(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
 
-            if (context.Project == null) 
+            if (context.Project.Id == null) 
             {
                 GlobalDataContext.Instance.Projects.Projects.Add(new Project
                 {
                     Name = txtName.Text,
-                    TetrifactServerAddress = txtServer.Text
+                    TetrifactServerAddress = txtServer.Text,
+
+                    // id is soft unique int, taken from a fixed date. As we can't generate two projects at same time, this is safe and most importantly, short
+                    // give how total path length can be an issue with packages with deep besting, we want to keep every section as short as possible
+                    Id = (DateTime.Now.Ticks - new DateTime(2022, 1, 1).Ticks).ToString()
                 });
             }
             else 
@@ -93,9 +77,6 @@ namespace TetrifactClient
             }
 
             if (string.IsNullOrEmpty(context.Project.Name))
-                return;
-
-            if (string.IsNullOrEmpty(context.Project.PackageSavePath))
                 return;
 
             if (string.IsNullOrEmpty(context.Project.TetrifactServerAddress))

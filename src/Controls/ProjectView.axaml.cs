@@ -19,6 +19,7 @@ namespace TetrifactClient
             gridPackages.DataContextChanged += GridDataChanged;
             txtNoBuildsAvailable.Text = string.Empty;
             _log = new Log();
+            SetVisualState();
         }
 
         private void GridDataChanged(object? sender, System.EventArgs e)
@@ -37,10 +38,14 @@ namespace TetrifactClient
         private void SetVisualState() 
         {
             Project datacontext = gridPackages.DataContext as Project;
-            gridPackages.IsVisible = datacontext.Packages.Any();
-            txtNoBuildsAvailable.IsVisible = !datacontext.Packages.Any();
+            if (datacontext != null)
+            {
+                gridPackages.IsVisible = datacontext.Packages.Any();
+                txtNoBuildsAvailable.IsVisible = !datacontext.Packages.Any();
+            }
 
-            this.IsVisible = this.DataContext != null;
+            projectContent.IsVisible = this.DataContext != null;
+            noProjectContent.IsVisible = this.DataContext == null;
         }
 
         private void gridChanged(object? sender, System.EventArgs e) 

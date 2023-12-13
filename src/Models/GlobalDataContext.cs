@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace TetrifactClient
 {
@@ -47,6 +48,7 @@ namespace TetrifactClient
             set => caption = value;
         }
 
+        [JsonIgnore]
         public string DataFolder { get; set; }
  
         public int DaemonIntervalMS { get; set; }
@@ -67,14 +69,19 @@ namespace TetrifactClient
 
         public int Timeout { get; set; }
 
+        public string ProjectsRootDirectory { get; set; }
+
         #endregion
 
         #region CTORS
 
         public GlobalDataContext() 
         {
-            // default
-            this.DataFolder = PathHelper.GetInternalDirectory();
+            // core data folder is always in appdata/local/<assembly name>
+            this.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Assembly.GetExecutingAssembly().GetName().Name);
+            
+            // default projects path where projects + packages are stored. user-definable
+            this.ProjectsRootDirectory = Path.Combine(this.DataFolder, "projects");
             this.DaemonIntervalMS = 5000;
             this.Timeout = 3000;
         }
@@ -82,11 +89,6 @@ namespace TetrifactClient
         #endregion
 
         #region METHODS
-
-        public string GetProjectsDirectoryPath() 
-        {
-            return Path.Combine(this.DataFolder, "projects");
-        }
 
         public static void Load() 
         {

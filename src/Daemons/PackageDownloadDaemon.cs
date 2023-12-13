@@ -45,13 +45,13 @@ namespace TetrifactClient
         private async Task Work()
         {
             System.Diagnostics.Debug.WriteLine($"PackageDownloadDaemon:WORK {DateTime.Now.Second}");
-            foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
             {
-                IEnumerable<LocalPackage> packagesToSync = project.Packages
-                    .Where(package => package.IsQueuedForDownload());
+                IList<LocalPackage> packagesToSync = project.Packages
+                    .Where(package => package.IsQueuedForDownload()).ToList();
 
-                foreach (LocalPackage package in packagesToSync)
-                    await this.ProcessPackage(project, package);
+                for (int i = 0; i < packagesToSync.Count; i++)
+                    await this.ProcessPackage(project, packagesToSync[i]);
             }
         }
 
@@ -75,6 +75,7 @@ namespace TetrifactClient
 
             PackageDiff packageDiff = null;
             LocalPackage donorPackage = null;
+
             if (allPackagesFromTargetServer.Any()) 
             {
                 package.DownloadProgress.Message = "Checking local files first";
@@ -125,7 +126,6 @@ namespace TetrifactClient
             {
                 package.TransferState = PackageTransferStates.DownloadFailed;
                 package.DownloadProgress.Message = "Error, check logs";
-                GlobalDataContext.Instance.Console.Add(result.Message);
                 _log.LogError(result.Exception, result.Message);
             }
         }

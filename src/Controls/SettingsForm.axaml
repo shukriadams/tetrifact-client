@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		d:DesignWidth="400"
+		d:DesignHeight="250"
+        x:Class="TetrifactClient.SettingsForm"
+		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
+		xmlns:vm="using:TetrifactClient"
+ 		x:DataType="vm:GlobalDataContext"		
+		Classes="dialog">
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+			<Label Content="Save Path" />
+			<Grid DockPanel.Dock="Top">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+					<ColumnDefinition Width="30"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<TextBox Name="txtSavePath" Text="{Binding ProjectsRootDirectory}" />
+				<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
+			</Grid>
+		</StackPanel>
+	</DockPanel>
+</Window>

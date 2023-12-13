@@ -12,7 +12,9 @@ namespace TetrifactClient
     public partial class Project : Observable
     {
         #region FIELDS
-        
+
+        private string _stat = string.Empty;
+        private DateTime _statDate = DateTime.Now;
         private string _id;
         private string _name;
         private string _description;
@@ -25,7 +27,6 @@ namespace TetrifactClient
         private int? _maxDownloadFailedAttempts;
         private bool _autoDownload;
         private bool _purgeOldPackages;
-        private string _packageSavePath;
         private IEnumerable<string> _requiredTags;
         private IEnumerable<string> _ignoreTags;
         private string _accessKey;
@@ -37,6 +38,12 @@ namespace TetrifactClient
         private IList<string> _commonTags;
         private readonly Dictionary<string, int> _rawTags = new Dictionary<string, int>();
         private IEnumerable<LocalPackage> _rawPackages = new List<LocalPackage>();
+        private IList<string> _removeQueue = new List<string>();
+        private IList<LocalPackage> _addQueue = new List<LocalPackage>();
+
+        #endregion
+
+        #region PROPERTIES
 
         /// <summary>
         /// Unique id of project. Generated from GUID. All data for project is partitition on disk with this id.
@@ -61,19 +68,6 @@ namespace TetrifactClient
             {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        /// <summary>
-        /// Path on local system packages are saved to. 
-        /// </summary>
-        public string PackageSavePath
-        {
-            get => _packageSavePath;
-            set
-            {
-                _packageSavePath = value;
-                OnPropertyChanged(nameof(PackageSavePath));
             }
         }
 
@@ -236,8 +230,11 @@ namespace TetrifactClient
         [JsonIgnore]                           
         public ObservableCollection<LocalPackage> Packages
         {
-            get => _packages;
-            set
+            get{
+                lock(_packages)
+                    return _packages;
+            }
+            private set
             {
                 _packages = value;
                 OnPropertyChanged(nameof(Packages));
@@ -320,7 +317,6 @@ namespace TetrifactClient
         public Project() 
         {
             this.AutoDownload = true;
-            this.Id = Guid.NewGuid().ToString();
             this.Packages = new ObservableCollection<LocalPackage>();
             this.AvailablePackageIds = new List<string>();
             this.CommonTags = new List<string>();
@@ -328,15 +324,42 @@ namespace TetrifactClient
             this.IgnoreTags = new string[0];
             this.PackageSyncCount = 3;
             this.CurrentStatus = string.Empty;
-
         }
 
         #endregion
 
         #region METHODS
 
-        private string _stat = string.Empty;
-        private DateTime _statDate = DateTime.Now;
+        public void AddPackage(LocalPackage package) 
+        {
+            _addQueue.Add(package);
+        }
+
+        public void RemovePackage(string id) 
+        {
+            _removeQueue.Add(id);
+        }
+
+        public void SyncPackages() 
+        {
+            lock (_packages)
+            {
+                foreach (LocalPackage package in _addQueue)
+                    this.Packages.Add(package);
+
+                _addQueue.Clear();
+
+                foreach (string id in _removeQueue)
+                {
+                    LocalPackage package = this.Packages.FirstOrDefault(p => p.Package.Id == id);
+                    if (package != null)
+                        this.Packages.Remove(package);
+                }
+
+                _removeQueue.Clear();
+            }
+        }
+
         public void SetStatus(string status) 
         {
             _stat = status;
@@ -365,7 +388,7 @@ namespace TetrifactClient
         /// </summary>
         public void PopulatePackageList()
         {
-            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.GetProjectsDirectoryPath(), this.Id, "packages");
+            string localProjectPackagesDirectory = Path.Combine(GlobalDataContext.Instance.ProjectsRootDirectory, this.Id);
             if (!Directory.Exists(localProjectPackagesDirectory))
                 return;
 
@@ -433,19 +456,30 @@ namespace TetrifactClient
                                 select package).ToList();
 
             int count = this.Packages.Count;
+            bool sync = false;
+
             for (int i = 0; i < count; i++)
             {
                 string id = this.Packages[count - i - 1].Package.Id;
                 if (!filteredPackages.Any(p => p.Package.Id == id))
-                    this.Packages.RemoveAt(count - i - 1);
+                {
+                    this.RemovePackage(id);
+                    sync = true;
+                }
             }
 
             foreach (var filteredPackage in filteredPackages)
                 if (!this.Packages.Any(p => p.Package.Id == filteredPackage.Package.Id))
-                    this.Packages.Add(filteredPackage);
+                {
+                    this.AddPackage(filteredPackage);
+                    sync = true;
+                }
 
-            foreach (var package in this.Packages) 
-                package.EnableAutoSave();
+            if (sync)
+                this.SyncPackages();
+
+            for (int i = 0; i < this.Packages.Count; i++) 
+                this.Packages[i].EnableAutoSave();
 
             //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
             //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DynamicData;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,8 +56,10 @@ namespace TetrifactClient
                 {
                     // Work way down packages in order of listing, marking them for autodownload as necessary
                     // This assumes packages are sorted newest to oldest
-                    foreach (LocalPackage package in project.Packages)
+                    for (int i = 0 ;  i < project.Packages.Count; i ++)
                     {
+                        LocalPackage package = project.Packages[i];
+
                         // mark for download
                         if (package.IsEligibleForAutoDownload())
                         {
@@ -73,8 +78,11 @@ namespace TetrifactClient
                 if (downloadedCount > project.PackageSyncCount) 
                 {
                     int removeCount = 0;
-                    foreach (LocalPackage package in project.Packages.Where(p => p.IsExecutable()).Reverse())
+                    IList<LocalPackage> cloned = project.Packages.Where(p => p.IsExecutable()).Reverse().ToList();
+
+                    for (int i = 0; i < cloned.Count; i ++)
                     {
+                        LocalPackage package = cloned[i];
                         package.TransferState = PackageTransferStates.AutoMarkedForDelete;
                         removeCount ++;
 

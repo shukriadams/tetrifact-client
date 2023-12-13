@@ -6,6 +6,7 @@
         FilePathTooLong = 1,
         LocalCopyFail = 2,
         DonorFileNotFount = 3,
-        FileDownloadFailed= 4
+        FileDownloadFailed= 4,
+        PackageNotFound = 5
     }
 }

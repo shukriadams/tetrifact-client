@@ -1,5 +1,8 @@
 {
-    "files" : [],
+    "files" : [
+        { "id" : "1", "path" : "/folder/file1.txt", "hash" : "abcd" },
+        { "id" : "2", "path" : "/file2.txt", "hash" : "cdef" }
+    ],
     "sizeOnDisk": 2358437425,
     "size": 33132020509,
     "isCompressed": false,
