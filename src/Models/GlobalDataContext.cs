@@ -72,6 +72,8 @@ namespace TetrifactClient
         /// </summary>
         public int Timeout { get; set; }
 
+        public int ThreadLoad { get; set; }
+
         public string ProjectsRootDirectory { get; set; }
 
         #endregion
@@ -87,6 +89,7 @@ namespace TetrifactClient
             this.ProjectsRootDirectory = Path.Combine(this.DataFolder, "projects");
             this.DaemonIntervalMS = 5000;
             this.Timeout = 3000;
+            this.ThreadLoad = 4;
         }
 
         #endregion

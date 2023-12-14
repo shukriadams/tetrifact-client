@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -62,10 +64,9 @@ namespace TetrifactClient
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
-        public static string[] SortFileArrayForHashing(string[] files)
+        public static IEnumerable<PackageFile> SortFileArrayForHashing(IEnumerable<PackageFile> files)
         {
-            Array.Sort(files, (x, y) => String.Compare(x, y));
-            return files;
+            return files.OrderBy(f => f.Path).ToList();
         }
     }
 }

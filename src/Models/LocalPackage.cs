@@ -15,6 +15,7 @@ namespace TetrifactClient
         private string _tetrifactServerAddress;
         private bool _ignore;
         private bool _isDownloading;
+        private bool _isQueuedForVerify;
         private bool _keep;
         private PackageTransferStates _transferState;
         private string _errorSummary;
@@ -49,6 +50,16 @@ namespace TetrifactClient
             {
                 _ignore = value;
                 OnPropertyChanged(nameof(Ignore));
+            }
+        }
+
+        public bool IsQueuedForVerify 
+        {
+            get => _isQueuedForVerify;
+            set
+            {
+                _isQueuedForVerify = value;
+                OnPropertyChanged(nameof(IsQueuedForVerify));
             }
         }
 
@@ -220,6 +231,7 @@ namespace TetrifactClient
         public bool IsDownloadedorQueuedForDownload()
         {
             return this.TransferState == PackageTransferStates.Downloaded
+                || this.TransferState == PackageTransferStates.Corrupt
                 || this.TransferState == PackageTransferStates.AutoMarkedForDownload
                 || this.TransferState == PackageTransferStates.UserMarkedForDownload;
         }
@@ -229,7 +241,8 @@ namespace TetrifactClient
             if (this.TransferState == PackageTransferStates.DoNotDelete)
                 return false;
 
-            return this.TransferState == PackageTransferStates.Downloaded;
+            return this.TransferState == PackageTransferStates.Downloaded 
+                || this.TransferState == PackageTransferStates.Corrupt;
         }
 
         public void CancelQueueState() 
@@ -259,6 +272,17 @@ namespace TetrifactClient
             return this.TransferState == PackageTransferStates.UserMarkedForDownload
                 || this.TransferState == PackageTransferStates.AutoMarkedForDownload
                 && !this.IsDownloading;
+        }
+
+        public bool IsDownloaded() 
+        {
+            return this.TransferState == PackageTransferStates.Downloaded
+                || this.TransferState == PackageTransferStates.Corrupt;
+        }
+
+        public bool IsVerifiable() 
+        {
+            return this.IsDownloaded() && !this.IsQueuedForVerify;
         }
 
         #endregion

@@ -44,6 +44,7 @@ public partial class App : Application
         UnityContainer.RegisterType<PackageDeleteDaemon, PackageDeleteDaemon>();
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
         UnityContainer.RegisterType<PackageReturnToAvailablePoolDaemon, PackageReturnToAvailablePoolDaemon>();
+        UnityContainer.RegisterType<PackageVerifyDaemon, PackageVerifyDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()

@@ -11,6 +11,7 @@
         UserCancellingDownload,     // user has requested package download be cancelled. this state can be entered into only if pacakge is queued for downloading, or is downloading
         DownloadFailed,             // package transfer failed and willnot resume
         Downloaded,                 // package is available locally for starting
+        Corrupt,                    // package is available locally but has failed verification
         DownloadCancelled,          // download was successfully cancelled
         DoNotDelete,                // package is downloaded and marked as keep forever by user
         AutoMarkedForDelete,        // package is marked is marked for delete by daemon

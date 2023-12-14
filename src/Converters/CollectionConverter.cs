@@ -31,6 +31,15 @@ namespace TetrifactClient
         });
 
         /// <summary>
+        /// Returns false if collection arg is null or empty.
+        /// </summary>
+        public static readonly IValueConverter IsEmpty = new FuncValueConverter<object?, bool>((object arg) => {
+
+            ICollection collection = (ICollection)arg;
+            return collection == null || collection.Count == 0 ? true : false;
+        });
+
+        /// <summary>
         /// Sorts a string collection asc
         /// </summary>
         public static readonly IValueConverter SortString = new FuncValueConverter<object?, IEnumerable<string>>((object arg) => {

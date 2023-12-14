@@ -65,10 +65,9 @@ namespace TetrifactClient
             mnuUnignore.IsVisible = selectedProject.IsDownloadable() && !mnuIgnore.IsVisible;
             mnuCanceldownload.IsVisible = selectedProject.IsQueuedForDownloadorDownloading();
             mnuRun.IsVisible = selectedProject.IsExecutable();
-            mnuVerify.IsVisible = selectedProject.IsExecutable();
+            mnuVerify.IsVisible = selectedProject.IsVerifiable();
             mnuKeep.IsVisible = selectedProject.IsExecutable() && !selectedProject.Keep;
             mnuUnkeep.IsVisible = selectedProject.IsExecutable() && !mnuKeep.IsVisible;
-            mnuVerify.IsVisible = selectedProject.IsExecutable();
         }
 
         private void OnIgnoreClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
@@ -125,33 +124,38 @@ namespace TetrifactClient
 
         private void OnVerifyClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
         {
+            LocalPackage selectPackage = gridPackages.SelectedItem as LocalPackage;
+            if (selectPackage == null)
+                return;
 
+            selectPackage.DownloadProgress.Message = "Verifying ...";
+            selectPackage.IsQueuedForVerify = true;
         }
 
         private void OnTagsClicked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
-            if (selectedProject == null)
+            LocalPackage selectedPackage = gridPackages.SelectedItem as LocalPackage;
+            if (selectedPackage == null)
                 return;
            
         }
 
         private void OnKeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
-            if (selectedProject == null)
+            LocalPackage selectedPackage = gridPackages.SelectedItem as LocalPackage;
+            if (selectedPackage == null)
                 return;
 
-            selectedProject.Keep = true;
+            selectedPackage.Keep = true;
         }
 
         private void OnUnkeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
-            if (selectedProject == null)
+            LocalPackage selectedPackage = gridPackages.SelectedItem as LocalPackage;
+            if (selectedPackage == null)
                 return;
 
-            selectedProject.Keep = false;
+            selectedPackage.Keep = false;
         }
 
         private void ProjectEdit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 

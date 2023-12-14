@@ -50,7 +50,6 @@ namespace TetrifactClient
             }
             finally
             {
-
                 // force thread pause so this loop doesn't lock CPU
                 DateTime start = DateTime.Now;
                 while (_pause && (DateTime.Now - start).TotalMilliseconds < _delayms) 

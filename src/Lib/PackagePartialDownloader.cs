@@ -62,13 +62,6 @@ namespace TetrifactClient
             {
                 // load files from disk
                 string packageFilesListPath = Path.Combine(GlobalDataContext.Instance.ProjectsRootDirectory, _project.Id, _package.Package.Id, "files.json");
-                if (!File.Exists(packageFilesListPath))
-                    return new PackageTransferResponse
-                    {
-                        Result = PackageTransferResultTypes.PackageNotFound,
-                        Message = "Manifest not found"
-                    };
-
                 JsonFileLoadResponse<IEnumerable<PackageFile>> jsonLoadResponse = JsonHelper.LoadJSONFile<IEnumerable<PackageFile>>(packageFilesListPath, true, true);
                 if (jsonLoadResponse.Payload == null)
                     throw new Exception($"Failed to load full Package {_package.Package.Id} in project {_project.Name}, error {jsonLoadResponse.ErrorType}.", jsonLoadResponse.Exception);
@@ -77,7 +70,7 @@ namespace TetrifactClient
                 countall = filesToDownload.Count();
             }
             
-            int parallels = 4;
+            
 
 
 
@@ -100,7 +93,7 @@ namespace TetrifactClient
                 int totalDownloadCount = filesToDownload.Count();
                 PackageTransferResponse downloadErrorResponse = null;
 
-                Parallel.ForEach(filesToDownload.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = parallels }, missingFile =>
+                Parallel.ForEach(filesToDownload.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = GlobalDataContext.Instance.ThreadLoad }, missingFile =>
                 {
                     try
                     {
@@ -161,7 +154,7 @@ namespace TetrifactClient
 
                 // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
                 PackageTransferResponse copyErrorResponse = null;
-                Parallel.ForEach(_packageDiff.Common.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = parallels }, existingFile => {
+                Parallel.ForEach(_packageDiff.Common.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = GlobalDataContext.Instance.ThreadLoad }, existingFile => {
 
                     if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
                         return;

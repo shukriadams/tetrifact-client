@@ -13,22 +13,28 @@
 	x:DataType="vm:ProjectsViewModel">
     <Border Classes="projectsView">
         <DockPanel Classes="projectsView" LastChildFill="True">
-			<Grid DockPanel.Dock="Top"  Classes="flow-vertical">
-				<TextBlock Classes="header1" HorizontalAlignment="Left">
-					Projects
-				</TextBlock>
-				<Button Click="OnNewProject" HorizontalAlignment="Right">
-					<Image Classes="icon" Source="/Assets/Images/Add.png" />
-				</Button>
-			</Grid>
+			<Border Padding="10" DockPanel.Dock="Top">
+				<Panel>
+					<Grid Classes="flow-vertical" DockPanel.Dock="Top">
+						<TextBlock Classes="header1" HorizontalAlignment="Left">
+							Projects
+						</TextBlock>
+						<Button Click="OnNewProject" HorizontalAlignment="Right">
+							<Image Classes="icon" Source="/Assets/Images/Add.png" />
+						</Button>
+					</Grid>
 
-            <TextBlock 
-				Classes="flow-vertical"
-				DockPanel.Dock="Top" 
-			    Text="No projects added yet"
-                IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.HasContent}}"/>
+					<TextBlock
+						Classes="flow-vertical"
+						Padding="0,20,0,0"
+						DockPanel.Dock="Top"
+						Text="No projects added yet"
+						IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
+				</Panel>
 
-            <ListBox 
+			</Border>
+
+			<ListBox 
 				Classes="listProjects flow-vertical"  
 				Tapped="ProjectsList_Clicked" 
 				DockPanel.Dock="Top" 
