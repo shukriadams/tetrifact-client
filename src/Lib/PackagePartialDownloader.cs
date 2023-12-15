@@ -69,10 +69,6 @@ namespace TetrifactClient
                 filesToDownload = jsonLoadResponse.Payload;
                 countall = filesToDownload.Count();
             }
-            
-            
-
-
 
             // Download new files
             if (filesToDownload.Any()) 
@@ -148,7 +144,7 @@ namespace TetrifactClient
             List<PackageFile> copyFails = new List<PackageFile>();
 
 
-            if (_donorPackage != null) 
+            if (_packageDiff != null && _donorPackage != null) 
             {
                 string donorBuildPath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _donorPackage);
 
@@ -159,7 +155,7 @@ namespace TetrifactClient
                     if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
                         return;
 
-                    _package.DownloadProgress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}%";
+                    _package.DownloadProgress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}% ({copiedCount}/{countall})";
 
                     string newFilePath = Path.Combine(finalPackagePath, existingFile.Path);
                     if (newFilePath.Length > Constants.MAX_PATH_LENGTH)
@@ -175,14 +171,8 @@ namespace TetrifactClient
 
                     // check and copy file, if that returns false, copy failed, we need to directly download file
                     bool fileCopied = VerifyAndCopyFile(donorFilePath, newFilePath, existingFile.Hash, _package.Package.Id);
-                    
-                    GlobalDataContext.Instance.Console.Add($"Copied doner {newFilePath}");
 
-                    if (fileCopied)
-                    {
-                        _log.LogDebug($"Copied local file {copiedCount} of {countall}, {existingFile.Path}");
-                    }
-                    else
+                    if (!fileCopied)
                     {
                         lock (copyFails)
                         {
@@ -214,13 +204,18 @@ namespace TetrifactClient
             };
         }
 
-        private bool VerifyAndCopyFile(string donorFilePath, string newFilePath, string donorSHA256, string packageId)
+        private bool VerifyAndCopyFile(string donorFilePath, string newFilePath, string donorSHA256, string packageId, bool force = false)
         {
             // Check donor file exists
             if (!File.Exists(donorFilePath))
             {
                 _log.LogDebug($"Server common list error or doner file missing - expected file {donorFilePath} not found - downloading instead");
                 return false;
+            }
+
+            if (File.Exists(newFilePath) && !force)
+            {
+                return true;
             }
 
             // Check CRC of donor file
