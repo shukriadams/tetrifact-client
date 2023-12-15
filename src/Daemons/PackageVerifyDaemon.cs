@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 
@@ -54,8 +55,10 @@ namespace TetrifactClient
             long count = 0;
             packageToVerify.DownloadProgress.Total = total;
 
-            //generate hash
-            List<PackageFile> files = HashLib.SortFileArrayForHashing(jsonLoadResponse.Payload);
+            // create a dictionary of all files in package, sorted by path
+            IDictionary<string, string> hashes = new Dictionary<string, string>();
+            foreach (PackageFile file in jsonLoadResponse.Payload.OrderBy(f => f.Path))
+                hashes.Add(file.Path, null);
 
             Parallel.ForEach(jsonLoadResponse.Payload, new ParallelOptions() { MaxDegreeOfParallelism = GlobalDataContext.Instance.ThreadLoad }, item =>
             {
@@ -80,6 +83,9 @@ namespace TetrifactClient
                         isValid = false;
                         inValidReason.Add($"Invalid hash for {item.Path}, expected {item.Hash}, got {checksum}");
                     }
+
+                    // append file checksum to combined hash dictionary
+                    hashes[item.Path] = HashLib.FromString(item.Path) + checksum;
                 }
                 catch(Exception ex)
                 {
@@ -87,6 +93,14 @@ namespace TetrifactClient
                     inValidReason.Add($"Unexpected error checking {item.Path}:{ex}");
                 }
             });
+
+            // the final package hash is the hash of the combined sorted file paths + file hashes in package
+            string currentHash = HashLib.FromString(string.Join(string.Empty, hashes.Values));
+            if (currentHash != packageToVerify.Package.Hash)
+            {
+                isValid = false;
+                inValidReason.Add($"Package hash failed, expected {packageToVerify.Package.Hash}, got {currentHash}");
+            }
 
             packageToVerify.IsQueuedForVerify = false;
 

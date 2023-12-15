@@ -67,12 +67,15 @@ class TetrifactServer(BaseHTTPRequestHandler):
         if not os.path.isfile(filePath):
             self.send_response(404)
             self.send_header('Content-type','text/html')
+            self.send_header('Content-Length', f'{file_stats.st_size}')
             self.end_headers()
             self.wfile.write(f'file {id} not found'.encode())
             return
 
+        file_stats = os.stat(filePath)
         self.send_response(200)
         self.send_header('Content-type','text/json')
+        self.send_header('Content-Length', f'{file_stats.st_size}')
         self.end_headers()
 
         response = { }
