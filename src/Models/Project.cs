@@ -40,7 +40,8 @@ namespace TetrifactClient
         private IEnumerable<LocalPackage> _rawPackages = new List<LocalPackage>();
         private IList<string> _removeQueue = new List<string>();
         private IList<LocalPackage> _addQueue = new List<LocalPackage>();
-
+        private ConnectionQuality _connectionQuality;
+        private double _connectionSpeed;
         #endregion
 
         #region PROPERTIES
@@ -314,12 +315,26 @@ namespace TetrifactClient
         /// Not persisted, must be calculated on the fly.
         /// </summary>
         [JsonIgnore]
-        public ConnectionQuality ConnectionQuality { get; set; }
+        public ConnectionQuality ConnectionQuality
+        {
+            get => _connectionQuality;
+            set
+            {
+                _connectionQuality = value;
+                OnPropertyChanged(nameof(ConnectionQuality));
+            }
+        }
 
         [JsonIgnore]
-        public double ConnectionSpeed { get; set; }
-
-        
+        public double ConnectionSpeed
+        {
+            get => _connectionSpeed;
+            set
+            {
+                _connectionSpeed = value;
+                OnPropertyChanged(nameof(ConnectionSpeed));
+            }
+        }
 
         #endregion
 

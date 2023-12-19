@@ -29,7 +29,7 @@ class TetrifactServer(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
 
-        self.wfile.write('tetrifact server')
+        self.wfile.write(bytes('tetrifact server', 'utf8'))
 
     def do_packages(self):
         self.send_response(200)
