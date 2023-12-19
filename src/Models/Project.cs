@@ -310,6 +310,17 @@ namespace TetrifactClient
             }
         }
 
+        /// <summary>
+        /// Not persisted, must be calculated on the fly.
+        /// </summary>
+        [JsonIgnore]
+        public ConnectionQuality ConnectionQuality { get; set; }
+
+        [JsonIgnore]
+        public double ConnectionSpeed { get; set; }
+
+        
+
         #endregion
 
         #region CTORS
@@ -324,6 +335,7 @@ namespace TetrifactClient
             this.IgnoreTags = new string[0];
             this.PackageSyncCount = 3;
             this.CurrentStatus = string.Empty;
+            this.ConnectionQuality = ConnectionQuality.Untested;
         }
 
         #endregion
@@ -481,8 +493,6 @@ namespace TetrifactClient
             for (int i = 0; i < this.Packages.Count; i++) 
                 this.Packages[i].EnableAutoSave();
 
-            //tempPackages = tempPackages.OrderByDescending(p => p.Package.CreatedUtc);
-            //project.Packages = new ObservableCollection<LocalPackage> (tempPackages);
             System.Diagnostics.Debug.WriteLine($"PopulatePackageList:{DateTime.Now.Second}:{this.Packages.Count}");
         }
 

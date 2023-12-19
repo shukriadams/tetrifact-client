@@ -224,7 +224,7 @@ namespace TetrifactClient
 
         private void OnFocusPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string focusPackageId = txtFocusPackage.Text;
+            string focusPackageId = txtFocusPackage.Text.Trim();
             if (string.IsNullOrEmpty(focusPackageId))
                 return;
 
@@ -233,6 +233,9 @@ namespace TetrifactClient
                 return;
 
             LocalPackage focusedPackage = project.Packages.FirstOrDefault(p => p.Package.Id == focusPackageId);
+            if (focusedPackage == null)
+                focusedPackage = project.Packages.FirstOrDefault(p => p.Package.Id.ToLower().Contains(focusPackageId.ToLower()));
+
             if (focusedPackage == null) 
                 return;
 

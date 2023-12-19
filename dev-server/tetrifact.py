@@ -13,21 +13,23 @@ class TetrifactServer(BaseHTTPRequestHandler):
             self.do_packages()
         elif self.path.startswith('/v1/packages/'):
             packageid = regex.search(r'\/v1\/packages\/(.*)', self.path).group(1)
-            print(self.path)
-            print(packageid)
             self.do_package(packageid)
         elif self.path.startswith('/v1/files/'):
             fileid = regex.search(r'\/v1\/files\/(.*)', self.path).group(1)
-            print(self.path)
-            print(fileid)
             self.do_file(fileid)
         elif self.path.startswith('/v1/archives/'):
             archiveid = regex.search(r'\/v1\/archives\/(.*)', self.path).group(1)
-            print(self.path)
-            print(archiveid)
             self.do_archive(archiveid)
+        elif self.path == '/' or self.path == '':
+            self.do_root()
         else:
             self.do_unhandled()
+    def do_root(self):
+        self.send_response(200)
+        self.send_header('Content-type','text/html')
+        self.end_headers()
+
+        self.wfile.write('tetrifact server')
 
     def do_packages(self):
         self.send_response(200)

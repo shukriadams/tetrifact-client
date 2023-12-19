@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using TetrifactClient.Daemons;
 using Unity;
 
 namespace TetrifactClient;
@@ -45,6 +46,7 @@ public partial class App : Application
         UnityContainer.RegisterType<ProjectLocalStateDaemon, ProjectLocalStateDaemon>();
         UnityContainer.RegisterType<PackageReturnToAvailablePoolDaemon, PackageReturnToAvailablePoolDaemon>();
         UnityContainer.RegisterType<PackageVerifyDaemon, PackageVerifyDaemon>();
+        UnityContainer.RegisterType<ConnectionQualityDaemon, ConnectionQualityDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()

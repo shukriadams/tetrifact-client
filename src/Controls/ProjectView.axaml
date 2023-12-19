@@ -20,6 +20,7 @@
 				<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Label Classes="header1" Content="Project : " />
 					<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
+					<TextBlock Text="{Binding ConnectionQuality}" />
 				</StackPanel>
 				<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
 					<Button Click="ProjectEdit_Click">
@@ -30,9 +31,7 @@
 					</Button>
 				</StackPanel>
 			</Grid>
-
-
-
+			
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
 				<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
 				<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
@@ -50,7 +49,7 @@
 			</Panel>
 
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-				<TextBox Name="txtFocusPackage" />
+				<TextBox Width="200" Name="txtFocusPackage" />
 				<Button Name="btnFocusPackage" Click="OnFocusPackage">Find</Button>
 			</StackPanel>
 
