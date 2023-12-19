@@ -12,7 +12,7 @@
 	<DockPanel>
 		<DockPanel Name="noProjectContent">
 			<TextBlock>
-				No project. Create one.
+				Create a project.
 			</TextBlock>
 		</DockPanel>
 		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True">
@@ -31,6 +31,8 @@
 				</StackPanel>
 			</Grid>
 
+
+
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
 				<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
 				<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
@@ -46,7 +48,12 @@
 			<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">
 				<TextBlock Classes="warning" Text="{Binding ServerErrorDescription}">[ERROR PLACEHOLDER TEXT]</TextBlock>
 			</Panel>
-		
+
+			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+				<TextBox Name="txtFocusPackage" />
+				<Button Name="btnFocusPackage" Click="OnFocusPackage">Find</Button>
+			</StackPanel>
+
 			<DataGrid
 				ItemsSource="{Binding Packages}"
 				Classes="grid flow-vertical"

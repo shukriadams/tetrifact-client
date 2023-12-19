@@ -143,7 +143,6 @@ namespace TetrifactClient
 
             List<PackageFile> copyFails = new List<PackageFile>();
 
-
             if (_packageDiff != null && _donorPackage != null) 
             {
                 string donorBuildPath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _donorPackage);
@@ -192,11 +191,9 @@ namespace TetrifactClient
                     };
             }
 
-
-
-
             // write state to package
             _package.TransferState = PackageTransferStates.Downloaded;
+
             // todo : log more info about transfer time etc?
 
             return new PackageTransferResponse {

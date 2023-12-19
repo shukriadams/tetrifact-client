@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,8 +46,13 @@ namespace TetrifactClient
                 txtNoBuildsAvailable.IsVisible = !datacontext.Packages.Any();
             }
 
-            projectContent.IsVisible = this.DataContext != null;
-            noProjectContent.IsVisible = this.DataContext == null;
+            bool hasContext = this.DataContext != null;
+            
+            // do not commit
+            hasContext = true;
+
+            projectContent.IsVisible = hasContext;
+            noProjectContent.IsVisible = !hasContext;
         }
 
         private void gridChanged(object? sender, System.EventArgs e) 
@@ -215,6 +222,22 @@ namespace TetrifactClient
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
 
+        private void OnFocusPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            string focusPackageId = txtFocusPackage.Text;
+            if (string.IsNullOrEmpty(focusPackageId))
+                return;
 
+            Project project = gridPackages.DataContext as Project;
+            if (project == null)
+                return;
+
+            LocalPackage focusedPackage = project.Packages.FirstOrDefault(p => p.Package.Id == focusPackageId);
+            if (focusedPackage == null) 
+                return;
+
+            gridPackages.SelectedItem = focusedPackage;
+            gridPackages.ScrollIntoView(gridPackages.SelectedItem, null);
+        }
     }
 }
