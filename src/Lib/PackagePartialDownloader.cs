@@ -50,7 +50,7 @@ namespace TetrifactClient
         {
             string finalPackagePath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _package);
 
-            IEnumerable<PackageFile> filesToDownload = new PackageFile[0];
+            IList<PackageFile> filesToDownload = new PackageFile[0];
             int countall = 0;
 
             if (_packageDiff != null)
@@ -66,8 +66,57 @@ namespace TetrifactClient
                 if (jsonLoadResponse.Payload == null)
                     throw new Exception($"Failed to load full Package {_package.Package.Id} in project {_project.Name}, error {jsonLoadResponse.ErrorType}.", jsonLoadResponse.Exception);
 
-                filesToDownload = jsonLoadResponse.Payload;
+                filesToDownload = jsonLoadResponse.Payload.ToList();
                 countall = filesToDownload.Count();
+            }
+
+            // copy local files from donor build
+            int copiedCount = 0;
+
+            List<PackageFile> copyFails = new List<PackageFile>();
+
+            if (_packageDiff != null && _donorPackage != null)
+            {
+                string donorBuildPath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _donorPackage);
+
+                // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
+                PackageTransferResponse copyErrorResponse = null;
+                Parallel.ForEach(_packageDiff.Common.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = GlobalDataContext.Instance.ThreadLoad }, existingFile => {
+
+                    if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
+                        return;
+
+                    _package.DownloadProgress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}% ({copiedCount}/{countall})";
+
+                    string newFilePath = Path.Combine(finalPackagePath, existingFile.Path);
+                    if (newFilePath.Length > Constants.MAX_PATH_LENGTH)
+                        copyErrorResponse = new PackageTransferResponse
+                        {
+                            Result = PackageTransferResultTypes.FilePathTooLong,
+                            Message = $"Path {newFilePath}"
+                        };
+
+                    FileSystemHelper.CreateDirectory(Path.GetDirectoryName(newFilePath));
+
+                    string donorFilePath = Path.Combine(donorBuildPath, existingFile.Path);
+
+                    // check and copy file, if that returns false, copy failed, we need to directly download file
+                    bool fileCopied = VerifyAndCopyFile(donorFilePath, newFilePath, existingFile.Hash, _package.Package.Id);
+
+                    if (!fileCopied)
+                    {
+                        filesToDownload.Add(existingFile);
+                    }
+
+                    copiedCount++; // Include failed files
+                });
+
+                if (copyFails.Any())
+                    return new PackageTransferResponse
+                    {
+                        Result = PackageTransferResultTypes.LocalCopyFail,
+                        Message = $"Files : {string.Join(", ", copyFails)}"
+                    };
             }
 
             // Download new files
@@ -138,58 +187,7 @@ namespace TetrifactClient
                     return downloadErrorResponse;
             }
 
-            // copy local files from donor build
-            int copiedCount = 0;
 
-            List<PackageFile> copyFails = new List<PackageFile>();
-
-            if (_packageDiff != null && _donorPackage != null) 
-            {
-                string donorBuildPath = PathHelper.GetPackageContentDirectoryPath(_dataContext, _project, _donorPackage);
-
-                // MaxDegreeOfParallellism needs tweaking to find optimum without overloading disk
-                PackageTransferResponse copyErrorResponse = null;
-                Parallel.ForEach(_packageDiff.Common.Select(fn => fn), new ParallelOptions { MaxDegreeOfParallelism = GlobalDataContext.Instance.ThreadLoad }, existingFile => {
-
-                    if (_package.TransferState == PackageTransferStates.UserCancellingDownload)
-                        return;
-
-                    _package.DownloadProgress.Message = $"Copying {MathHelper.Percent(copiedCount, countall)}% ({copiedCount}/{countall})";
-
-                    string newFilePath = Path.Combine(finalPackagePath, existingFile.Path);
-                    if (newFilePath.Length > Constants.MAX_PATH_LENGTH)
-                        copyErrorResponse = new PackageTransferResponse
-                        {
-                            Result = PackageTransferResultTypes.FilePathTooLong,
-                            Message = $"Path {newFilePath}"
-                        };
-
-                    FileSystemHelper.CreateDirectory(Path.GetDirectoryName(newFilePath));
-
-                    string donorFilePath = Path.Combine(donorBuildPath, existingFile.Path);
-
-                    // check and copy file, if that returns false, copy failed, we need to directly download file
-                    bool fileCopied = VerifyAndCopyFile(donorFilePath, newFilePath, existingFile.Hash, _package.Package.Id);
-
-                    if (!fileCopied)
-                    {
-                        lock (copyFails)
-                        {
-                            copyFails.Add(existingFile);
-                        }
-                        _log.LogDebug($"Error copying local file {copiedCount} of {countall}, {existingFile.Path}");
-                    }
-
-                    copiedCount++; // Include failed files
-                });
-
-                if (copyFails.Any())
-                    return new PackageTransferResponse
-                    {
-                        Result = PackageTransferResultTypes.LocalCopyFail,
-                        Message = $"Files : {string.Join(", ", copyFails)}"
-                    };
-            }
 
             // write state to package
             _package.TransferState = PackageTransferStates.Downloaded;

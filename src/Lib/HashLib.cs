@@ -64,9 +64,10 @@ namespace TetrifactClient
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
-        public static IEnumerable<PackageFile> SortFileArrayForHashing(IEnumerable<PackageFile> files)
+        public static string[] SortFileArrayForHashing(string[] files)
         {
-            return files.OrderBy(f => f.Path).ToList();
+            Array.Sort(files.ToArray(), (x, y) => String.Compare(x, y));
+            return files;
         }
     }
 }

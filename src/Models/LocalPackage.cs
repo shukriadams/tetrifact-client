@@ -53,6 +53,7 @@ namespace TetrifactClient
             }
         }
 
+        [JsonIgnore]
         public bool IsQueuedForVerify 
         {
             get => _isQueuedForVerify;
