@@ -20,7 +20,9 @@
 				<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Label Classes="header1" Content="Project : " />
 					<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
-					<TextBlock Text="{Binding ConnectionQuality}" />
+					<StackPanel Orientation="Horizontal">
+						<Panel Width="20" Height="20" Margin="10,0,10,10" ToolTip.Tip="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToTooltipString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}"/>
+					</StackPanel>
 				</StackPanel>
 				<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
 					<Button Click="ProjectEdit_Click">
