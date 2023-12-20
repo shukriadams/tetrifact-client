@@ -133,9 +133,10 @@
 	<Style Selector="Border.tag">
 		<Setter Property="Background" Value="Gainsboro"/>
 		<Setter Property="BorderBrush" Value="Gray"/>
-		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="CornerRadius" Value="3"/>
 		<Setter Property="Padding" Value="12,2,6,2"/>
+		<Setter Property="Margin" Value="4"/>
 	</Style>
 
 	<Style Selector="Border.tag:pointerover">

@@ -34,7 +34,7 @@
 				</StackPanel>
 			</Grid>
 			
-			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top" IsVisible="False">
 				<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
 				<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
 			</StackPanel>
@@ -51,8 +51,9 @@
 			</Panel>
 
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-				<TextBox Width="200" Name="txtFocusPackage" />
-				<Button Name="btnFocusPackage" Click="OnFocusPackage">Find</Button>
+				<TextBox Width="200" Name="txtFocusPackage" KeyDown="FocusPackage_KeyDown" />
+				<Button Name="btnFocusPackage" Margin="10,0,10,0" Click="OnFocusPackage">Find</Button>
+				<TextBlock Name="lblFocusPackageFeedback" Margin="10,0,0,10" Text="" />
 			</StackPanel>
 
 			<DataGrid
@@ -93,11 +94,13 @@
 								<DataTemplate>
 									<ItemsRepeater Classes="grid" ItemsSource="{Binding Package.Tags}">
 										<ItemsRepeater.Layout>
-											<StackLayout Spacing="40" Orientation="Horizontal" />
+											<WrapLayout Orientation="Horizontal" />
 										</ItemsRepeater.Layout>
 										<ItemsRepeater.ItemTemplate>
 											<DataTemplate>
-												<TextBlock DockPanel.Dock="Left" Text="{Binding}" />
+												<Border Classes="tag">
+													<TextBlock Classes="tag" Text="{Binding}" />
+												</Border>
 											</DataTemplate>
 										</ItemsRepeater.ItemTemplate>
 									</ItemsRepeater>

@@ -222,25 +222,51 @@ namespace TetrifactClient
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
 
-        private void OnFocusPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnFocusPackage() 
         {
-            string focusPackageId = txtFocusPackage.Text.Trim();
+            lblFocusPackageFeedback.Text = string.Empty;
+
+            string focusPackageId = txtFocusPackage.Text;
             if (string.IsNullOrEmpty(focusPackageId))
+            {
+                lblFocusPackageFeedback.Text = "Required";
                 return;
+            }
+
+            focusPackageId = focusPackageId.Trim();
 
             Project project = gridPackages.DataContext as Project;
             if (project == null)
+            {
+                lblFocusPackageFeedback.Text = "No matches";
                 return;
+            }
 
             LocalPackage focusedPackage = project.Packages.FirstOrDefault(p => p.Package.Id == focusPackageId);
             if (focusedPackage == null)
                 focusedPackage = project.Packages.FirstOrDefault(p => p.Package.Id.ToLower().Contains(focusPackageId.ToLower()));
 
-            if (focusedPackage == null) 
+            // no feedback, this is unlikely
+            if (focusedPackage == null)
+            {
+                lblFocusPackageFeedback.Text = "No matches";
                 return;
+            }
 
             gridPackages.SelectedItem = focusedPackage;
             gridPackages.ScrollIntoView(gridPackages.SelectedItem, null);
+
+        }
+
+        private void OnFocusPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            this.OnFocusPackage();
+        }
+
+        private void FocusPackage_KeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
+        {
+            if (e.Key == Avalonia.Input.Key.Enter)
+                this.OnFocusPackage();
         }
     }
 }
