@@ -19,6 +19,7 @@ namespace TetrifactClient
         private static GlobalDataContext _thisInstance;
         private string caption = "some text";
         private Project _focusedProject;
+        private string _projectsRootDirectory;
 
         #endregion
 
@@ -74,7 +75,11 @@ namespace TetrifactClient
 
         public int ThreadLoad { get; set; }
 
-        public string ProjectsRootDirectory { get; set; }
+        public string ProjectsRootDirectory
+        {
+            get => _projectsRootDirectory;
+            set => this.RaiseAndSetIfChanged(ref _projectsRootDirectory, value);
+        }
 
         #endregion
 

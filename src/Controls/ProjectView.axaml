@@ -10,12 +10,12 @@
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:Project">
 	<DockPanel>
-		<DockPanel Name="noProjectContent">
+		<DockPanel Name="noProjectContent" DockPanel.Dock="Top">
 			<TextBlock>
-				Create a project.
+				No projects found.
 			</TextBlock>
 		</DockPanel>
-		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True">
+		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True" DockPanel.Dock="Top">
 			<Grid DockPanel.Dock="Top">
 				<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Label Classes="header1" Content="Project : " />

@@ -9,6 +9,8 @@ public partial class MainWindow : Window
     
     private ConsoleWindow _consoleWindow;
 
+    private SettingsForm _settingsWindow;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -26,5 +28,19 @@ public partial class MainWindow : Window
         _consoleWindow = new ConsoleWindow();
         _consoleWindow.DataContext = GlobalDataContext.Instance.Console;
         _consoleWindow.Show();
+    }
+
+    private void On_Settings_Open(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+    {
+        if (_settingsWindow != null)
+        {
+            _settingsWindow.Close();
+            _settingsWindow = null;
+        }
+
+        _settingsWindow = new SettingsForm();
+        _settingsWindow.DataContext = GlobalDataContext.Instance.Console;
+        _settingsWindow.CenterOn(MainWindow.Instance);
+        _settingsWindow.ShowDialog(MainWindow.Instance);
     }
 }

@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Unity;
 
 namespace TetrifactClient
@@ -47,13 +46,13 @@ namespace TetrifactClient
                 txtNoBuildsAvailable.IsVisible = !datacontext.Packages.Any();
             }
 
-            bool hasContext = this.DataContext != null;
-            
-            // do not commit
-            hasContext = true;
-
-            projectContent.IsVisible = hasContext;
-            noProjectContent.IsVisible = !hasContext;
+            // we always want to both project + no-project content in design mode
+            if (!Design.IsDesignMode)
+            {
+                bool show = this.DataContext != null;
+                projectContent.IsVisible = show;
+                noProjectContent.IsVisible = !show;
+            }
         }
 
         private void gridChanged(object? sender, System.EventArgs e) 

@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace TetrifactClient
@@ -8,6 +11,8 @@ namespace TetrifactClient
         public SettingsForm()
         {
             InitializeComponent();
+
+            txtSavePath.Text = GlobalDataContext.Instance.ProjectsRootDirectory;
         }
 
         private void OnPathSelect(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -16,8 +21,31 @@ namespace TetrifactClient
             {
                 OpenFolderDialog dialog = new OpenFolderDialog();
                 string path = await dialog.ShowAsync(this);
-                if (!string.IsNullOrEmpty(path))
-                    GlobalDataContext.Instance.ProjectsRootDirectory = path;
+
+                Dispatcher.UIThread.Post(() => {
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        // prevent setting path to drive route
+                        if (Directory.GetParent(path) == null)
+                        {
+                            try
+                            {
+                                Alert alert = new Alert();
+                                alert.SetContent("Error", "Storage path cannot be drive root");
+                                alert.Show();
+                                return;
+                            }
+                            catch (Exception ex)
+                            {
+                                string test = ex.ToString();
+                            }
+                        }
+
+                        GlobalDataContext.Instance.ProjectsRootDirectory = path;
+                        GlobalDataContext.Save();
+                    }
+                }, DispatcherPriority.Background);
+
             });
         }
     }

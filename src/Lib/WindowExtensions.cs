@@ -18,10 +18,11 @@ namespace TetrifactClient
                 currentWindow.Height = parentWindow.Height - fitBufferMargin;
             }
 
+            if (double.IsNaN(currentWindow.Width))
+                return;
+
             int x = Convert.ToInt32(parentWindow.Position.X + (parentWindow.Width / 2) - (currentWindow.Width / 2) + (fitBufferMargin/4));
             int y = Convert.ToInt32(parentWindow.Position.Y + (parentWindow.Height / 2) - (currentWindow.Height / 2) + (fitBufferMargin / 4));
-
-
 
             currentWindow.Position = new Avalonia.PixelPoint(x, y);
         }

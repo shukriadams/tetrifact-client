@@ -24,6 +24,7 @@
 			<Border Padding="10">
 				<Button Name="btnOpenConsole" Click="On_Console_Open" DockPanel.Dock="Bottom">Console</Button>
 			</Border>
+			<Button Click="On_Settings_Open" DockPanel.Dock="Bottom">Settings</Button>
 		</DockPanel>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left">

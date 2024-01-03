@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TetrifactClient": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ForceShowProjectView": "true"
+      }
+    }
+  }
+}
