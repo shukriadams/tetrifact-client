@@ -80,7 +80,7 @@
 							<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
 							<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
 							<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
-							<MenuItem Header="Copy id" Name="mnuCopyId" />
+							<MenuItem Header="Copy package id" Name="mnuCopyId" Click="OnCopyPackageId" />
 							<MenuItem Header="Advanced" Name="mnuAdvanced" />
 							<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
 						</ContextMenu>

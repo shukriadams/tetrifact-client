@@ -1,10 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Input.Platform;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity;
 
 namespace TetrifactClient
@@ -154,6 +155,18 @@ namespace TetrifactClient
                 return;
 
             selectedPackage.Keep = true;
+        }
+
+        private async void OnCopyPackageId(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            LocalPackage selectedPackage = gridPackages.SelectedItem as LocalPackage;
+            if (selectedPackage == null)
+                return;
+
+            IClipboard clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            DataObject dataObject = new DataObject();
+            dataObject.Set(DataFormats.Text, selectedPackage.Package.Id);
+            await clipboard.SetDataObjectAsync(dataObject);
         }
 
         private void OnUnkeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

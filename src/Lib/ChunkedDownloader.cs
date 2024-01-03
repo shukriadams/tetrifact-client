@@ -26,8 +26,6 @@ namespace TetrifactClient
 
         public event OnPersistantProcessError OnError;
 
-        public int RetryAttempts { get; set; }
-
         private ILog _log;
 
         #endregion
@@ -145,7 +143,8 @@ namespace TetrifactClient
                     webClient.Timeout = GlobalDataContext.Instance.Timeout;
                     webClient.Range = new Range { Start = range.Start, End = range.End };
 
-                    byte[] data = webClient.DownloadBytes(url, this.RetryAttempts); 
+                    int retries = 10;
+                    byte[] data = webClient.DownloadBytes(url, retries); 
                     string tempFilePath1 = Path.Combine(tempDirectory, $"{Guid.NewGuid()}.chunk");
                     string tempFilePath2 = Path.Combine(tempDirectory, $"{range.Index}.chunk");
 
