@@ -39,8 +39,11 @@
 				<TextBox Name="txtServer" Text="{Binding Project.TetrifactServerAddress}"></TextBox>
 			</StackPanel>
 
-
-
+			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+				<Label>Executable name</Label>
+				<TextBox Name="txtExecutableName" Text="{Binding Project.ApplicationExecutableName}"></TextBox>
+			</StackPanel>
+			
 			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 				<Label>Description (optional)</Label>
 				<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>

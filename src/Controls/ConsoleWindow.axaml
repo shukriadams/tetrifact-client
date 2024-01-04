@@ -9,10 +9,15 @@
 		Title="Console">
 	<DockPanel>
 		<TextBlock DockPanel.Dock="Top" Text="Console" Classes="header1" />
-		<ListBox DockPanel.Dock="Top" Name="listProjects" ItemsSource="{Binding Items}">
+		<ListBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="listProjects" ItemsSource="{Binding Items}">
+			<ListBox.ContextMenu>
+				<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
+					<MenuItem Header="Copy" Name="mnuDownload" Click="OnCopyConsoleItem" />
+				</ContextMenu>
+			</ListBox.ContextMenu>
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding}" TextWrapping="Wrap" />
+					<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Text="{Binding}" TextWrapping="Wrap" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>

@@ -74,6 +74,7 @@ namespace TetrifactClient
                 context.Project.TetrifactServerAddress = txtServer.Text;
                 context.Project.IgnoreTags = blockedTagsList.Tags;
                 context.Project.RequiredTags= requiredTagsList.Tags;
+                context.Project.ApplicationExecutableName = txtExecutableName.Text;
             }
 
             if (string.IsNullOrEmpty(context.Project.Name))
