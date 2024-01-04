@@ -1,6 +1,7 @@
 ﻿using Avalonia.Threading;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 
 namespace TetrifactClient
@@ -29,8 +30,8 @@ namespace TetrifactClient
             {
                 ProcessStartInfo gameProcessStartInfo = new ProcessStartInfo
                 {
-                    FileName = project.ApplicationExecutableName,
-                    WorkingDirectory = PathHelper.GetPackageContentDirectoryPath(context, project, package)
+                    FileName = Path.Combine(PathHelper.ToUnixPath(PathHelper.GetPackageContentDirectoryPath(context, project, package)), project.ApplicationExecutableName),
+                    WorkingDirectory = PathHelper.ToUnixPath(PathHelper.GetPackageContentDirectoryPath(context, project, package))
                 };
 
                 Process process = new Process

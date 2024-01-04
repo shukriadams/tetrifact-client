@@ -193,19 +193,7 @@ namespace TetrifactClient
             selectedProject.CancelQueueState();
         }
 
-        private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            Project context = this.DataContext as Project;
 
-            Prompt prompt = new Prompt();
-            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Name}?", "Cancel", "Delete");
-            prompt.Height = 300;
-            prompt.Width = 400;
-            prompt.Classes.Add("delete");
-            prompt.ShowDialog(MainWindow.Instance);
-            prompt.CenterOn(MainWindow.Instance);
-            prompt.OnAccept += this.OnDeleteAccept;
-        }
 
         private void OnDownloadClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
@@ -227,12 +215,7 @@ namespace TetrifactClient
             selectedProject.TransferState = PackageTransferStates.UserMarkedForDelete;
         }
 
-        private void OnDeleteAccept() 
-        {
-            GlobalDataContext.Instance.Projects.Projects.Remove(GlobalDataContext.Instance.FocusedProject);
-            GlobalDataContext.Save();
-            GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
-        }
+
 
         private void OnFocusPackage() 
         {

@@ -12,7 +12,7 @@
 	<DockPanel>
 		<DockPanel Name="noProjectContent" DockPanel.Dock="Top">
 			<TextBlock>
-				No projects found.
+				No projects found. 
 			</TextBlock>
 		</DockPanel>
 		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True" DockPanel.Dock="Top">
@@ -23,21 +23,18 @@
 					<StackPanel Orientation="Horizontal">
 						<Panel Width="20" Height="20" Margin="10,0,10,10" ToolTip.Tip="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToTooltipString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}"/>
 					</StackPanel>
-				</StackPanel>
-				<StackPanel  Orientation="Horizontal" Classes="flow-vertical" HorizontalAlignment="Right">
-					<Button Click="ProjectEdit_Click">
-						<Image Classes="icon" Source="/Assets/Images/Settings.png" />
-					</Button>
-					<Button Classes="warning" Click="ProjectDelete_Click">
-						<Image Classes="icon" Source="/Assets/Images/Trash.png" />
-					</Button>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+						<Button Click="ProjectEdit_Click">
+							<Image Classes="icon" Source="/Assets/Images/Settings.png" />
+						</Button>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" DockPanel.Dock="Top" IsVisible="False">
+						<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
+						<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
+					</StackPanel>
 				</StackPanel>
 			</Grid>
-			
-			<StackPanel Orientation="Horizontal" DockPanel.Dock="Top" IsVisible="False">
-				<TextBlock Foreground="DarkGray" Text="{Binding CurrentStatus}">[STATUS PLACEHOLDER]</TextBlock>
-				<TextBlock Foreground="Gray" Text="{Binding CurrentStatusDate}">[STATUS PLACEHOLDER]</TextBlock>
-			</StackPanel>
+
 
 			<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
 				<Label Content="Description : " />

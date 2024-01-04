@@ -16,16 +16,19 @@
 	
 	<DockPanel LastChildFill="True">
 
-		<DockPanel Classes="appLayout" DockPanel.Dock="Left" Width="200" Background="#4F4557">
-			<local:ProjectsList DockPanel.Dock="Top" DataContext="{Binding Projects}" />
-		</DockPanel>
-
-		<DockPanel Classes="appLayout" DockPanel.Dock="Right" Width="200">
-			<Border Padding="10">
-				<Button Name="btnOpenConsole" Click="On_Console_Open" DockPanel.Dock="Bottom">Console</Button>
+		<Grid Classes="appLayout" DockPanel.Dock="Left" Width="200" Background="#4F4557">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<local:ProjectsList Grid.Row="0" DataContext="{Binding Projects}" />
+			<Border Grid.Row="1" Padding="10">
+				<StackPanel Grid.Row="1" Orientation="Horizontal" Classes="appLayout">
+					<Button Name="btnOpenConsole" Click="On_Console_Open">Console</Button>
+					<Button Click="On_Settings_Open">Settings</Button>
+				</StackPanel>
 			</Border>
-			<Button Click="On_Settings_Open" DockPanel.Dock="Bottom">Settings</Button>
-		</DockPanel>
+		</Grid>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
 			<Border Padding="10">

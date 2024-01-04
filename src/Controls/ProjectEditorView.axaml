@@ -18,6 +18,10 @@
 				<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 			</Panel>
 
+			<Button Name="btnDeleteProject" DockPanel.Dock="Top" Classes="warning" Click="ProjectDelete_Click">
+				<Image Classes="icon" Source="/Assets/Images/Trash.png" />
+			</Button>
+
 			<StackPanel Name="panelFromTemplate" DockPanel.Dock="Top" Classes="flow-vertical">
 				<Label Content="From Template" />
 				<ComboBox Name="cmbTemplateSource" ItemsSource="{Binding ProjectTemplates.Projects}" SelectedIndex="0" SelectionChanged="OnTemplateSourceChanged">

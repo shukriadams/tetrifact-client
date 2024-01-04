@@ -12,12 +12,14 @@
 		Classes="dialog">
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label Content="Save Path" />
+			<Label Classes="header1 flow-vertical">Settings</Label>
+			<Label Content="Downloads Root Directory" />
 			<Grid DockPanel.Dock="Top">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"></ColumnDefinition>
 					<ColumnDefinition Width="30"></ColumnDefinition>
 				</Grid.ColumnDefinitions>
+
 				<TextBox Name="txtSavePath" Text="{Binding ProjectsRootDirectory}" />
 				<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
 			</Grid>

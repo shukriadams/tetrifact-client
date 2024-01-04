@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace TetrifactClient
 {
@@ -9,6 +10,11 @@ namespace TetrifactClient
             path1 = path1.Replace("\\", "/");
             path2 = path2.Replace("\\", "/");
             return Path.Combine(path1, path2);
+        }
+
+        public static string ToUnixPath(string path) 
+        {
+            return path.Replace("\\", "/");
         }
 
         public static string GetLogsDirectory(GlobalDataContext context) 
