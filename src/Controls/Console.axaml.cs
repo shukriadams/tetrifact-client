@@ -4,9 +4,9 @@ using Avalonia.Input;
 
 namespace TetrifactClient.Controls
 {
-    public partial class ConsoleWindow : Window
+    public partial class Console : Window
     {
-        public ConsoleWindow()
+        public Console()
         {
             InitializeComponent();
         }

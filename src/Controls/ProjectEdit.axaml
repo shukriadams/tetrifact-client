@@ -7,7 +7,7 @@
 		d:DesignWidth="600" 
 		d:DesignHeight="850"
 		x:DataType="vm:ProjectEditorViewModel"
-		x:Class="TetrifactClient.ProjectEditorView"
+		x:Class="TetrifactClient.Controls.ProjectEdit"
 		Classes="dialog"
     	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">

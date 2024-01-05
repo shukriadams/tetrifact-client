@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using TetrifactClient.Daemons;
+using TetrifactClient.Controls;
 using Unity;
 
 namespace TetrifactClient;
@@ -34,7 +34,7 @@ public partial class App : Application
             return;
 
         UnityContainer = new UnityContainer();
-        UnityContainer.RegisterType<ProjectEditorView, ProjectEditorView>();
+        UnityContainer.RegisterType<ProjectEdit, ProjectEdit>();
         UnityContainer.RegisterType<ILog, Log>();
         UnityContainer.RegisterType<ProjectCurrentStatusDaemon, ProjectCurrentStatusDaemon>();
         UnityContainer.RegisterType<PackageRemoteListDaemon, PackageRemoteListDaemon>();

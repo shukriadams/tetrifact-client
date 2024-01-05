@@ -2,11 +2,11 @@ using Avalonia.Controls;
 using System;
 using System.Linq;
 
-namespace TetrifactClient
+namespace TetrifactClient.Controls
 {
-    public partial class ProjectEditorView : Window
+    public partial class ProjectEdit : Window
     {
-        public ProjectEditorView()
+        public ProjectEdit()
         {
             this.DataContextChanged += This_DataContextChanged;
             InitializeComponent();

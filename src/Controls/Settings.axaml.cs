@@ -4,11 +4,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace TetrifactClient
+namespace TetrifactClient.Controls
 {
-    public partial class SettingsForm : Window
+    public partial class Settings : Window
     {
-        public SettingsForm()
+        public Settings()
         {
             InitializeComponent();
 

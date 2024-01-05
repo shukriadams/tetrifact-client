@@ -1,7 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Rendering.Composition;
-using System;
 
 namespace TetrifactClient
 {

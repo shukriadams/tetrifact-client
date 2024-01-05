@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using System.Collections.Specialized;
 using System.Linq;
 using Unity;
+using TetrifactClient.Controls;
 
 namespace TetrifactClient
 {
@@ -22,7 +23,7 @@ namespace TetrifactClient
 
         public void OnNewProject(object? sender, RoutedEventArgs args)
         {
-            ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
+            ProjectEdit editor = App.UnityContainer.Resolve<ProjectEdit>();
             editor.SetContext(new Project { 
                 AutoDownload = true,
                 PackageSyncCount = 3

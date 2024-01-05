@@ -1,19 +1,13 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 
 namespace TetrifactClient
 {
     public class PackageVerifyDaemon : IDaemon
     {
-        private string _currentlyVerifying;
-
         public void Start()
         {
             DaemonProcessRunner runner = new DaemonProcessRunner();

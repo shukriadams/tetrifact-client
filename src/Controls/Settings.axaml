@@ -5,7 +5,7 @@
         mc:Ignorable="d"
 		d:DesignWidth="400"
 		d:DesignHeight="250"
-        x:Class="TetrifactClient.SettingsForm"
+        x:Class="TetrifactClient.Controls.Settings"
 		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:GlobalDataContext"		

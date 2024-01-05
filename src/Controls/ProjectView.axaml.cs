@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using TetrifactClient.Controls;
 using Unity;
 
 namespace TetrifactClient
@@ -179,7 +180,7 @@ namespace TetrifactClient
 
         private void ProjectEdit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
         {
-            ProjectEditorView editor = App.UnityContainer.Resolve<ProjectEditorView>();
+            ProjectEdit editor = App.UnityContainer.Resolve<ProjectEdit>();
             editor.SetContext(gridPackages.DataContext as Project);
             editor.ShowDialog(MainWindow.Instance);
         }
