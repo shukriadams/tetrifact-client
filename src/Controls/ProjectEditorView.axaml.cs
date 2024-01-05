@@ -53,10 +53,10 @@ namespace TetrifactClient
 
         private void ProjectDelete_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            Project context = this.DataContext as Project;
+            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
 
             Prompt prompt = new Prompt();
-            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Name}?", "Cancel", "Delete");
+            prompt.SetContent("Delete Project", $"Are you sure you want to permanently delete the project {context.Project.Name}?", "Cancel", "Delete");
             prompt.Height = 300;
             prompt.Width = 400;
             prompt.Classes.Add("delete");
@@ -67,7 +67,9 @@ namespace TetrifactClient
         
         private void OnDeleteAccept()
         {
-            GlobalDataContext.Instance.Projects.Projects.Remove(GlobalDataContext.Instance.FocusedProject);
+            ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
+
+            GlobalDataContext.Instance.Projects.Projects.Remove(context.Project);
             GlobalDataContext.Save();
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
