@@ -10,6 +10,7 @@ namespace TetrifactClient
         {
             this.DataContextChanged += This_DataContextChanged;
             InitializeComponent();
+
         }
 
         private void This_DataContextChanged(object? sender, EventArgs e)
@@ -21,6 +22,9 @@ namespace TetrifactClient
                 requiredTagsList.SetContext(context.Project.CommonTags, context.Project.RequiredTags);
                 blockedTagsList.SetContext(context.Project.CommonTags, context.Project.IgnoreTags);
             }
+
+            if (context.Project.Id == null)
+                btnDeleteProject.IsVisible = false;
         }
 
         public void SetContext(Project project) 

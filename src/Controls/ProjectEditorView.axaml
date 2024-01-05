@@ -18,7 +18,7 @@
 				<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 			</Panel>
 
-			<Button Name="btnDeleteProject" DockPanel.Dock="Top" Classes="warning" Click="ProjectDelete_Click">
+			<Button Name="btnDeleteProject" DockPanel.Dock="Top" Classes="warning icon" Click="ProjectDelete_Click">
 				<Image Classes="icon" Source="/Assets/Images/Trash.png" />
 			</Button>
 

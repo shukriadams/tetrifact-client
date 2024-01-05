@@ -12,7 +12,7 @@
 	<DockPanel>
 		<DockPanel Name="noProjectContent" DockPanel.Dock="Top">
 			<TextBlock>
-				No projects found. 
+				No projects yet - make one first. 
 			</TextBlock>
 		</DockPanel>
 		<DockPanel Name="projectContent" Classes="projectView" LastChildFill="True" DockPanel.Dock="Top">
@@ -20,11 +20,9 @@
 				<StackPanel Classes="flow-vertical" Orientation="Horizontal" HorizontalAlignment="Left">
 					<Label Classes="header1" Content="Project : " />
 					<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
-					<StackPanel Orientation="Horizontal">
-						<Panel Width="20" Height="20" Margin="10,0,10,10" ToolTip.Tip="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToTooltipString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-						<Button Click="ProjectEdit_Click">
+					<StackPanel Margin="0,-6,0,0" Orientation="Horizontal">
+						<Panel Width="30" Height="30" Margin="10,0,10,0" ToolTip.Tip="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToTooltipString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}"/>
+						<Button Classes="icon" Click="ProjectEdit_Click">
 							<Image Classes="icon" Source="/Assets/Images/Settings.png" />
 						</Button>
 					</StackPanel>
@@ -34,7 +32,6 @@
 					</StackPanel>
 				</StackPanel>
 			</Grid>
-
 
 			<StackPanel IsVisible="{Binding Description,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}" DockPanel.Dock="Top" Classes="flow-vertical" Orientation="Horizontal">
 				<Label Content="Description : " />

@@ -24,8 +24,12 @@
 			<local:ProjectsList Grid.Row="0" DataContext="{Binding Projects}" />
 			<Border Grid.Row="1" Padding="10">
 				<StackPanel Grid.Row="1" Orientation="Horizontal" Classes="appLayout">
-					<Button Name="btnOpenConsole" Click="On_Console_Open">Console</Button>
-					<Button Click="On_Settings_Open">Settings</Button>
+					<Button Classes="icon" Name="btnOpenConsole" Click="On_Console_Open">
+						<Image Classes="icon" Source="/Assets/Images/Timeline.png" />
+					</Button>
+					<Button Classes="icon" Click="On_Settings_Open">
+						<Image Classes="icon" Source="/Assets/Images/Settings.png" />
+					</Button>
 				</StackPanel>
 			</Border>
 		</Grid>
