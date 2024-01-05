@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -13,6 +14,27 @@ namespace TetrifactClient.Controls
             InitializeComponent();
 
             txtSavePath.Text = GlobalDataContext.Instance.ProjectsRootDirectory;
+        }
+
+        private void On_View_Data_In_Explorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+        {
+            string path = GlobalDataContext.Instance.DataFolder;
+            if (!Directory.Exists(path))
+            {
+                GlobalDataContext.Instance.Console.Add($"Expected app data folder {path} does not exist.");
+            }
+
+            try
+            {
+                // note : this is windows specific, need to find a cross-os friendly version 
+                
+                Process.Start("explorer.exe", path);
+            }
+            catch (Exception ex)
+            {
+                Log log = new Log();
+                log.LogError(ex, $"Error opening path {path}");
+            }
         }
 
         private void OnPathSelect(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -48,5 +70,7 @@ namespace TetrifactClient.Controls
 
             });
         }
+
+
     }
 }

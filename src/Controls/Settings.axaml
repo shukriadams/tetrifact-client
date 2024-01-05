@@ -13,13 +13,18 @@
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 			<Label Classes="header1 flow-vertical">Settings</Label>
+			
+			<StackPanel Classes="flow-vertical" Orientation="Horizontal" DockPanel.Dock="Top">
+				<Label>View data</Label>
+				<Button Click="On_View_Data_In_Explorer">Open</Button>
+			</StackPanel>
+
 			<Label Content="Downloads Root Directory" />
 			<Grid DockPanel.Dock="Top">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"></ColumnDefinition>
 					<ColumnDefinition Width="30"></ColumnDefinition>
 				</Grid.ColumnDefinitions>
-
 				<TextBox Name="txtSavePath" Text="{Binding ProjectsRootDirectory}" />
 				<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
 			</Grid>
