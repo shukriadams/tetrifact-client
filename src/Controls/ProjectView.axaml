@@ -60,26 +60,27 @@
 				CanUserResizeColumns="True"
 				CanUserSortColumns="True"
 				GridLinesVisibility="All"
+				LoadingRow="OnLoadRow"
 				BorderThickness="1" 
 				BorderBrush="Gray">
-					<DataGrid.ContextMenu>
-						<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
-							<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
-							<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
-							<MenuItem Header="Cancel" Name="mnuCanceldownload" Click="OnCancelDownloadClick" />
-							<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
-							<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
-							<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
-							<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
-							<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
-							<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
-							<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
-							<MenuItem Header="Copy package id" Name="mnuCopyId" Click="OnCopyPackageId" />
-							<MenuItem Header="Advanced" Name="mnuAdvanced" />
-							<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
-						</ContextMenu>
-					</DataGrid.ContextMenu>
-					<DataGrid.Columns>
+				<DataGrid.ContextMenu>
+					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
+						<MenuItem Header="Download" Name="mnuDownload" Click="OnDownloadClick" />
+						<MenuItem Header="Keep" Name="mnuKeep" Click="OnKeepClick" />
+						<MenuItem Header="Cancel" Name="mnuCanceldownload" Click="OnCancelDownloadClick" />
+						<MenuItem Header="Unkeep" Name="mnuUnkeep" Click="OnUnkeepClick" />
+						<MenuItem Header="Ignore" Name="mnuIgnore" Click="OnIgnoreClick" />
+						<MenuItem Header="Unignore" Name="mnuUnignore" Click="OnUnignoreClick" />
+						<MenuItem Header="Run" Name="mnuRun" Click="OnRunPackage" />
+						<MenuItem Header="View in Explorer" Name="mnuViewInExplorer" Click="OnViewInExplorer" />
+						<MenuItem Header="Delete" Name="mnuDelete" Click="OnDeletePackage" />
+						<MenuItem Header="Verify" Name="mnuVerify" Click="OnVerifyClick" />
+						<MenuItem Header="Copy package id" Name="mnuCopyId" Click="OnCopyPackageId" />
+						<MenuItem Header="Advanced" Name="mnuAdvanced" />
+						<MenuItem Header="Tags" Name="mnuTags" Click="OnTagsClicked" />
+					</ContextMenu>
+				</DataGrid.ContextMenu>
+				<DataGrid.Columns>
 						<DataGridTextColumn Header="Id" Width="100" Binding="{Binding Package.Id}"/>
 						<DataGridTextColumn Header="Date" Width="100" Binding="{Binding Package.CreatedUtc}"/>
 						<DataGridTextColumn Header="Status" Binding="{Binding TransferState, Converter={x:Static, local:LocalPackageStatusConverter.GetState}}"/>

@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using System;
@@ -145,7 +147,6 @@ namespace TetrifactClient
             LocalPackage selectedPackage = gridPackages.SelectedItem as LocalPackage;
             if (selectedPackage == null)
                 return;
-           
         }
 
         private void OnKeepClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -194,8 +195,6 @@ namespace TetrifactClient
             selectedProject.CancelQueueState();
         }
 
-
-
         private void OnDownloadClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             LocalPackage selectedProject = gridPackages.SelectedItem as LocalPackage;
@@ -216,7 +215,14 @@ namespace TetrifactClient
             selectedProject.TransferState = PackageTransferStates.UserMarkedForDelete;
         }
 
-
+        private void OnLoadRow(object sender, DataGridRowEventArgs e) 
+        {
+            DataGridRow row = e.Row;
+            LocalPackage package = e.Row.DataContext as LocalPackage;
+            row.Bind(DataGridRow. BackgroundProperty, 
+                new Binding("TransferState", BindingMode.OneWay) { Converter = new RowSatusConverter() }, 
+                package);
+        }
 
         private void OnFocusPackage() 
         {

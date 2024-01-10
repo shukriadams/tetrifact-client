@@ -76,12 +76,14 @@ namespace TetrifactClient
             PackageDiff packageDiff = null;
             LocalPackage donorPackage = null;
 
-            if (allPackagesFromTargetServer.Any()) 
+            if (allPackagesFromTargetServer.Any())
             {
-                package.DownloadProgress.Message = "Checking local files first";
                 foreach (LocalPackage potentialDonorPackage in allPackagesFromTargetServer)
                 {
+                    package.DownloadProgress.Message = "Requesting package diff list from serve ...";
                     PackageDiffResponse diffLookup = JsonHelper.DownloadDiff(package.TetrifactServerAddress, potentialDonorPackage.Package.Id, package.Package.Id);
+                    package.DownloadProgress.Message = "Diff list received, processing ...";
+
                     if (diffLookup.ResponseType == PackageDiffResponseTypes.None) 
                     {
                         packageDiff = diffLookup.PackageDiff;

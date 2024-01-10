@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace TetrifactClient
@@ -28,20 +26,19 @@ namespace TetrifactClient
             {
                 foreach (LocalPackage package in project.Packages)
                 {
-                    string markedDirectory = Path.Join(GlobalDataContext.Instance.ProjectsRootDirectory, project.Id, package.Package.Id, "!_");
-                    if (!Directory.Exists(markedDirectory))
+                    string markedForDeleteDirectory = Path.Join(GlobalDataContext.Instance.ProjectsRootDirectory, project.Id, package.Package.Id, "!_");
+                    if (!Directory.Exists(markedForDeleteDirectory))
                         continue;
 
                     try
                     {
                         // delete stuff
-                        Directory.Delete(markedDirectory, true);
+                        Directory.Delete(markedForDeleteDirectory, true);
                     }
                     catch (Exception ex)
                     {
                         _log.LogError(ex);
                     }
-
                 }
             }
         }

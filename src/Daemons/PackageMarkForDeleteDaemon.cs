@@ -31,11 +31,11 @@ namespace TetrifactClient
 
             foreach (Project project in GlobalDataContext.Instance.Projects.Projects) 
             {
-                IList<LocalPackage> cloned = project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()).ToList();
+                IList<LocalPackage> markedForDeleteCloned = project.Packages.Where(package => package.IsMarkedForDeleteOrBeingDeleting()).ToList();
 
-                for (int i = 0; i < cloned.Count; i ++ )
+                for (int i = 0; i < markedForDeleteCloned.Count; i ++ )
                 {
-                    LocalPackage packageMarkedForDelete = cloned[i];
+                    LocalPackage packageMarkedForDelete = markedForDeleteCloned[i];
 
                     string packageDirectory = Path.Combine(context.ProjectsRootDirectory, project.Id, packageMarkedForDelete.Package.Id, "_");
                     string deletePath = Path.Combine(context.ProjectsRootDirectory, project.Id, packageMarkedForDelete.Package.Id, "!_");
@@ -56,6 +56,9 @@ namespace TetrifactClient
                     if (!Directory.Exists(packageDirectory) && !Directory.Exists(deletePath))
                     {
                         packageMarkedForDelete.TransferState = PackageTransferStates.Deleted;
+                        LocalPackage original = project.Packages.SingleOrDefault(p => p.Package.Id == packageMarkedForDelete.Package.Id);
+                        if (original != null)
+                            original.TransferState = PackageTransferStates.Deleted;
                         packageMarkedForDelete.DownloadProgress.Message = "Deleted";
                     }
                 }
