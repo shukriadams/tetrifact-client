@@ -15,6 +15,8 @@ namespace TetrifactClient.Controls
             InitializeComponent();
 
             txtSavePath.Text = GlobalDataContext.Instance.ProjectsRootDirectory;
+            string currentVersion = ResourceLoader.GetAsString("currentversion.txt");
+            lblCurrentVersion.Content = currentVersion;
         }
 
         private void On_View_Data_In_Explorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 

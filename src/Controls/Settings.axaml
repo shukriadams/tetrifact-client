@@ -19,6 +19,11 @@
 			<Label DockPanel.Dock="Top" Classes="header1 flow-vertical">Settings</Label>
 
 			<StackPanel Classes="flow-vertical" DockPanel.Dock="Top">
+				<Label>Version : </Label>
+				<Label FontWeight="Bold" Name="lblCurrentVersion">[SET IN CODE]</Label>
+			</StackPanel>
+			
+			<StackPanel Classes="flow-vertical" DockPanel.Dock="Top">
 				<Label >Log data (Explorer)</Label>
 				<Button Click="On_View_Data_In_Explorer">Open </Button>
 			</StackPanel>

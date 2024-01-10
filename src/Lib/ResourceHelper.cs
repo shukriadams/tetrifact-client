@@ -16,6 +16,18 @@ namespace TetrifactClient
             return $"{Assembly.GetExecutingAssembly().GetName().Name}.{item}";
         }
 
+        public static string GetAsString(string path) 
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream(GetFullName(path)))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+
+        }
+
         public static T DeserializeFromJson<T>(string source)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

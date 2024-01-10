@@ -19,6 +19,7 @@
   <ItemGroup>
     <None Remove="Assets\Images\delete.png" />
     <None Remove="background.jpg" />
+    <None Remove="currentversion.txt" />
     <None Remove="DarkTheme.xaml" />
     <None Remove="Templates\Projects.json" />
   </ItemGroup>
@@ -32,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="currentversion.txt" />
     <EmbeddedResource Include="Templates\Projects.json" />
   </ItemGroup>
 
