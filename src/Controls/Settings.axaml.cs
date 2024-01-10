@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
+using Avalonia.Interactivity;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -36,8 +37,13 @@ namespace TetrifactClient.Controls
                 log.LogError(ex, $"Error opening path {path}");
             }
         }
+        
+        private void OnCloseClick(object? sernder, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
-        private void OnPathSelect(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void OnPathSelect(object? sender, RoutedEventArgs e)
         {
             Task.Run(async () =>
             {

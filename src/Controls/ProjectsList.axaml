@@ -23,7 +23,6 @@
 							<Image Classes="icon" Source="/Assets/Images/Add.png" />
 						</Button>
 					</Grid>
-
 					<TextBlock
 						Classes="flow-vertical"
 						Padding="0,20,0,0"
@@ -31,9 +30,7 @@
 						Text="No projects added yet"
 						IsVisible="{Binding Projects, Converter={x:Static local:CollectionConverter.IsEmpty}}"/>
 				</Panel>
-
 			</Border>
-
 			<ListBox 
 				Classes="listProjects flow-vertical"  
 				Tapped="ProjectsList_Clicked" 
@@ -48,5 +45,4 @@
             </ListBox>
         </DockPanel>
     </Border>
-
 </UserControl>

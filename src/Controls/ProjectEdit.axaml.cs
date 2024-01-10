@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using System;
 using System.Linq;
 
@@ -78,7 +79,9 @@ namespace TetrifactClient.Controls
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
 
-        private void OnSave(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+
+
+        private void OnSave(object? sender, RoutedEventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
 
@@ -122,5 +125,7 @@ namespace TetrifactClient.Controls
             txtName.Text = projectTemplate.Name;
             txtServer.Text = projectTemplate.TetrifactServerAddress;
         }
+
+        
     }
 }

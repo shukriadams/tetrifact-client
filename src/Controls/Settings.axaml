@@ -10,24 +10,33 @@
 		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:GlobalDataContext"		
 		Classes="dialog">
-	<DockPanel>
-		<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-			<Label Classes="header1 flow-vertical">Settings</Label>
-			
-			<StackPanel Classes="flow-vertical" Orientation="Horizontal" DockPanel.Dock="Top">
-				<Label>View data</Label>
-				<Button Click="On_View_Data_In_Explorer">Open</Button>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<DockPanel Grid.Row="0">
+			<Label DockPanel.Dock="Top" Classes="header1 flow-vertical">Settings</Label>
+
+			<StackPanel Classes="flow-vertical" DockPanel.Dock="Top">
+				<Label >Log data (Explorer)</Label>
+				<Button Click="On_View_Data_In_Explorer">Open </Button>
 			</StackPanel>
 
-			<Label Content="Downloads Root Directory" />
-			<Grid DockPanel.Dock="Top">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"></ColumnDefinition>
-					<ColumnDefinition Width="30"></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-				<TextBox Name="txtSavePath" Text="{Binding ProjectsRootDirectory}" />
-				<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
-			</Grid>
-		</StackPanel>
-	</DockPanel>
+			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+				<Label Content="Downloads Root Directory" />
+				<Grid DockPanel.Dock="Top">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						<ColumnDefinition Width="30"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<TextBox Name="txtSavePath" Text="{Binding ProjectsRootDirectory}" />
+					<Button Click="OnPathSelect" Width="30" Grid.Column="1">...</Button>
+				</Grid>
+			</StackPanel>
+		</DockPanel>
+		<Panel Grid.Row="1" HorizontalAlignment="Right">
+			<Button  Click="OnCloseClick" Classes="flow-vertical">Close</Button>
+		</Panel>
+	</Grid>
 </Window>

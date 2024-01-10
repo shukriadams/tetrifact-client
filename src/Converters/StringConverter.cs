@@ -15,7 +15,5 @@ namespace TetrifactClient
             string s = (string)arg;
             return !string.IsNullOrEmpty(s);
         });
-
-        
     }
 }

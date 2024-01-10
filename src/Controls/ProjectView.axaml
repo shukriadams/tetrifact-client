@@ -61,7 +61,7 @@
 				CanUserSortColumns="True"
 				GridLinesVisibility="All"
 				LoadingRow="OnLoadRow"
-				BorderThickness="1" 
+				BorderThickness="0" 
 				BorderBrush="Gray">
 				<DataGrid.ContextMenu>
 					<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">

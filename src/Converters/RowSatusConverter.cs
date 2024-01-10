@@ -11,8 +11,9 @@ namespace TetrifactClient
 
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
+            IBrush defaultColor = Brush.Parse("#4F4557");
             if (value == null)
-                return Brush.Parse("#393646");
+                return defaultColor;
 
             PackageTransferStates transFerState = (PackageTransferStates)Enum.Parse(typeof(PackageTransferStates), value.ToString());
 
@@ -25,7 +26,7 @@ namespace TetrifactClient
             if (transFerState == PackageTransferStates.Deleting || transFerState == PackageTransferStates.AutoMarkedForDelete || transFerState == PackageTransferStates.UserMarkedForDelete)
                 return Brush.Parse("#763794");
 
-            return Brush.Parse("#393646");
+            return defaultColor;
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
