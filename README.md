@@ -2,7 +2,11 @@
 
 GUI client for tetrifact. Avalonia UI, C#.
 
-# Dev Setup
+## Build
+
+    sh ./build.sh <VERSION-NUMBER>
+
+## Dev Setup
 
 - Dotnet Core 6.0 SDK
 
@@ -10,3 +14,4 @@ GUI client for tetrifact. Avalonia UI, C#.
 
 - Avalonia for Visual Studio
 - Python 3.x 
+- NSIS
