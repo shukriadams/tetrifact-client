@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Instance = this;
+        //this.win StateChanged += MainWindow_StateChanged;
     }
 
     private void On_Console_Open(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -40,7 +41,11 @@ public partial class MainWindow : Window
 
         _settingsWindow = new Settings();
         _settingsWindow.DataContext = GlobalDataContext.Instance.Console;
-        _settingsWindow.CenterOn(MainWindow.Instance);
         _settingsWindow.ShowDialog(MainWindow.Instance);
+    }
+
+    private void On_App_Close(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
+    {
+        AppHelper.DoShutdown();
     }
 }

@@ -8,4 +8,17 @@
 		<FluentTheme />
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 	</Application.Styles>
+	<TrayIcon.Icons>
+		<TrayIcons>
+			<TrayIcon Icon="/Assets/Images/AppIcon.ico" ToolTipText="Tetrifact Tool">
+				<TrayIcon.Menu>
+					<NativeMenu>
+						<NativeMenuItem Header="Hide/Show" Click="OnMinimizeApp" />
+						<NativeMenuItemSeparator />
+						<NativeMenuItem Header="Quit" Click="OnQuitApp" />
+					</NativeMenu>
+				</TrayIcon.Menu>
+			</TrayIcon>
+		</TrayIcons>
+	</TrayIcon.Icons>
 </Application>

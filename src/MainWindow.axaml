@@ -5,6 +5,7 @@
         x:Class="TetrifactClient.MainWindow"
 		xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         mc:Ignorable="d" 
+		Icon="/Assets/Images/AppIcon.ico"
 		d:DesignWidth="800" 
 		d:DesignHeight="350"
 		xmlns:vm="using:TetrifactClient"
@@ -18,24 +19,25 @@
 
 		<Grid Classes="appLayout" DockPanel.Dock="Left" Width="200" Background="#4F4557">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
+				<RowDefinition Height="20"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<local:ProjectsList Grid.Row="0" DataContext="{Binding Projects}" />
-			<Border Grid.Row="1" Padding="10">
-				<StackPanel Grid.Row="1" Orientation="Horizontal" Classes="appLayout">
-					<Button Classes="icon" Name="btnOpenConsole" Click="On_Console_Open">
-						<Image Classes="icon" Source="/Assets/Images/Timeline.png" />
-					</Button>
-					<Button Classes="icon" Click="On_Settings_Open">
-						<Image Classes="icon" Source="/Assets/Images/Settings.png" />
-					</Button>
-				</StackPanel>
-			</Border>
+			<Button Grid.Row="0" Height="14" Margin="8,8,2,2">
+				<Image Classes="icon" Source="/Assets/Images/More.png" />
+				<Button.Flyout>
+					<MenuFlyout>
+						<MenuItem Header="Settings" Click="On_Settings_Open"/>
+						<MenuItem Header="Console" Click="On_Console_Open"/>
+						<MenuItem Header="-"/>
+						<MenuItem Header="Quit" Click="On_App_Close"/>
+					</MenuFlyout>
+				</Button.Flyout>
+			</Button>
+			<local:ProjectsList Grid.Row="1" DataContext="{Binding Projects}" />
 		</Grid>
 
 		<DockPanel Classes="appLayout" DockPanel.Dock="Left">
-			<Border Padding="10">
+			<Border Padding="6,10,6,0">
 				<local:ProjectView DockPanel.Dock="Top" DataContext="{Binding FocusedProject}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 			</Border>
 		</DockPanel>

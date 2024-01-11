@@ -19,6 +19,12 @@ namespace TetrifactClient.Controls
             lblCurrentVersion.Content = currentVersion;
         }
 
+        public new void ShowDialog(Window parent)
+        {
+            base.ShowDialog(parent);
+            this.CenterOn(parent, true);
+        }
+
         private void On_View_Data_In_Explorer(object? sender, Avalonia.Interactivity.RoutedEventArgs e) 
         {
             string path = GlobalDataContext.Instance.DataFolder;

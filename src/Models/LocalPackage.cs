@@ -254,6 +254,11 @@ namespace TetrifactClient
             this.TransferState = PackageTransferStates.UserCancellingDownload;
         }
 
+        public bool IsDeletable() 
+        {
+            return this.IsExecutable() || this.TransferState == PackageTransferStates.DownloadFailed;
+        }
+
         public bool IsMarkedForDeleteOrBeingDeleting() 
         {
             return this.TransferState == PackageTransferStates.AutoMarkedForDelete

@@ -10,7 +10,7 @@ namespace TetrifactClient
         /// </summary>
         /// <param name="currentWindow"></param>
         /// <param name="parentWindow"></param>
-        public static void CenterOn(this Window currentWindow, Window parentWindow, bool fitSize = false, int fitBufferMargin = 100)
+        public static void CenterOn(this Window currentWindow, Window parentWindow, bool fitSize = false, int fitBufferMargin = 0)
         {
             if (fitSize)
             {

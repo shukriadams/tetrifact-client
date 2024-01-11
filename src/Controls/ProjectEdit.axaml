@@ -79,7 +79,7 @@
 		</DockPanel>
 
 		<DockPanel DockPanel.Dock="Top">
-			<StackPanel DockPanel.Dock="Bottom" Classes="flow-vertical" Orientation="Horizontal">
+			<StackPanel DockPanel.Dock="Bottom" Classes="flow-vertical" HorizontalAlignment="Right" Orientation="Horizontal">
 				<Button Name="btnCancel" Click="OnCancel">Cancel</Button>
 				<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
 			</StackPanel>

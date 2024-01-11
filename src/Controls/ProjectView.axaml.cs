@@ -70,7 +70,7 @@ namespace TetrifactClient
                 return;
 
             mnuDownload.IsVisible = selectedProject.IsDownloadable();
-            mnuDelete.IsVisible = selectedProject.IsExecutable();
+            mnuDelete.IsVisible = selectedProject.IsDeletable();
             mnuIgnore.IsVisible = selectedProject.IsDownloadable() && !selectedProject.Ignore;
             mnuUnignore.IsVisible = selectedProject.IsDownloadable() && !mnuIgnore.IsVisible;
             mnuCanceldownload.IsVisible = selectedProject.IsQueuedForDownloadorDownloading();

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using System;
@@ -13,6 +14,8 @@ namespace TetrifactClient;
 
 public partial class App : Application
 {
+    private bool _stateChangingFromTrayIcon;
+
     public static IUnityContainer UnityContainer { get; private set; }
 
     public static IList<IDaemon> Daemons { get; private set; } = new List<IDaemon>();
@@ -82,5 +85,41 @@ public partial class App : Application
             daemon.Start();
             Daemons.Add(daemon);
         }
+
+        if (MainWindow.Instance != null)
+            MainWindow.Instance.SizeChanged += MainWindow_StateChanged;
+    }
+    
+    private void MainWindow_StateChanged(object sender, EventArgs e)
+    {
+        if (_stateChangingFromTrayIcon)
+            return;
+
+        // force hide the app from task bar when minimized
+        if (MainWindow.Instance.WindowState == WindowState.Minimized)
+            MainWindow.Instance.Hide();
+    }
+
+    private void OnQuitApp(object? sender, EventArgs e) 
+    {
+        AppHelper.DoShutdown();
+    }
+
+    private void OnMinimizeApp(object? sender, EventArgs e)
+    {
+        _stateChangingFromTrayIcon = true;
+
+        if (MainWindow.Instance.WindowState == WindowState.Normal)
+        {
+            MainWindow.Instance.Hide();
+            MainWindow.Instance.WindowState = WindowState.Minimized;
+        }
+        else if (MainWindow.Instance.WindowState == WindowState.Minimized)
+        {
+            MainWindow.Instance.Show();
+            MainWindow.Instance.WindowState = WindowState.Normal;
+        }
+
+        _stateChangingFromTrayIcon = false;
     }
 }
