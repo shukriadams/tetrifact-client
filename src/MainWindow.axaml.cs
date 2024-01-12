@@ -15,7 +15,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Instance = this;
-        //this.win StateChanged += MainWindow_StateChanged;
     }
 
     private void On_Console_Open(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
