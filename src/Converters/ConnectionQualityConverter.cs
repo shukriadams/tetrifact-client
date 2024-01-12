@@ -1,5 +1,6 @@
 ﻿using Avalonia.Data.Converters;
 using Avalonia.Media;
+using System;
 
 namespace TetrifactClient
 {
@@ -12,6 +13,11 @@ namespace TetrifactClient
                 quality == ConnectionQuality.Good ? Brush.Parse("Green") :
                 quality == ConnectionQuality.Degraded ? Brush.Parse("Orange") :
                 Brush.Parse("Purple");
+        });
+
+        public static readonly IValueConverter ToDisplayString = new FuncValueConverter<object?, string>((object arg) => {
+            double quality = (double)arg;
+            return $"{Math.Round(quality, 1)}ms";
         });
 
         public static readonly IValueConverter ToTooltipString = new FuncValueConverter<object?, string>((object arg) =>

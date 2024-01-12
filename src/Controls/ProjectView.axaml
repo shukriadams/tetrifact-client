@@ -21,7 +21,7 @@
 					<Label Classes="header1" Content="Project : " />
 					<TextBlock Classes="header1" Text="{Binding Name}">[NAME PLACEHOLDER]</TextBlock>
 					<StackPanel Margin="0,-6,0,0" Orientation="Horizontal">
-						<Panel Width="30" Height="30" Margin="10,0,10,0" ToolTip.Tip="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToTooltipString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}"/>
+						<Panel Width="30" Height="30" Margin="10,0,10,0" ToolTip.Tip="{Binding ConnectionSpeed, Converter={x:Static local:ConnectionQualityConverter.ToDisplayString}}" Background="{Binding ConnectionQuality, Converter={x:Static local:ConnectionQualityConverter.ToNamedColor}}" />
 						<Button Classes="icon" Click="ProjectEdit_Click">
 							<Image Classes="icon" Source="/Assets/Images/Settings.png" />
 						</Button>
