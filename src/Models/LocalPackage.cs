@@ -22,6 +22,8 @@ namespace TetrifactClient
         private Package _package;
         private string _status;
         private PackageTransferProgress _downloadProgress;
+        private bool saveset = false;
+        private bool _wasAutoDownloaded;
 
         #endregion
 
@@ -53,6 +55,22 @@ namespace TetrifactClient
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool WasAutoDownloaded
+        {
+            get => _wasAutoDownloaded;
+            set
+            {
+                _wasAutoDownloaded = value;
+                OnPropertyChanged(nameof(WasAutoDownloaded));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         [JsonIgnore]
         public bool IsQueuedForVerify 
         {
@@ -175,8 +193,6 @@ namespace TetrifactClient
 
         #region METHODS
 
-        private bool saveset = false;
-
         public void EnableAutoSave() 
         {
             if (saveset)
@@ -229,7 +245,7 @@ namespace TetrifactClient
                 || this.TransferState == PackageTransferStates.Downloaded;
         }
 
-        public bool IsDownloadedorQueuedForDownload()
+        public bool IsDownloadedOrQueuedForDownload()
         {
             return this.TransferState == PackageTransferStates.Downloaded
                 || this.TransferState == PackageTransferStates.Corrupt
@@ -256,7 +272,9 @@ namespace TetrifactClient
 
         public bool IsDeletable() 
         {
-            return this.IsExecutable() || this.TransferState == PackageTransferStates.DownloadFailed;
+            return this.IsExecutable()
+                || this.TransferState == PackageTransferStates.Corrupt
+                || this.TransferState == PackageTransferStates.DownloadFailed;
         }
 
         public bool IsMarkedForDeleteOrBeingDeleting() 
@@ -280,6 +298,13 @@ namespace TetrifactClient
                 && !this.IsDownloading;
         }
 
+        public bool IsAttemptedDownloaded() 
+        {
+            return this.TransferState == PackageTransferStates.Downloaded
+                || this.TransferState == PackageTransferStates.DownloadFailed
+                || this.TransferState == PackageTransferStates.Corrupt;
+        }
+
         public bool IsDownloaded() 
         {
             return this.TransferState == PackageTransferStates.Downloaded
@@ -288,7 +313,9 @@ namespace TetrifactClient
 
         public bool IsVerifiable() 
         {
-            return this.IsDownloaded() && !this.IsQueuedForVerify;
+            return (this.TransferState == PackageTransferStates.Downloaded
+                || this.TransferState == PackageTransferStates.Corrupt)
+                && !this.IsQueuedForVerify;
         }
 
         #endregion

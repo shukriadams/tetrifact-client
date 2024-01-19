@@ -1,6 +1,5 @@
 ﻿using DynamicData;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 namespace TetrifactClient
 {
     /// <summary>
-    /// Automatically queues packages to be downloaded. Does not
+    /// Automatically queues packages to be downloaded, and to be deleted. Does not not the actual download/delete, only queuing.  
     /// </summary>
     public class PackageDownloadAutoQueueDaemon : IDaemon
     {
@@ -41,14 +40,11 @@ namespace TetrifactClient
 
         private async Task Work()
         {
-            foreach (Project project in GlobalDataContext.Instance.Projects.Projects)
+            // no need to do anything if auto download disabled, user will mark packges for download themselves
+            foreach (Project project in GlobalDataContext.Instance.Projects.Projects.Where(p => p.AutoDownload))
             {
-                // no need to do anything if auto download disabled, user will mark packges for download themselves I guess.
-                if (!project.AutoDownload)
-                    continue;
-
                 int downloadedCount = project.Packages.Where(p => p.IsExecutable()).Count();
-                int aleadyQueued = project.Packages.Where(p => p.IsDownloadedorQueuedForDownload()).Count();
+                int aleadyQueued = project.Packages.Where(p => p.IsDownloadedOrQueuedForDownload()).Count();
                 int requiredToDownload = project.PackageSyncCount - downloadedCount - aleadyQueued;
                 int queuedCount = 0;
 
@@ -74,11 +70,11 @@ namespace TetrifactClient
                     }
                 }
 
-                // mark for delete
+                // mark older packages for delete, only if they're executable and have been autodownloaded
                 if (downloadedCount > project.PackageSyncCount) 
                 {
                     int removeCount = 0;
-                    IList<LocalPackage> cloned = project.Packages.Where(p => p.IsExecutable()).Reverse().ToList();
+                    IList<LocalPackage> cloned = project.Packages.Where(p => p.IsAttemptedDownloaded() && p.WasAutoDownloaded).Reverse().ToList();
 
                     for (int i = 0; i < cloned.Count; i ++)
                     {

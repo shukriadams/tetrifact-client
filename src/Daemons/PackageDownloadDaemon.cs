@@ -125,6 +125,9 @@ namespace TetrifactClient
 
             if (result.Succeeded)
             {
+                if (package.TransferState == PackageTransferStates.AutoMarkedForDownload)
+                    package.WasAutoDownloaded = true;
+
                 package.TransferState = PackageTransferStates.Downloaded;
                 package.DownloadProgress.Message = string.Empty;
             }

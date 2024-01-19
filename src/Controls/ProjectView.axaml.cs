@@ -257,7 +257,6 @@ namespace TetrifactClient
 
             gridPackages.SelectedItem = focusedPackage;
             gridPackages.ScrollIntoView(gridPackages.SelectedItem, null);
-
         }
 
         private void OnFocusPackage(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
