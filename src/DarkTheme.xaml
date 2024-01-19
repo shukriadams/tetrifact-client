@@ -10,13 +10,14 @@
 	-->
 
 	<Style Selector="Window">
+		<!-- Hides window top bar -->
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True"/>
+		<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>
 	</Style>
 
 	<Style Selector="Window.nobar">
-		<!-- hides all window controls -->
+		<!-- hides window close controls in corner -->
 		<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
-		<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>
 	</Style>
 
 	<Design.PreviewWith>
@@ -159,6 +160,19 @@
 	<Style Selector="Image.icon">
 		<Setter Property="Height" Value="12"/>
 		<Setter Property="Width" Value="12"/>
+	</Style>
+
+	<Style Selector="Window.console">
+		<Setter Property="Background" Value="#393646"/>
+	</Style>
+
+
+	<Style Selector="DockPanel.console > Label">
+		<Setter Property="Padding" Value="12"/>
+	</Style>
+
+	<Style Selector="DockPanel.console > ListBox">
+		<Setter Property="Background" Value="#5c5771"/>
 	</Style>
 	
 </Styles>

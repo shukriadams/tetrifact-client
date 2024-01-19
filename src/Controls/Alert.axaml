@@ -6,6 +6,7 @@
 		d:DesignWidth="400" 
 		d:DesignHeight="250"
         x:Class="TetrifactClient.Alert"
+		Classes="nobar"
         Title="Alert">
 	<DockPanel VerticalAlignment="Stretch">
 

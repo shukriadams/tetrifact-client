@@ -2,13 +2,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" 
+		d:DesignWidth="800" 
+		d:DesignHeight="450"
         x:Class="TetrifactClient.Controls.Console"
  		xmlns:vm="using:TetrifactClient"
  		x:DataType="vm:ConsoleViewModel"
+		Classes="console"
 		Title="Console">
-	<DockPanel>
-		<TextBlock DockPanel.Dock="Top" Text="Console" Classes="header1" />
+	<DockPanel Classes="console">
+ 		<Label DockPanel.Dock="Top" Content="Console" Classes="header1" />
 		<ListBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Name="listProjects" ItemsSource="{Binding Items}">
 			<ListBox.ContextMenu>
 				<ContextMenu Opening="ContextMenu_Opening" Name="gridContextMenu">
@@ -17,7 +20,7 @@
 			</ListBox.ContextMenu>
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Text="{Binding}" TextWrapping="Wrap" />
+					<TextBlock DockPanel.Dock="Top" Text="{Binding}" TextWrapping="Wrap" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
