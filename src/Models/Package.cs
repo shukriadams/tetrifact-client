@@ -25,7 +25,6 @@ namespace TetrifactClient
 
         #endregion
 
-
         #region PROPERTIES
 
         public string Id

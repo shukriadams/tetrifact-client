@@ -38,6 +38,8 @@
 				<TextBlock Text="{Binding Description}">[DESCRIPTION PLACEHOLDER]</TextBlock>
 			</StackPanel>
 
+			<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtCurrentDiskUse" Text="{Binding DiskUse}" />
+			
 			<TextBlock DockPanel.Dock="Top" Classes="flow-vertical" Name="txtNoBuildsAvailable">[NO DATA MESSAGE]</TextBlock>
 
 			<Panel DockPanel.Dock="Top" Name="serverErrorPan" Classes="flow-vertical" IsVisible="{Binding ServerErrorDescription,Converter={x:Static local:StringConverter.IsNotNullOrEmpty}}">

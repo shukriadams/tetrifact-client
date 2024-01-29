@@ -50,6 +50,7 @@ public partial class App : Application
         UnityContainer.RegisterType<PackageReturnToAvailablePoolDaemon, PackageReturnToAvailablePoolDaemon>();
         UnityContainer.RegisterType<PackageVerifyDaemon, PackageVerifyDaemon>();
         UnityContainer.RegisterType<ConnectionQualityDaemon, ConnectionQualityDaemon>();
+        UnityContainer.RegisterType<ProjectDiskUseDaemon, ProjectDiskUseDaemon>();
     }
 
     public override void OnFrameworkInitializationCompleted()

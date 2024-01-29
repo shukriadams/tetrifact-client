@@ -1,15 +1,38 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace TetrifactClient
 {
-    public partial class TagsListViewModel : ObservableObject
+    public partial class TagsListViewModel : Observable
     {
-        [ObservableProperty]
         private ObservableCollection<string> _existingTags;
 
-        [ObservableProperty]
         private ObservableCollection<string> _tags;
+
+        /// <summary>
+        /// List of possible existing tags, remains unchanged
+        /// </summary>
+        public IEnumerable<string> ExistingAll = new List<string>();
+
+        public ObservableCollection<string> ExistingTags
+        {
+            get => _existingTags;
+            set
+            {
+                _existingTags = value;
+                OnPropertyChanged(nameof(ExistingTags));
+            }
+        }
+
+        public ObservableCollection<string> Tags
+        {
+            get => _tags;
+            set
+            {
+                _tags = value;
+                OnPropertyChanged(nameof(Tags));
+            }
+        }
 
         public TagsListViewModel() 
         {

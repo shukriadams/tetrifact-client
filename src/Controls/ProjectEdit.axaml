@@ -11,9 +11,20 @@
 		Classes="dialog"
     	xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
         Title="ProjectEditorView">
-	<DockPanel>
-		<DockPanel DockPanel.Dock="Top">
-			
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<DockPanel Grid.Row="1" DockPanel.Dock="Top">
+			<StackPanel DockPanel.Dock="Bottom" Classes="flow-vertical" HorizontalAlignment="Right" Orientation="Horizontal">
+				<Button Name="btnCancel" Click="OnCancel">Cancel</Button>
+				<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
+			</StackPanel>
+		</DockPanel>
+
+		<DockPanel Grid.Row="0">
+
 			<Panel DockPanel.Dock="Top" Classes="flow-vertical">
 				<Label Name="lblFormTitle" Classes="header1">Settings for Project [NAME]</Label>
 			</Panel>
@@ -23,7 +34,7 @@
 			</Button>
 
 			<StackPanel Name="panelFromTemplate" DockPanel.Dock="Top" Classes="flow-vertical">
-				<Label Content="From Template" />
+				<Label Content="Copy from template" />
 				<ComboBox Name="cmbTemplateSource" ItemsSource="{Binding ProjectTemplates.Projects}" SelectedIndex="0" SelectionChanged="OnTemplateSourceChanged">
 					<ComboBox.ItemTemplate>
 						<DataTemplate x:DataType="vm:Project">
@@ -47,11 +58,6 @@
 				<Label>Executable name</Label>
 				<TextBox Name="txtExecutableName" Text="{Binding Project.ApplicationExecutableName}"></TextBox>
 			</StackPanel>
-			
-			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-				<Label>Description (optional)</Label>
-				<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>
-			</StackPanel>
 
 			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
 				<Label Content="Number of packages to sync" />
@@ -59,30 +65,28 @@
 			</StackPanel>
 
 			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-				<CheckBox Name="cbAutoDownload" Content="Automatically download" IsChecked="{Binding Project.AutoDownload}" />
+				<CheckBox Name="cbAutoDownload" Content="Download latest automatically" IsChecked="{Binding Project.AutoDownload}" />
+			</StackPanel>
+
+			<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
+				<Label>Description (optional)</Label>
+				<TextBox Name="txtDescription" Text="{Binding Project.Description}"></TextBox>
 			</StackPanel>
 
 			<ScrollViewer DockPanel.Dock="Top" Height="290">
 				<DockPanel>
-					<TextBlock FontWeight="Bold" DockPanel.Dock="Top">Tags</TextBlock>
 					<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-						<Label FontWeight="Bold">Required </Label>
+						<Label Classes="flow-vertical" FontWeight="Bold">Require packages to have tags:</Label>
 						<local:TagsList Name="requiredTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 					</StackPanel>
 
 					<StackPanel DockPanel.Dock="Top" Classes="flow-vertical">
-						<Label FontWeight="Bold">Ignored</Label>
+						<Label Classes="flow-vertical" FontWeight="Bold">Ignore packges with tags:</Label>
 						<local:TagsList Name="blockedTagsList" DockPanel.Dock="Top" HorizontalAlignment="Stretch" />
 					</StackPanel>
 				</DockPanel>
 			</ScrollViewer>
 		</DockPanel>
 
-		<DockPanel DockPanel.Dock="Top">
-			<StackPanel DockPanel.Dock="Bottom" Classes="flow-vertical" HorizontalAlignment="Right" Orientation="Horizontal">
-				<Button Name="btnCancel" Click="OnCancel">Cancel</Button>
-				<Button Name="btnSave" Click="OnSave" Classes="proceed">Save</Button>
-			</StackPanel>
-		</DockPanel>
-	</DockPanel>
+	</Grid>
 </Window>

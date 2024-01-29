@@ -4,7 +4,7 @@
         { "id" : "2", "path" : "/file2.txt", "hash" : "220540c2ca27e093abb0f7c15a32e002bcfc3762ed24511c9dc6334c0469fec0" }
     ],
     "sizeOnDisk": 2358437425,
-    "size": 33132020509,
+    "size": 256,
     "isCompressed": false,
     "id": "3_FunTerminal",
     "hash": "5f0755253ed7c7f32f2b7dc95ccc3a18136273645032a9322be870be7fcb6000",

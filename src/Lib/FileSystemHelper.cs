@@ -7,6 +7,12 @@ namespace TetrifactClient
 {
     public static class FileSystemHelper
     {
+        public static double BytesToMegabytes(long bytes)
+        {
+            var megs = (bytes / 1024f) / 1024f;
+            return Math.Round(megs, 0);
+        }
+
         /// <summary>
         /// Creates directory, waits until directory is available before returning. 
         //  On systems with extremely high disk IO that Directory.CreateDirectory returns before

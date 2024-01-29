@@ -3,8 +3,8 @@
         { "id" : "1", "path" : "/folder/file1.txt", "hash" : "a56c9d9d7c000206a6b29db5cdfd754645a10d5ad419c8298f7530a550dfbd87" },
         { "id" : "2", "path" : "/file2.txt", "hash" : "220540c2ca27e093abb0f7c15a32e002bcfc3762ed24511c9dc6334c0469fec0" }
     ],
-    "sizeOnDisk": 2358437425,
-    "size": 33132020509,
+    "sizeOnDisk": 256,
+    "size": 256,
     "isCompressed": false,
     "id": "1_YCube",
     "hash": "5f0755253ed7c7f32f2b7dc95ccc3a18136273645032a9322be870be7fcb6000",

@@ -9,9 +9,9 @@
 			 x:DataType="vm:TagsListViewModel"
 		 	 xmlns:local="clr-namespace:TetrifactClient;assembly=TetrifactClient"
              x:Class="TetrifactClient.TagsList">
-	<DockPanel Classes="flow">
+	<DockPanel Classes="flow-vertical">
 		<StackPanel Name="panelExistingTags"  DockPanel.Dock="Top">
-			<TextBlock Text="Common tags (click to add)" Margin="0,0,0,10"></TextBlock>
+			<TextBlock Text="Frequent tags:" Margin="0,0,0,10"></TextBlock>
 			<ItemsRepeater Margin="0,0,0,10" Tapped="ExistingTags_Tapped" ItemsSource="{Binding ExistingTags}">
 				<ItemsRepeater.Layout>
 					<StackLayout Spacing="10" Orientation="Horizontal" />
@@ -29,7 +29,7 @@
 			</ItemsRepeater>
 		</StackPanel>
 		<StackPanel Name="panelCurrentTags"  DockPanel.Dock="Top">
-			<TextBlock Text="Currently using : " Margin="0,0,0,10"></TextBlock>
+			<TextBlock Text="Currently using: " Margin="0,0,0,10"></TextBlock>
 			<ItemsRepeater Name="repeaterCurrentTags" Margin="0,0,0,10" Tapped="SelfTags_Tapped" ItemsSource="{Binding Tags}">
 				<ItemsRepeater.Layout>
 					<StackLayout Spacing="10" Orientation="Horizontal" />

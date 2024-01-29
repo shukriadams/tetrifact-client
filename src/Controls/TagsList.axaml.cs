@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using DynamicData;
+using HarfBuzzSharp;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -7,11 +9,20 @@ using TetrifactClient.Lib;
 
 namespace TetrifactClient
 {
+    /// <summary>
+    /// Data model is two string collections. See SetContext method below.
+    /// </summary>
     public partial class TagsList : UserControl
     {
+        #region FIELDS
+
         private IEnumerable<string> _tags = new string[0];
 
         public TagsChanged OnTagsChanged;
+
+        #endregion
+
+        #region PROPERTIES
 
         public IEnumerable<string> Tags
         {
@@ -21,6 +32,10 @@ namespace TetrifactClient
             } 
         }
 
+        #endregion
+
+        #region CTORS
+
         public TagsList()
         {
             TagsListViewModel context = new TagsListViewModel();
@@ -29,26 +44,31 @@ namespace TetrifactClient
 
             InitializeComponent();
 
-            // add demo tags
+            // add demo tags, this is for V.Studio designer view
             context.ExistingTags.Add("test1");
             context.ExistingTags.Add("test2");
             context.Tags.Add("test1");
             context.Tags.Add("test1");
         }
 
+        #endregion
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="existingTags"></param>
+        /// <param name="boundTags"></param>
         public void SetContext(IEnumerable<string> existingTags, IEnumerable<string> boundTags) 
         {
             TagsListViewModel context = this.DataContext as TagsListViewModel;
 
-            // clear demo tags
-            context.ExistingTags.Clear();
+            context.ExistingAll = existingTags;
+
+            // clear demo (visual studio designer) tags
             context.Tags.Clear();
 
-            foreach (string tag in existingTags)
-                context.ExistingTags.Add(tag);
-
-            foreach (string tag in boundTags)
-                context.Tags.Add(tag);
+            context.Tags.Add(boundTags);
 
             panelExistingTags.IsVisible = context.ExistingTags.Any();
 
@@ -62,6 +82,13 @@ namespace TetrifactClient
         private void SetVisiblity() 
         {
             TagsListViewModel context = this.DataContext as TagsListViewModel;
+
+            // load into rendered collections
+            context.ExistingTags.Clear();
+            foreach (string tag in context.ExistingAll)
+                if (!context.Tags.Contains(tag))
+                    context.ExistingTags.Add(tag);
+
             panelCurrentTags.IsVisible = context.Tags.Any();
         }
 

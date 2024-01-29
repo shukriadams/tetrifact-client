@@ -11,7 +11,6 @@ namespace TetrifactClient.Controls
         {
             this.DataContextChanged += This_DataContextChanged;
             InitializeComponent();
-
         }
 
         private void This_DataContextChanged(object? sender, EventArgs e)
@@ -79,8 +78,6 @@ namespace TetrifactClient.Controls
             GlobalDataContext.Instance.FocusedProject = GlobalDataContext.Instance.Projects.Projects.FirstOrDefault();
         }
 
-
-
         private void OnSave(object? sender, RoutedEventArgs e)
         {
             ProjectEditorViewModel context = this.DataContext as ProjectEditorViewModel;
@@ -125,7 +122,5 @@ namespace TetrifactClient.Controls
             txtName.Text = projectTemplate.Name;
             txtServer.Text = projectTemplate.TetrifactServerAddress;
         }
-
-        
     }
 }

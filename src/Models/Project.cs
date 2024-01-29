@@ -42,9 +42,21 @@ namespace TetrifactClient
         private IList<LocalPackage> _addQueue = new List<LocalPackage>();
         private ConnectionQuality _connectionQuality;
         private double _connectionSpeed;
+        private string _diskUse;
+
         #endregion
 
         #region PROPERTIES
+
+        public string DiskUse
+        {
+            get => _diskUse;
+            set
+            {
+                _diskUse = value;
+                OnPropertyChanged(nameof(DiskUse));
+            }
+        }
 
         /// <summary>
         /// Unique id of project. Generated from GUID. All data for project is partitition on disk with this id.
@@ -231,7 +243,8 @@ namespace TetrifactClient
         [JsonIgnore]                           
         public ObservableCollection<LocalPackage> Packages
         {
-            get{
+            get
+            {
                 lock(_packages)
                     return _packages;
             }
